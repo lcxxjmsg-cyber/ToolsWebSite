@@ -7,7 +7,6 @@ import { SUPPORTED_OUTPUT_FORMATS } from '../types/index';
 interface ConvertModalProps {
   isOpen: boolean;
   onClose: () => void;
-  applyToAll?: boolean;
 }
 
 interface FormatInfo {
@@ -31,7 +30,7 @@ const FORMAT_INFO: Record<string, FormatInfo> = {
 
 const LOSSY_FORMATS: ImageFormat[] = ['jpeg', 'jpg', 'webp', 'avif'];
 
-export default function ConvertModal({ isOpen, onClose, applyToAll = false }: ConvertModalProps) {
+export default function ConvertModal({ isOpen, onClose }: ConvertModalProps) {
   const { selectedTaskId, tasks, updateTaskSettings, updateAllTasksSettings } = useTaskStore();
   const selectedTask = tasks.find((t) => t.id === selectedTaskId);
 
@@ -82,14 +81,12 @@ export default function ConvertModal({ isOpen, onClose, applyToAll = false }: Co
       outputFormat: targetFormat,
       ...(showLossyQuality ? { compress: { mode: 'quality' as const, quality } } : {}),
     });
-    if (applyToAll) {
-      updateAllTasksSettings({
-        outputFormat: targetFormat,
-        ...(showLossyQuality ? { compress: { mode: 'quality' as const, quality } } : {}),
-      });
-    }
+    updateAllTasksSettings({
+      outputFormat: targetFormat,
+      ...(showLossyQuality ? { compress: { mode: 'quality' as const, quality } } : {}),
+    });
     onClose();
-  }, [selectedTaskId, targetFormat, quality, showLossyQuality, applyToAll, updateTaskSettings, updateAllTasksSettings, onClose]);
+  }, [selectedTaskId, targetFormat, quality, showLossyQuality, updateTaskSettings, updateAllTasksSettings, onClose]);
 
   if (!isOpen) return null;
 

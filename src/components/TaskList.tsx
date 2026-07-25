@@ -6,7 +6,6 @@ import TaskCard from './TaskCard';
 export default function TaskList() {
   const {
     tasks,
-    selectedTaskId,
     setSelectedTaskId,
     reorderTasks,
     clearTasks,
@@ -54,8 +53,6 @@ export default function TaskList() {
     [reorderTasks],
   );
 
-  const allSelected = tasks.length > 0 && selectedTaskId !== null;
-
   if (tasks.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center py-16 px-4 animate-fade-in">
@@ -75,26 +72,9 @@ export default function TaskList() {
   return (
     <div>
       <div className="flex items-center justify-between mb-4">
-        <div className="flex items-center gap-3">
-          <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer select-none">
-            <input
-              type="checkbox"
-              checked={allSelected}
-              onChange={() => {
-                if (allSelected) {
-                  useTaskStore.getState().deselectAll();
-                } else {
-                  useTaskStore.getState().selectAll();
-                }
-              }}
-              className="w-4 h-4 rounded border-slate-300 dark:border-slate-600 text-brand-500 focus:ring-brand-500"
-            />
-            全选
-          </label>
-          <span className="text-sm text-slate-400 dark:text-slate-500">
-            共 {tasks.length} 个任务
-          </span>
-        </div>
+        <span className="text-sm text-slate-500 dark:text-slate-400">
+          共 {tasks.length} 个任务
+        </span>
 
         <button
           onClick={clearTasks}

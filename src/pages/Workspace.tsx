@@ -8,6 +8,7 @@ import TaskList from '../components/TaskList';
 import CropModal from '../components/CropModal';
 import ResizeModal from '../components/ResizeModal';
 import CompressModal from '../components/CompressModal';
+import ConvertModal from '../components/ConvertModal';
 import FilterModal from '../components/FilterModal';
 import WatermarkModal from '../components/WatermarkModal';
 import BorderModal from '../components/BorderModal';
@@ -98,6 +99,10 @@ export default function Workspace() {
       />
       <CompressModal
         isOpen={activeModal === 'compress'}
+        onClose={handleCloseModal}
+      />
+      <ConvertModal
+        isOpen={activeModal === 'convert'}
         onClose={handleCloseModal}
       />
       <FilterModal
