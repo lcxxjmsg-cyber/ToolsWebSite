@@ -13,6 +13,15 @@ import FilterModal from '../components/FilterModal';
 import WatermarkModal from '../components/WatermarkModal';
 import BorderModal from '../components/BorderModal';
 import OcrModal from '../components/OcrModal';
+import MergeModal from '../components/MergeModal';
+import SplitModal from '../components/SplitModal';
+import RoundCornersModal from '../components/RoundCornersModal';
+import MirrorModal from '../components/MirrorModal';
+import MosaicModal from '../components/MosaicModal';
+import CompareModal from '../components/CompareModal';
+import ExifModal from '../components/ExifModal';
+import RemoveBgModal from '../components/RemoveBgModal';
+import GifModal from '../components/GifModal';
 import { useTaskStore } from '../store/taskStore';
 import { useSEO, InjectJSONLD } from '../utils/seo';
 
@@ -120,6 +129,42 @@ export default function Workspace() {
       />
       <OcrModal
         isOpen={activeModal === 'ocr'}
+        onClose={handleCloseModal}
+      />
+      <MergeModal
+        isOpen={activeModal === 'merge'}
+        onClose={handleCloseModal}
+      />
+      <SplitModal
+        isOpen={activeModal === 'split'}
+        onClose={handleCloseModal}
+      />
+      <RoundCornersModal
+        isOpen={activeModal === 'roundCorners'}
+        onClose={handleCloseModal}
+      />
+      <MirrorModal
+        isOpen={activeModal === 'mirror'}
+        onClose={handleCloseModal}
+      />
+      <MosaicModal
+        isOpen={activeModal === 'mosaic'}
+        onClose={handleCloseModal}
+      />
+      <CompareModal
+        isOpen={activeModal === 'compare'}
+        onClose={handleCloseModal}
+      />
+      <ExifModal
+        isOpen={activeModal === 'exif'}
+        onClose={handleCloseModal}
+      />
+      <RemoveBgModal
+        isOpen={activeModal === 'removeBg'}
+        onClose={handleCloseModal}
+      />
+      <GifModal
+        isOpen={activeModal === 'gif'}
         onClose={handleCloseModal}
       />
 

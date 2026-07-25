@@ -76,7 +76,7 @@ export interface BorderSettings {
 
 export type TaskStatus = 'pending' | 'processing' | 'completed' | 'error';
 
-export type ToolMode = 'convert' | 'compress' | 'crop' | 'resize' | 'filter' | 'watermark' | 'border' | 'metadata' | 'ocr';
+export type ToolMode = 'convert' | 'compress' | 'crop' | 'resize' | 'filter' | 'watermark' | 'border' | 'metadata' | 'ocr' | 'merge' | 'split' | 'roundCorners' | 'mirror' | 'mosaic' | 'compare' | 'exif' | 'removeBg' | 'gif';
 
 export interface TaskSettings {
   outputFormat: ImageFormat;

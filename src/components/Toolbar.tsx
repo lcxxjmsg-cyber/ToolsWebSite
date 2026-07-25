@@ -14,6 +14,15 @@ import {
   RotateCcw,
   CheckCircle2,
   ScanLine,
+  Images,
+  Grid3X3,
+  Circle,
+  FlipHorizontal2,
+  Hash,
+  Columns2,
+  Info,
+  Eraser,
+  Film,
 } from 'lucide-react';
 import type { ToolMode } from '../types/index';
 import { useTaskStore } from '../store/taskStore';
@@ -35,6 +44,15 @@ const TOOLS: ToolConfig[] = [
   { mode: 'filter', label: '滤镜', icon: Sparkles },
   { mode: 'watermark', label: '水印', icon: Type },
   { mode: 'border', label: '边框', icon: Square },
+  { mode: 'merge', label: '合并', icon: Images },
+  { mode: 'split', label: '切割', icon: Grid3X3 },
+  { mode: 'roundCorners', label: '圆角', icon: Circle },
+  { mode: 'mirror', label: '镜像', icon: FlipHorizontal2 },
+  { mode: 'mosaic', label: '马赛克', icon: Hash },
+  { mode: 'compare', label: '对比', icon: Columns2 },
+  { mode: 'exif', label: '元数据', icon: Info },
+  { mode: 'removeBg', label: '去背景', icon: Eraser },
+  { mode: 'gif', label: 'GIF', icon: Film },
   { mode: 'ocr', label: '文字识别', icon: ScanLine },
 ];
 
