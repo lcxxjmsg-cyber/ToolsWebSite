@@ -71,6 +71,20 @@ export default function CropModal({ isOpen, onClose }: CropModalProps) {
     return () => { document.body.style.overflow = ''; };
   }, [isOpen]);
 
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas || !isOpen) return;
+
+    const preventDefault = (e: Event) => e.preventDefault();
+    canvas.addEventListener('touchstart', preventDefault, { passive: false });
+    canvas.addEventListener('touchmove', preventDefault, { passive: false });
+
+    return () => {
+      canvas.removeEventListener('touchstart', preventDefault);
+      canvas.removeEventListener('touchmove', preventDefault);
+    };
+  }, [isOpen, imgLoaded]);
+
   const loadAndSetup = useCallback(() => {
     if (!isOpen || !thumbnail) {
       imgRef.current = null;
@@ -350,7 +364,6 @@ export default function CropModal({ isOpen, onClose }: CropModalProps) {
 
   const handleTouchStart = useCallback(
     (e: React.TouchEvent<HTMLCanvasElement>) => {
-      e.preventDefault();
       const canvas = canvasRef.current;
       if (!canvas || e.touches.length === 0) return;
       const rect = canvas.getBoundingClientRect();
@@ -375,7 +388,6 @@ export default function CropModal({ isOpen, onClose }: CropModalProps) {
 
   const handleTouchMove = useCallback(
     (e: React.TouchEvent<HTMLCanvasElement>) => {
-      e.preventDefault();
       if (!dragging) return;
       const canvas = canvasRef.current;
       if (!canvas || e.touches.length === 0) return;
@@ -528,7 +540,7 @@ export default function CropModal({ isOpen, onClose }: CropModalProps) {
                 ref={canvasRef}
                 width={displaySize.w}
                 height={displaySize.h}
-                style={{ width: displaySize.w, height: displaySize.h, cursor: dragging ? 'grabbing' : 'crosshair' }}
+                style={{ width: displaySize.w, height: displaySize.h, cursor: dragging ? 'grabbing' : 'crosshair', touchAction: 'none' }}
                 onMouseDown={handleMouseDown}
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
