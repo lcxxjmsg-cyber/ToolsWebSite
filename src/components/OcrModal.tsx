@@ -13,6 +13,15 @@ const LANGUAGE_OPTIONS: { value: string; label: string }[] = [
   { value: 'eng', label: '英文' },
 ];
 
+function fileToDataUrl(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = () => reject(new Error('Failed to read file'));
+    reader.readAsDataURL(file);
+  });
+}
+
 export default function OcrModal({ isOpen, onClose }: OcrModalProps) {
   const { selectedTaskId, tasks } = useTaskStore();
   const selectedTask = tasks.find((t) => t.id === selectedTaskId);
@@ -23,6 +32,7 @@ export default function OcrModal({ isOpen, onClose }: OcrModalProps) {
   const [statusText, setStatusText] = useState('');
   const [result, setResult] = useState('');
   const [error, setError] = useState('');
+  const [fullImageUrl, setFullImageUrl] = useState('');
   const workerRef = useRef<Tesseract.Worker | null>(null);
 
   useEffect(() => {
@@ -49,11 +59,14 @@ export default function OcrModal({ isOpen, onClose }: OcrModalProps) {
       setError('');
       setProgress(0);
       setStatusText('');
+      setFullImageUrl('');
+    } else if (selectedTask?.file) {
+      fileToDataUrl(selectedTask.file).then(setFullImageUrl).catch(() => {});
     }
-  }, [isOpen]);
+  }, [isOpen, selectedTask?.file]);
 
   const handleRecognize = useCallback(async () => {
-    if (!selectedTask?.thumbnail || recognizing) return;
+    if (!fullImageUrl || recognizing) return;
     setRecognizing(true);
     setError('');
     setResult('');
@@ -64,7 +77,7 @@ export default function OcrModal({ isOpen, onClose }: OcrModalProps) {
       const worker = await Tesseract.createWorker(language);
       workerRef.current = worker;
 
-      const { data } = await worker.recognize(selectedTask.thumbnail);
+      const { data } = await worker.recognize(fullImageUrl);
       setResult(data.text);
       setProgress(100);
       setStatusText('识别完成');
@@ -77,7 +90,7 @@ export default function OcrModal({ isOpen, onClose }: OcrModalProps) {
     } finally {
       setRecognizing(false);
     }
-  }, [selectedTask?.thumbnail, language, recognizing]);
+  }, [fullImageUrl, language, recognizing]);
 
   const handleCopy = useCallback(() => {
     if (!result) return;
@@ -118,10 +131,10 @@ export default function OcrModal({ isOpen, onClose }: OcrModalProps) {
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">识别图片中的文字内容</p>
 
         <div className="mt-6 space-y-4">
-          {selectedTask?.thumbnail && (
-            <div className="flex justify-center">
+          {fullImageUrl && (
+            <div className="flex items-center justify-center bg-slate-100 dark:bg-slate-800 rounded-xl p-3">
               <img
-                src={selectedTask.thumbnail}
+                src={fullImageUrl}
                 alt="预览"
                 className="max-h-40 rounded-xl border border-slate-200 dark:border-slate-700 object-contain"
               />
@@ -145,7 +158,7 @@ export default function OcrModal({ isOpen, onClose }: OcrModalProps) {
           {!result && !recognizing && (
             <button
               onClick={handleRecognize}
-              disabled={!selectedTask?.thumbnail}
+              disabled={!fullImageUrl}
               className="w-full flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium shadow-lg shadow-brand-500/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 active:scale-[0.98]"
             >
               <ScanLine className="w-4 h-4" />
