@@ -40,37 +40,39 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
     const newTasks: TaskItem[] = [];
 
     for (const file of files) {
-      const id = crypto.randomUUID();
-      let taskFile = file;
-
       if (isDocumentFile(file)) {
         try {
-          taskFile = await convertDocumentToImage(file);
+          const imageFiles = await convertDocumentToImage(file);
+          for (const imageFile of imageFiles) {
+            const id = crypto.randomUUID();
+
+            let thumbnail = '';
+            try { thumbnail = await generateThumbnail(imageFile, 200); } catch { thumbnail = ''; }
+
+            newTasks.push({
+              id, file: imageFile, fileName: imageFile.name,
+              originalSize: imageFile.size, originalFormat: `PNG ← ${file.name}`,
+              thumbnail, status: 'pending', progress: 0,
+              settings: { ...DEFAULT_TASK_SETTINGS },
+            });
+          }
         } catch {
           continue;
         }
+      } else {
+        const id = crypto.randomUUID();
+        const ext = getFileExtension(file.name);
+
+        let thumbnail = '';
+        try { thumbnail = await generateThumbnail(file, 200); } catch { thumbnail = ''; }
+
+        newTasks.push({
+          id, file, fileName: file.name,
+          originalSize: file.size, originalFormat: getFormatLabel(ext),
+          thumbnail, status: 'pending', progress: 0,
+          settings: { ...DEFAULT_TASK_SETTINGS },
+        });
       }
-
-      const ext = getFileExtension(taskFile.name);
-
-      let thumbnail = '';
-      try {
-        thumbnail = await generateThumbnail(taskFile, 200);
-      } catch {
-        thumbnail = '';
-      }
-
-      newTasks.push({
-        id,
-        file: taskFile,
-        fileName: taskFile.name,
-        originalSize: taskFile.size,
-        originalFormat: file !== taskFile ? `${getFormatLabel(ext)} ← ${file.name}` : getFormatLabel(ext),
-        thumbnail,
-        status: 'pending',
-        progress: 0,
-        settings: { ...DEFAULT_TASK_SETTINGS },
-      });
     }
 
     set((state) => {
