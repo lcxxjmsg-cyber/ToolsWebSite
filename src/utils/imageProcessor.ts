@@ -474,7 +474,6 @@ export async function processImage(
     (!settings.border || settings.border.width <= 0) &&
     settings.outputFormat === inputFormat &&
     settings.compress.mode === 'quality' &&
-    settings.compress.quality >= 92 &&
     settings.outputFormat !== 'pdf';
 
   if (isNoOp) {
