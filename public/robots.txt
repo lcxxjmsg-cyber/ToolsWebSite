@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://imagetoolbox.pages.dev/sitemap.xml
