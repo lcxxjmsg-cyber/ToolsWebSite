@@ -93,8 +93,12 @@ export default function MirrorModal({ isOpen, onClose }: MirrorModalProps) {
     try {
       const img = await loadImage(URL.createObjectURL(selectedTask.file));
       const blob = await mirrorImage(img, horizontal, vertical);
-      const { setTaskResult } = useTaskStore.getState();
-      setTaskResult(selectedTaskId, blob, blob.size);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.download = `mirrored_${selectedTask.fileName.replace(/\.[^.]+$/, '')}.png`;
+      a.href = url;
+      a.click();
+      URL.revokeObjectURL(url);
     } catch {
       // ignore
     }
@@ -184,7 +188,7 @@ export default function MirrorModal({ isOpen, onClose }: MirrorModalProps) {
             disabled={!selectedTaskId}
             className="btn-primary text-sm py-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            应用
+            镜像并下载
           </button>
         </div>
       </div>

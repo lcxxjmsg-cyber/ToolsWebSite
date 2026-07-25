@@ -26,6 +26,7 @@ declare module 'gifenc' {
     delay?: number;
     transparent?: boolean;
     dispose?: number;
+    repeat?: number;
   }
 
   export function GIFEncoder(): {
@@ -42,13 +43,13 @@ declare module 'gifenc' {
   };
 
   export function quantize(
-    imageData: ImageData | Uint8ClampedArray,
+    imageData: Uint8Array | Uint8ClampedArray,
     maxColors: number,
     options?: { format?: 'rgb444' | 'rgb565'; oneBitAlpha?: boolean },
   ): number[][];
 
   export function applyPalette(
-    imageData: ImageData | Uint8ClampedArray,
+    imageData: Uint8Array | Uint8ClampedArray,
     palette: number[][],
     format?: 'rgb444' | 'rgb565',
   ): Uint8Array;

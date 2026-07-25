@@ -12,7 +12,7 @@ function removeBackground(img: HTMLImageElement, targetColor: { r: number; g: nu
   const canvas = document.createElement('canvas');
   canvas.width = img.naturalWidth;
   canvas.height = img.naturalHeight;
-  const ctx = canvas.getContext('2d')!;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
   ctx.drawImage(img, 0, 0);
   const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
   const data = imageData.data;
@@ -109,9 +109,9 @@ export default function RemoveBgModal({ isOpen, onClose }: RemoveBgModalProps) {
       if (!canvas) return;
       canvas.width = img.naturalWidth;
       canvas.height = img.naturalHeight;
-      const ctx = canvas.getContext('2d')!;
-      ctx.drawImage(img, 0, 0);
-      generatePreview();
+        const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+        ctx.drawImage(img, 0, 0);
+        generatePreview();
     });
   }, [isOpen, selectedTask, generatePreview]);
 
@@ -128,7 +128,7 @@ export default function RemoveBgModal({ isOpen, onClose }: RemoveBgModalProps) {
     const scaleY = canvas.height / rect.height;
     const x = Math.floor((e.clientX - rect.left) * scaleX);
     const y = Math.floor((e.clientY - rect.top) * scaleY);
-    const ctx = canvas.getContext('2d');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
     if (!ctx) return;
     const pixelData = ctx.getImageData(x, y, 1, 1).data;
     const hex = `#${pixelData[0].toString(16).padStart(2, '0')}${pixelData[1].toString(16).padStart(2, '0')}${pixelData[2].toString(16).padStart(2, '0')}`;

@@ -168,9 +168,9 @@ export default function GifModal({ isOpen, onClose }: GifModalProps) {
       const gif = gifenc.GIFEncoder();
 
       for (const frame of composeImageDatas) {
-        const palette = gifenc.quantize(frame, 256);
-        const indexed = gifenc.applyPalette(frame, palette);
-        gif.writeFrame(indexed, frame.width, frame.height, { palette, delay: frameDelay });
+        const palette = gifenc.quantize(frame.data, 256);
+        const indexed = gifenc.applyPalette(frame.data, palette);
+        gif.writeFrame(indexed, frame.width, frame.height, { palette, delay: frameDelay, repeat: loop ? 0 : -1 });
       }
       gif.finish();
 
@@ -182,7 +182,7 @@ export default function GifModal({ isOpen, onClose }: GifModalProps) {
     } catch {
       setError('生成预览失败');
     }
-  }, [composeImageDatas, frameDelay, previewing, previewUrl]);
+  }, [composeImageDatas, frameDelay, loop, previewing, previewUrl]);
 
   const handleDownloadGif = useCallback(async () => {
     if (composeImageDatas.length === 0) return;
@@ -192,9 +192,9 @@ export default function GifModal({ isOpen, onClose }: GifModalProps) {
       const gif = gifenc.GIFEncoder();
 
       for (const frame of composeImageDatas) {
-        const palette = gifenc.quantize(frame, 256);
-        const indexed = gifenc.applyPalette(frame, palette);
-        gif.writeFrame(indexed, frame.width, frame.height, { palette, delay: frameDelay });
+        const palette = gifenc.quantize(frame.data, 256);
+        const indexed = gifenc.applyPalette(frame.data, palette);
+        gif.writeFrame(indexed, frame.width, frame.height, { palette, delay: frameDelay, repeat: loop ? 0 : -1 });
       }
       gif.finish();
 
@@ -209,7 +209,7 @@ export default function GifModal({ isOpen, onClose }: GifModalProps) {
     } catch {
       setError('生成 GIF 失败');
     }
-  }, [composeImageDatas, frameDelay]);
+  }, [composeImageDatas, frameDelay, loop]);
 
   if (!isOpen) return null;
 

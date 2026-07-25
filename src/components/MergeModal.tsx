@@ -268,18 +268,7 @@ export default function MergeModal({ isOpen, onClose }: MergeModalProps) {
           )}
         </div>
 
-        <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
-          <button onClick={onClose} className="btn-secondary text-sm py-2.5">
-            取消
-          </button>
-          <button
-            onClick={handleDownload}
-            disabled={!previewUrl}
-            className="btn-primary text-sm py-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
-          >
-            应用
-          </button>
-        </div>
+
       </div>
     </div>
   );

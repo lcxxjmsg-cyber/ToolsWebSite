@@ -41,7 +41,7 @@ function roundCorners(img: HTMLImageElement, radius: number, circular: boolean):
 }
 
 export default function RoundCornersModal({ isOpen, onClose }: RoundCornersModalProps) {
-  const { selectedTaskId, tasks, updateAllTasksSettings } = useTaskStore();
+  const { selectedTaskId, tasks } = useTaskStore();
   const selectedTask = tasks.find((t) => t.id === selectedTaskId);
 
   const [radius, setRadius] = useState(20);
@@ -115,14 +115,17 @@ export default function RoundCornersModal({ isOpen, onClose }: RoundCornersModal
     try {
       const img = await loadImage(URL.createObjectURL(selectedTask.file));
       const blob = await roundCorners(img, radius, circular);
-      updateAllTasksSettings({ crop: null });
-      const { setTaskResult } = useTaskStore.getState();
-      setTaskResult(selectedTaskId, blob, blob.size);
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.download = `rounded_${selectedTask.fileName.replace(/\.[^.]+$/, '')}.png`;
+      a.href = url;
+      a.click();
+      URL.revokeObjectURL(url);
     } catch {
       // ignore
     }
     onClose();
-  }, [selectedTask, selectedTaskId, radius, circular, updateAllTasksSettings, onClose]);
+  }, [selectedTask, selectedTaskId, radius, circular, onClose]);
 
   if (!isOpen) return null;
 
@@ -197,7 +200,7 @@ export default function RoundCornersModal({ isOpen, onClose }: RoundCornersModal
             disabled={!selectedTaskId}
             className="btn-primary text-sm py-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            应用
+            圆角并下载
           </button>
         </div>
       </div>
