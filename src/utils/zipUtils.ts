@@ -1,6 +1,7 @@
 import JSZip from 'jszip';
 import { isValidImageFile } from './formatUtils';
 import { getFileExtension } from './formatUtils';
+import { isDocumentFile } from './documentConverter';
 
 export async function extractImagesFromZip(
   zipFile: File,
@@ -13,24 +14,32 @@ export async function extractImagesFromZip(
 
   const entries = Object.entries(zip.files);
 
+  const mimeTypeMap: Record<string, string> = {
+    png: 'image/png',
+    jpg: 'image/jpeg',
+    jpeg: 'image/jpeg',
+    webp: 'image/webp',
+    gif: 'image/gif',
+    bmp: 'image/bmp',
+    ico: 'image/x-icon',
+    tiff: 'image/tiff',
+    avif: 'image/avif',
+    svg: 'image/svg+xml',
+    heic: 'image/heic',
+    heif: 'image/heif',
+    txt: 'text/plain',
+    html: 'text/html',
+    htm: 'text/html',
+    docx: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    xlsx: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    xls: 'application/vnd.ms-excel',
+  };
+
   for (const [path, entry] of entries) {
     if (entry.dir) continue;
 
     const ext = getFileExtension(path);
     if (!ext) continue;
-
-    const mimeTypeMap: Record<string, string> = {
-      png: 'image/png',
-      jpg: 'image/jpeg',
-      jpeg: 'image/jpeg',
-      webp: 'image/webp',
-      gif: 'image/gif',
-      bmp: 'image/bmp',
-      ico: 'image/x-icon',
-      tiff: 'image/tiff',
-      avif: 'image/avif',
-      svg: 'image/svg+xml',
-    };
 
     const mimeType = mimeTypeMap[ext.toLowerCase()];
     if (!mimeType) continue;
@@ -39,7 +48,7 @@ export async function extractImagesFromZip(
     const fileName = path.split('/').pop() || path;
     const file = new File([blob], fileName, { type: mimeType });
 
-    if (isValidImageFile(file)) {
+    if (isValidImageFile(file) || isDocumentFile(file)) {
       files.push(file);
       structure.set(fileName, path);
     }

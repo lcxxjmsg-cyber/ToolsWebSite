@@ -3,6 +3,7 @@ import type { TaskItem, TaskSettings, TaskStatus } from '../types/index';
 import { DEFAULT_TASK_SETTINGS } from '../types/index';
 import { generateThumbnail } from '../utils/imageProcessor';
 import { getFileExtension, getFormatLabel } from '../utils/formatUtils';
+import { isDocumentFile, convertDocumentToImage } from '../utils/documentConverter';
 
 interface TaskStore {
   tasks: TaskItem[];
@@ -40,21 +41,31 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
 
     for (const file of files) {
       const id = crypto.randomUUID();
-      const ext = getFileExtension(file.name);
+      let taskFile = file;
+
+      if (isDocumentFile(file)) {
+        try {
+          taskFile = await convertDocumentToImage(file);
+        } catch {
+          continue;
+        }
+      }
+
+      const ext = getFileExtension(taskFile.name);
 
       let thumbnail = '';
       try {
-        thumbnail = await generateThumbnail(file, 200);
+        thumbnail = await generateThumbnail(taskFile, 200);
       } catch {
         thumbnail = '';
       }
 
       newTasks.push({
         id,
-        file,
-        fileName: file.name,
-        originalSize: file.size,
-        originalFormat: getFormatLabel(ext),
+        file: taskFile,
+        fileName: taskFile.name,
+        originalSize: taskFile.size,
+        originalFormat: file !== taskFile ? `${getFormatLabel(ext)} ← ${file.name}` : getFormatLabel(ext),
         thumbnail,
         status: 'pending',
         progress: 0,

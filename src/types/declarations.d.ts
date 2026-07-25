@@ -66,3 +66,35 @@ declare module 'exif-js' {
   };
   export default EXIF;
 }
+
+declare module 'xlsx' {
+  interface WorkBook {
+    SheetNames: string[];
+    Sheets: Record<string, WorkSheet>;
+  }
+  interface WorkSheet {
+    [key: string]: unknown;
+  }
+  export function read(data: ArrayBuffer, opts: { type: string }): WorkBook;
+  export const utils: {
+    sheet_to_html(sheet: WorkSheet, opts?: Record<string, unknown>): string;
+  };
+}
+
+declare module 'mammoth' {
+  interface Result {
+    value: string;
+    messages: unknown[];
+  }
+  export function convertToHtml(opts: { arrayBuffer: ArrayBuffer }): Promise<Result>;
+}
+
+declare module 'html2canvas' {
+  interface Options {
+    backgroundColor?: string;
+    scale?: number;
+    useCORS?: boolean;
+  }
+  function html2canvas(element: HTMLElement, options?: Options): Promise<HTMLCanvasElement>;
+  export default html2canvas;
+}
