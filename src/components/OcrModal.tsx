@@ -74,10 +74,18 @@ export default function OcrModal({ isOpen, onClose }: OcrModalProps) {
     setStatusText('正在初始化 OCR 引擎...');
 
     try {
+      const origWarn = console.warn;
+      console.warn = (...args: unknown[]) => {
+        const msg = String(args[0]);
+        if (msg.includes('Parameter not found') || msg.includes('tesseract')) return;
+        origWarn.apply(console, args);
+      };
+
       const worker = await Tesseract.createWorker(language);
       workerRef.current = worker;
 
       const { data } = await worker.recognize(fullImageUrl);
+      console.warn = origWarn;
       setResult(data.text);
       setProgress(100);
       setStatusText('识别完成');
