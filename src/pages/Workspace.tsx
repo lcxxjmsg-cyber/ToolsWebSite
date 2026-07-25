@@ -22,7 +22,7 @@ export default function Workspace() {
     description: 'ImageToolbox工作台，一站式在线图片处理：格式转换、压缩、裁剪、调整尺寸、滤镜特效、水印、边框。支持批量处理，纯本地运行。',
     keywords: '图片处理工作台,批量图片处理,在线图片编辑,图片转换压缩裁剪,一站式图片工具',
   });
-  const { tasks } = useTaskStore();
+  const { tasks, applyToAll } = useTaskStore();
 
   const hasTasks = tasks.length > 0;
 
@@ -92,30 +92,37 @@ export default function Workspace() {
       <CropModal
         isOpen={activeModal === 'crop'}
         onClose={handleCloseModal}
+        applyToAll={applyToAll}
       />
       <ResizeModal
         isOpen={activeModal === 'resize'}
         onClose={handleCloseModal}
+        applyToAll={applyToAll}
       />
       <CompressModal
         isOpen={activeModal === 'compress'}
         onClose={handleCloseModal}
+        applyToAll={applyToAll}
       />
       <FilterModal
         isOpen={activeModal === 'filter'}
         onClose={handleCloseModal}
+        applyToAll={applyToAll}
       />
       <ConvertModal
         isOpen={activeModal === 'convert'}
         onClose={handleCloseModal}
+        applyToAll={applyToAll}
       />
       <WatermarkModal
         isOpen={activeModal === 'watermark'}
         onClose={handleCloseModal}
+        applyToAll={applyToAll}
       />
       <BorderModal
         isOpen={activeModal === 'border'}
         onClose={handleCloseModal}
+        applyToAll={applyToAll}
       />
 
       <Footer />

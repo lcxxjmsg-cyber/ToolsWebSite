@@ -349,6 +349,95 @@ export default function CropModal({ isOpen, onClose, applyToAll = false }: CropM
     setDragCorner(null);
   }, []);
 
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent<HTMLCanvasElement>) => {
+      e.preventDefault();
+      const canvas = canvasRef.current;
+      if (!canvas || e.touches.length === 0) return;
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.touches[0].clientX - rect.left;
+      const my = e.touches[0].clientY - rect.top;
+      const corner = getHandle(mx, my);
+      if (!corner) {
+        const { ix, iy } = displayToImg(mx, my);
+        setCropX(clamp(ix, 0, imgNatural.w - 1));
+        setCropY(clamp(iy, 0, imgNatural.h - 1));
+        setCropW(10);
+        setCropH(10);
+        setDragCorner('br');
+      } else {
+        setDragCorner(corner);
+      }
+      setDragStart({ mx, my, cx: cropX, cy: cropY, cw: cropW, ch: cropH });
+      setDragging(true);
+    },
+    [cropX, cropY, cropW, cropH, displayToImg, imgNatural, getHandle],
+  );
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent<HTMLCanvasElement>) => {
+      e.preventDefault();
+      if (!dragging) return;
+      const canvas = canvasRef.current;
+      if (!canvas || e.touches.length === 0) return;
+      const rect = canvas.getBoundingClientRect();
+      const mx = e.touches[0].clientX - rect.left;
+      const my = e.touches[0].clientY - rect.top;
+
+      const ddx = mx - dragStart.mx;
+      const ddy = my - dragStart.my;
+      const di = displayToImg(ddx, ddy);
+
+      let nx = dragStart.cx;
+      let ny = dragStart.cy;
+      let nw = dragStart.cw;
+      let nh = dragStart.ch;
+
+      switch (dragCorner) {
+        case 'br':
+          nw = dragStart.cw + di.ix;
+          nh = dragStart.ch + di.iy;
+          break;
+        case 'tl':
+          nx = dragStart.cx + di.ix;
+          ny = dragStart.cy + di.iy;
+          nw = dragStart.cw - di.ix;
+          nh = dragStart.ch - di.iy;
+          break;
+        case 'tr':
+          ny = dragStart.cy + di.iy;
+          nw = dragStart.cw + di.ix;
+          nh = dragStart.ch - di.iy;
+          break;
+        case 'bl':
+          nx = dragStart.cx + di.ix;
+          nw = dragStart.cw - di.ix;
+          nh = dragStart.ch + di.iy;
+          break;
+        case 'move':
+          nx = dragStart.cx + di.ix;
+          ny = dragStart.cy + di.iy;
+          break;
+      }
+
+      const constrained = constrainCrop(nx, ny, Math.max(10, nw), Math.max(10, nh));
+      setCropX(constrained.x);
+      setCropY(constrained.y);
+      setCropW(constrained.w);
+      setCropH(constrained.h);
+    },
+    [dragging, dragStart, dragCorner, displayToImg, constrainCrop],
+  );
+
+  const handleTouchEnd = useCallback(
+    (e: React.TouchEvent<HTMLCanvasElement>) => {
+      e.preventDefault();
+      setDragging(false);
+      setDragCorner(null);
+    },
+    [],
+  );
+
   const handlePresetChange = useCallback(
     (ratio: number | null) => {
       setPresetRatio(ratio);
@@ -447,6 +536,9 @@ export default function CropModal({ isOpen, onClose, applyToAll = false }: CropM
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseUp}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
                 className="max-w-full"
               />
             </div>

@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Image, Shield, Menu, X } from 'lucide-react';
+import { Image, Shield, Menu, X, Mail } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 
 const NAV_LINKS = [
@@ -70,10 +70,16 @@ export default function Header() {
           </nav>
 
           <div className="hidden lg:flex items-center gap-1">
+            <a href="mailto:anony.neatly471@passfwd.com" title="意见反馈" className="p-2 text-slate-500 hover:text-brand-500 transition-colors">
+              <Mail className="w-5 h-5" />
+            </a>
             <ThemeToggle />
           </div>
 
           <div className="flex lg:hidden items-center gap-2">
+            <a href="mailto:anony.neatly471@passfwd.com" title="意见反馈" className="p-2 text-slate-500 hover:text-brand-500 transition-colors">
+              <Mail className="w-5 h-5" />
+            </a>
             <ThemeToggle />
             <button
               onClick={() => setMobileOpen(!mobileOpen)}

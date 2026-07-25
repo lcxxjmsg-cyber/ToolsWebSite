@@ -57,6 +57,8 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
     tasks,
     isProcessing,
     overallProgress,
+    applyToAll,
+    setApplyToAll,
     updateAllTasksSettings,
     startProcessing,
     finishProcessing,
@@ -70,7 +72,6 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
 
   const [activeTool, setActiveTool] = useState<ToolMode>('convert');
   const [outputFormat, setOutputFormat] = useState<ImageFormat>('png');
-  const [applyToAll, setApplyToAll] = useState(true);
   const [formatDropdownOpen, setFormatDropdownOpen] = useState(false);
   const abortRef = useRef(false);
   const formatDropdownRef = useRef<HTMLDivElement>(null);
@@ -86,17 +87,6 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
     setFormatDropdownOpen(false);
     if (applyToAll) {
       updateAllTasksSettings({ outputFormat: fmt });
-    }
-  };
-
-  const handleApplyToAllToggle = () => {
-    const next = !applyToAll;
-    setApplyToAll(next);
-    if (next) {
-      updateAllTasksSettings({
-        outputFormat,
-        activeTool,
-      });
     }
   };
 
@@ -238,8 +228,9 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
             <button
               onClick={() => setFormatDropdownOpen(!formatDropdownOpen)}
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+              title="点击选择输出格式"
             >
-              输出: {FORMAT_LABELS[outputFormat] ?? outputFormat.toUpperCase()}
+              转为: {FORMAT_LABELS[outputFormat] ?? outputFormat.toUpperCase()}
               <svg className="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="6,9 12,15 18,9" />
               </svg>
@@ -269,7 +260,16 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
               <input
                 type="checkbox"
                 checked={applyToAll}
-                onChange={handleApplyToAllToggle}
+                onChange={() => {
+                  const next = !applyToAll;
+                  setApplyToAll(next);
+                  if (next) {
+                    updateAllTasksSettings({
+                      outputFormat,
+                      activeTool,
+                    });
+                  }
+                }}
                 className="sr-only"
               />
               <div

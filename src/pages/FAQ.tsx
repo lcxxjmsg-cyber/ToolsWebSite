@@ -96,18 +96,15 @@ const FAQ_ITEMS: FAQItem[] = [
         <p>
           如果您遇到任何问题或有功能建议，可以通过以下方式联系：
         </p>
-        <ul className="list-disc list-inside mt-2 space-y-1 text-slate-600 dark:text-slate-400">
+         <ul className="list-disc list-inside mt-2 space-y-1 text-slate-600 dark:text-slate-400">
           <li>
-            在{' '}
+            请发送邮件至{' '}
             <a
-              href="https://github.com"
-              target="_blank"
-              rel="noopener noreferrer"
+              href="mailto:anony.neatly471@passfwd.com"
               className="text-brand-500 hover:text-brand-600 underline"
             >
-              GitHub Issues
-            </a>{' '}
-            提交问题报告或功能请求
+              anony.neatly471@passfwd.com
+            </a>
           </li>
           <li>查看浏览器控制台（F12）中的错误信息以帮助诊断</li>
           <li>尝试使用最新版本的 Chrome、Firefox 或 Edge 浏览器</li>

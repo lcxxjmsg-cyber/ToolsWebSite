@@ -9,6 +9,26 @@ import type {
 } from '../types/index';
 import { FORMAT_MIME_MAP } from '../types/index';
 
+let heic2any: ((args: { blob: Blob; toType?: string; quality?: number }) => Promise<Blob | Blob[]>) | null = null;
+
+async function loadHeicDecoder() {
+  if (heic2any) return heic2any;
+  const mod = await import('heic2any');
+  heic2any = mod.default;
+  return heic2any;
+}
+
+export async function decodeHeic(file: File): Promise<Blob> {
+  const decoder = await loadHeicDecoder();
+  const result = await decoder({ blob: file, toType: 'image/png' });
+  return Array.isArray(result) ? result[0] : result;
+}
+
+export function isHeicFile(file: File): boolean {
+  const ext = file.name.split('.').pop()?.toLowerCase();
+  return ext === 'heic' || ext === 'heif' || file.type === 'image/heic' || file.type === 'image/heif';
+}
+
 function getMimeType(format: string): string {
   return FORMAT_MIME_MAP[format] || `image/${format}`;
 }
@@ -441,7 +461,13 @@ export async function processImage(
   file: File,
   settings: TaskSettings,
 ): Promise<{ blob: Blob; format: string }> {
-  const img = await fileToImage(file);
+  let img: HTMLImageElement;
+  if (isHeicFile(file)) {
+    const pngBlob = await decodeHeic(file);
+    img = await blobToImage(pngBlob);
+  } else {
+    img = await fileToImage(file);
+  }
 
   let canvas = document.createElement('canvas');
   canvas.width = img.naturalWidth;

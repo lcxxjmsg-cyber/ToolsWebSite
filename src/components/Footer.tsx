@@ -7,7 +7,7 @@ const FOOTER_LINKS = [
   { to: '/terms', label: '使用条款' },
 ];
 
-const GITHUB_ISSUES_URL = 'https://github.com';
+const FEEDBACK_EMAIL = 'mailto:anony.neatly471@passfwd.com';
 
 export default function Footer() {
   return (
@@ -38,9 +38,7 @@ export default function Footer() {
               </Link>
             ))}
             <a
-              href={GITHUB_ISSUES_URL}
-              target="_blank"
-              rel="noopener noreferrer"
+              href={FEEDBACK_EMAIL}
               className="text-sm text-slate-400 hover:text-white transition-colors"
             >
               反馈
