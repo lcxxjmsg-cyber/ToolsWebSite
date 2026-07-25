@@ -6,10 +6,9 @@ import type { ResizeSettings } from '../types/index';
 interface ResizeModalProps {
   isOpen: boolean;
   onClose: () => void;
-  applyToAll?: boolean;
 }
 
-export default function ResizeModal({ isOpen, onClose, applyToAll = false }: ResizeModalProps) {
+export default function ResizeModal({ isOpen, onClose }: ResizeModalProps) {
   const { selectedTaskId, tasks, updateTaskSettings, updateAllTasksSettings } = useTaskStore();
   const selectedTask = tasks.find((t) => t.id === selectedTaskId);
 
@@ -110,11 +109,9 @@ export default function ResizeModal({ isOpen, onClose, applyToAll = false }: Res
       ...(mode === 'fit' ? { fitWidth, fitHeight, fitMode } : {}),
     };
     updateTaskSettings(selectedTaskId, { resize: settings });
-    if (applyToAll) {
-      updateAllTasksSettings({ resize: settings });
-    }
+    updateAllTasksSettings({ resize: settings });
     onClose();
-  }, [selectedTaskId, mode, percent, width, height, lockAspectRatio, fitWidth, fitHeight, fitMode, applyToAll, updateTaskSettings, updateAllTasksSettings, onClose]);
+  }, [selectedTaskId, mode, percent, width, height, lockAspectRatio, fitWidth, fitHeight, fitMode, updateTaskSettings, updateAllTasksSettings, onClose]);
 
   const handleReset = () => {
     setPercent(100);

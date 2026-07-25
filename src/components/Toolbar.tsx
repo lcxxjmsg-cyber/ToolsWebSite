@@ -1,6 +1,5 @@
 import { useState, useCallback, useRef } from 'react';
 import {
-  ArrowLeftRight,
   Zap,
   Crop,
   Maximize2,
@@ -14,7 +13,7 @@ import {
   RotateCcw,
 } from 'lucide-react';
 import type { ImageFormat, ToolMode } from '../types/index';
-import { SUPPORTED_OUTPUT_FORMATS, DEFAULT_TASK_SETTINGS } from '../types/index';
+import { SUPPORTED_OUTPUT_FORMATS } from '../types/index';
 import { useTaskStore } from '../store/taskStore';
 import { processImage } from '../utils/imageProcessor';
 import { createZipFromResults } from '../utils/zipUtils';
@@ -23,11 +22,10 @@ import { createZipFromResults } from '../utils/zipUtils';
 interface ToolConfig {
   mode: ToolMode;
   label: string;
-  icon: typeof ArrowLeftRight;
+  icon: typeof Zap;
 }
 
 const TOOLS: ToolConfig[] = [
-  { mode: 'convert', label: '格式转换', icon: ArrowLeftRight },
   { mode: 'compress', label: '压缩', icon: Zap },
   { mode: 'crop', label: '裁剪', icon: Crop },
   { mode: 'resize', label: '调整尺寸', icon: Maximize2 },
@@ -57,8 +55,6 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
     tasks,
     isProcessing,
     overallProgress,
-    applyToAll,
-    setApplyToAll,
     updateAllTasksSettings,
     startProcessing,
     finishProcessing,
@@ -85,9 +81,7 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
   const handleFormatSelect = (fmt: ImageFormat) => {
     setOutputFormat(fmt);
     setFormatDropdownOpen(false);
-    if (applyToAll) {
-      updateAllTasksSettings({ outputFormat: fmt });
-    }
+    updateAllTasksSettings({ outputFormat: fmt });
   };
 
   const handleStartProcessing = useCallback(async () => {
@@ -230,7 +224,7 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
               className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 text-sm font-medium text-slate-700 dark:text-slate-200 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
               title="点击选择输出格式"
             >
-              转为: {FORMAT_LABELS[outputFormat] ?? outputFormat.toUpperCase()}
+              输出格式: {FORMAT_LABELS[outputFormat] ?? outputFormat.toUpperCase()}
               <svg className="w-3.5 h-3.5 text-slate-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
                 <polyline points="6,9 12,15 18,9" />
               </svg>
@@ -255,45 +249,7 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
             )}
           </div>
 
-          <label className="flex items-center gap-2 text-sm text-slate-600 dark:text-slate-400 cursor-pointer select-none">
-            <div className="relative">
-              <input
-                type="checkbox"
-                checked={applyToAll}
-                onChange={() => {
-                  const next = !applyToAll;
-                  setApplyToAll(next);
-                  if (next) {
-                    updateAllTasksSettings({
-                      outputFormat,
-                      activeTool,
-                    });
-                  }
-                }}
-                className="sr-only"
-              />
-              <div
-                className={`w-9 h-5 rounded-full transition-colors ${
-                  applyToAll ? 'bg-brand-500' : 'bg-slate-300 dark:bg-slate-600'
-                }`}
-              >
-                <div
-                  className={`w-4 h-4 rounded-full bg-white shadow-sm transition-transform mt-0.5 ${
-                    applyToAll ? 'translate-x-4 ml-0.5' : 'translate-x-0.5'
-                  }`}
-                />
-              </div>
-            </div>
-            应用到全部
-            <span className="text-xs text-slate-400 ml-1">(将当前设置应用到所有任务)</span>
-          </label>
 
-          <button
-            onClick={() => updateAllTasksSettings({ ...DEFAULT_TASK_SETTINGS })}
-            className="px-3 py-1.5 rounded-lg bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-sm text-slate-600 dark:text-slate-400 transition-colors"
-          >
-            重置设置
-          </button>
 
           {isProcessing && (
             <div className="flex items-center gap-3 ml-auto">

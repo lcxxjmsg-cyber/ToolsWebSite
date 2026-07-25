@@ -6,7 +6,6 @@ import type { CompressSettings } from '../types/index';
 interface CompressModalProps {
   isOpen: boolean;
   onClose: () => void;
-  applyToAll?: boolean;
 }
 
 function getQualityColor(q: number) {
@@ -21,7 +20,7 @@ function getQualityBg(q: number) {
   return 'bg-red-500';
 }
 
-export default function CompressModal({ isOpen, onClose, applyToAll = false }: CompressModalProps) {
+export default function CompressModal({ isOpen, onClose }: CompressModalProps) {
   const { selectedTaskId, tasks, updateTaskSettings, updateAllTasksSettings } = useTaskStore();
   const selectedTask = tasks.find((t) => t.id === selectedTaskId);
 
@@ -65,11 +64,9 @@ export default function CompressModal({ isOpen, onClose, applyToAll = false }: C
       ...(mode === 'targetSize' ? { targetSizeKB } : {}),
     };
     updateTaskSettings(selectedTaskId, { compress: settings });
-    if (applyToAll) {
-      updateAllTasksSettings({ compress: settings });
-    }
+    updateAllTasksSettings({ compress: settings });
     onClose();
-  }, [selectedTaskId, mode, quality, targetSizeKB, applyToAll, updateTaskSettings, updateAllTasksSettings, onClose]);
+  }, [selectedTaskId, mode, quality, targetSizeKB, updateTaskSettings, updateAllTasksSettings, onClose]);
 
   if (!isOpen) return null;
 

@@ -6,10 +6,9 @@ import type { BorderSettings } from '../types/index';
 interface BorderModalProps {
   isOpen: boolean;
   onClose: () => void;
-  applyToAll?: boolean;
 }
 
-export default function BorderModal({ isOpen, onClose, applyToAll = false }: BorderModalProps) {
+export default function BorderModal({ isOpen, onClose }: BorderModalProps) {
   const { selectedTaskId, tasks, updateTaskSettings, updateAllTasksSettings } = useTaskStore();
   const selectedTask = tasks.find((t) => t.id === selectedTaskId);
 
@@ -53,11 +52,9 @@ export default function BorderModal({ isOpen, onClose, applyToAll = false }: Bor
       radius,
     };
     updateTaskSettings(selectedTaskId, { border: settings });
-    if (applyToAll) {
-      updateAllTasksSettings({ border: settings });
-    }
+    updateAllTasksSettings({ border: settings });
     onClose();
-  }, [selectedTaskId, width, color, radius, applyToAll, updateTaskSettings, updateAllTasksSettings, onClose]);
+  }, [selectedTaskId, width, color, radius, updateTaskSettings, updateAllTasksSettings, onClose]);
 
   if (!isOpen) return null;
 

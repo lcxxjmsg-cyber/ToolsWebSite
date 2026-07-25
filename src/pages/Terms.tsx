@@ -46,7 +46,7 @@ const SECTIONS = [
     icon: FileText,
     title: '条款修改',
     content:
-      '我们保留随时修改本使用条款的权利。条款的重大变更将通过以下方式通知：网站页面的公告栏更新、GitHub 仓库的 Release Notes。修改后的条款自发布之日起生效。如果您在条款修改后继续使用本工具，即表示您接受修改后的条款。建议您定期查阅本页面以了解最新的使用条款内容。',
+      '我们保留随时修改本使用条款的权利。条款的重大变更将通过以下方式通知：网站页面的公告栏更新。修改后的条款自发布之日起生效。如果您在条款修改后继续使用本工具，即表示您接受修改后的条款。建议您定期查阅本页面以了解最新的使用条款内容。',
   },
 ];
 
@@ -117,7 +117,7 @@ export default function Terms() {
           {/* Footer Note */}
           <div className="mt-10 text-center space-y-2">
             <p className="text-xs text-slate-400 dark:text-slate-500">
-              如果您对本使用条款有任何疑问，请通过 GitHub Issues 联系我们。
+              如果您对本使用条款有任何疑问，请发送邮件至 anony.neatly471@passfwd.com
             </p>
             <p className="text-xs text-slate-400 dark:text-slate-500">
               本使用条款的最终解释权归 ImageToolbox 开发者所有。

@@ -6,7 +6,6 @@ import type { CropSettings } from '../types/index';
 interface CropModalProps {
   isOpen: boolean;
   onClose: () => void;
-  applyToAll?: boolean;
 }
 
 const PRESET_RATIOS: { label: string; value: number | null }[] = [
@@ -24,7 +23,7 @@ function clamp(val: number, min: number, max: number) {
   return Math.max(min, Math.min(max, val));
 }
 
-export default function CropModal({ isOpen, onClose, applyToAll = false }: CropModalProps) {
+export default function CropModal({ isOpen, onClose }: CropModalProps) {
   const { selectedTaskId, tasks, updateTaskSettings, updateAllTasksSettings } = useTaskStore();
   const selectedTask = tasks.find((t) => t.id === selectedTaskId);
   const thumbnail = selectedTask?.thumbnail ?? '';
@@ -491,11 +490,9 @@ export default function CropModal({ isOpen, onClose, applyToAll = false }: CropM
       aspectRatio: presetRatio ?? undefined,
     };
     updateTaskSettings(selectedTaskId, { crop: settings });
-    if (applyToAll) {
-      updateAllTasksSettings({ crop: settings });
-    }
+    updateAllTasksSettings({ crop: settings });
     onClose();
-  }, [selectedTaskId, cropX, cropY, cropW, cropH, presetRatio, applyToAll, updateTaskSettings, updateAllTasksSettings, onClose]);
+  }, [selectedTaskId, cropX, cropY, cropW, cropH, presetRatio, updateTaskSettings, updateAllTasksSettings, onClose]);
 
   if (!isOpen) return null;
 

@@ -7,7 +7,6 @@ import { DEFAULT_FILTER_SETTINGS } from '../types/index';
 interface FilterModalProps {
   isOpen: boolean;
   onClose: () => void;
-  applyToAll?: boolean;
 }
 
 interface FilterSlider {
@@ -45,7 +44,7 @@ function buildFilterString(f: FilterSettings): string {
   return parts.join(' ');
 }
 
-export default function FilterModal({ isOpen, onClose, applyToAll = false }: FilterModalProps) {
+export default function FilterModal({ isOpen, onClose }: FilterModalProps) {
   const { selectedTaskId, tasks, updateTaskSettings, updateAllTasksSettings } = useTaskStore();
   const selectedTask = tasks.find((t) => t.id === selectedTaskId);
 
@@ -86,11 +85,9 @@ export default function FilterModal({ isOpen, onClose, applyToAll = false }: Fil
   const handleApply = useCallback(() => {
     if (!selectedTaskId) return;
     updateTaskSettings(selectedTaskId, { filter });
-    if (applyToAll) {
-      updateAllTasksSettings({ filter });
-    }
+    updateAllTasksSettings({ filter });
     onClose();
-  }, [selectedTaskId, filter, applyToAll, updateTaskSettings, updateAllTasksSettings, onClose]);
+  }, [selectedTaskId, filter, updateTaskSettings, updateAllTasksSettings, onClose]);
 
   const filterCss = buildFilterString(filter);
 

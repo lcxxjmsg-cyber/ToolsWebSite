@@ -6,7 +6,6 @@ import type { WatermarkSettings } from '../types/index';
 interface WatermarkModalProps {
   isOpen: boolean;
   onClose: () => void;
-  applyToAll?: boolean;
 }
 
 type WatermarkPosition = WatermarkSettings['position'];
@@ -30,7 +29,7 @@ function getPositionStyle(pos: WatermarkPosition): React.CSSProperties {
   }
 }
 
-export default function WatermarkModal({ isOpen, onClose, applyToAll = false }: WatermarkModalProps) {
+export default function WatermarkModal({ isOpen, onClose }: WatermarkModalProps) {
   const { selectedTaskId, tasks, updateTaskSettings, updateAllTasksSettings } = useTaskStore();
   const selectedTask = tasks.find((t) => t.id === selectedTaskId);
 
@@ -106,11 +105,9 @@ export default function WatermarkModal({ isOpen, onClose, applyToAll = false }: 
       imageScale,
     };
     updateTaskSettings(selectedTaskId, { watermark: settings });
-    if (applyToAll) {
-      updateAllTasksSettings({ watermark: settings });
-    }
+    updateAllTasksSettings({ watermark: settings });
     onClose();
-  }, [selectedTaskId, type, text, fontSize, fontColor, opacity, position, imageUrl, imageScale, applyToAll, updateTaskSettings, updateAllTasksSettings, onClose]);
+  }, [selectedTaskId, type, text, fontSize, fontColor, opacity, position, imageUrl, imageScale, updateTaskSettings, updateAllTasksSettings, onClose]);
 
   if (!isOpen) return null;
 
@@ -133,7 +130,7 @@ export default function WatermarkModal({ isOpen, onClose, applyToAll = false }: 
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">选择水印类型并调整参数</p>
 
         {selectedTask?.thumbnail && (
-          <div className="mt-4 flex-shrink-0 flex items-center justify-center bg-slate-100 dark:bg-slate-800 rounded-xl p-3 relative overflow-hidden" style={{ minHeight: 160 }}>
+          <div className="mt-4 flex-shrink-0 flex items-center justify-center bg-slate-100 dark:bg-slate-800 rounded-xl p-3 relative" style={{ minHeight: 160 }}>
             <img
               src={selectedTask.thumbnail}
               alt="预览底图"

@@ -9,7 +9,6 @@ interface TaskStore {
   isProcessing: boolean;
   overallProgress: number;
   selectedTaskId: string | null;
-  applyToAll: boolean;
 
   addTasks: (files: File[]) => Promise<void>;
   removeTask: (id: string) => void;
@@ -28,7 +27,6 @@ interface TaskStore {
   setSelectedTaskId: (id: string | null) => void;
   resetResults: () => void;
   replaceWithResults: () => void;
-  setApplyToAll: (value: boolean) => void;
 }
 
 export const useTaskStore = create<TaskStore>((set, get) => ({
@@ -36,7 +34,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
   isProcessing: false,
   overallProgress: 0,
   selectedTaskId: null,
-  applyToAll: true,
 
   addTasks: async (files: File[]) => {
     const newTasks: TaskItem[] = [];
@@ -209,10 +206,6 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       isProcessing: false,
       overallProgress: 0,
     }));
-  },
-
-  setApplyToAll: (value: boolean) => {
-    set({ applyToAll: value });
   },
 
   replaceWithResults: () => {
