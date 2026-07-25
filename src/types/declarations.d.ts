@@ -98,3 +98,18 @@ declare module 'html2canvas' {
   function html2canvas(element: HTMLElement, options?: Options): Promise<HTMLCanvasElement>;
   export default html2canvas;
 }
+
+declare module 'pdfjs-dist' {
+  export const GlobalWorkerOptions: { workerSrc: string };
+  export function getDocument(opts: { data: ArrayBuffer; url?: string }): {
+    promise: Promise<PDFDocumentProxy>;
+  };
+  interface PDFDocumentProxy {
+    numPages: number;
+    getPage(num: number): Promise<PDFPageProxy>;
+  }
+  interface PDFPageProxy {
+    getViewport(opts: { scale: number }): { width: number; height: number };
+    render(opts: { canvasContext: CanvasRenderingContext2D; viewport: { width: number; height: number } }): { promise: Promise<void> };
+  }
+}

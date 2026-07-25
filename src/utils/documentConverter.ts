@@ -1,4 +1,4 @@
-// Document-to-image converter: TXT, HTML, DOCX, XLSX → PNG(s) with pagination
+// Document-to-image converter: TXT, HTML, DOCX, XLSX, PDF → PNG(s) with pagination
 
 const PAGE_WIDTH = 794;
 const PAGE_HEIGHT = 1122;
@@ -6,9 +6,9 @@ const SCALE = 2;
 
 export function isDocumentFile(file: File): boolean {
   const ext = file.name.split('.').pop()?.toLowerCase() || '';
-  const docExts = ['txt', 'html', 'htm', 'docx', 'xlsx', 'xls'];
+  const docExts = ['txt', 'html', 'htm', 'docx', 'xlsx', 'xls', 'pdf'];
   if (docExts.includes(ext)) return true;
-  if (file.type === 'text/plain' || file.type === 'text/html') return true;
+  if (file.type === 'text/plain' || file.type === 'text/html' || file.type === 'application/pdf') return true;
   if (file.type.includes('officedocument') || file.type.includes('spreadsheet')) return true;
   return false;
 }
@@ -184,6 +184,28 @@ async function xlsxToFile(file: File): Promise<File[]> {
   return allFiles;
 }
 
+async function pdfToFile(file: File): Promise<File[]> {
+  const pdfjsLib = await import('pdfjs-dist');
+  pdfjsLib.GlobalWorkerOptions.workerSrc = new URL('pdfjs-dist/build/pdf.worker.mjs', import.meta.url).toString();
+
+  const arrayBuffer = await file.arrayBuffer();
+  const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+  const files: File[] = [];
+
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const viewport = page.getViewport({ scale: SCALE });
+    const canvas = document.createElement('canvas');
+    canvas.width = viewport.width;
+    canvas.height = viewport.height;
+    const ctx = canvas.getContext('2d')!;
+    await page.render({ canvasContext: ctx, viewport }).promise;
+    files.push(canvasToFileSync(canvas, `page_${i}.png`));
+  }
+
+  return files;
+}
+
 export async function convertDocumentToImage(file: File): Promise<File[]> {
   const ext = file.name.split('.').pop()?.toLowerCase() || '';
   const baseName = file.name.replace(/\.[^.]+$/, '');
@@ -203,6 +225,9 @@ export async function convertDocumentToImage(file: File): Promise<File[]> {
     case 'xlsx':
     case 'xls':
       pages = await xlsxToFile(file);
+      break;
+    case 'pdf':
+      pages = await pdfToFile(file);
       break;
     default:
       throw new Error(`Unsupported document format: ${ext}`);
