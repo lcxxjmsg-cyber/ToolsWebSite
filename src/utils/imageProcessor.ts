@@ -8,6 +8,7 @@ import type {
   TaskSettings,
 } from '../types/index';
 import { FORMAT_MIME_MAP } from '../types/index';
+import { getFileExtension } from './formatUtils';
 
 let heic2any: ((args: { blob: Blob; toType?: string; quality?: number }) => Promise<Blob | Blob[]>) | null = null;
 
@@ -461,6 +462,23 @@ export async function processImage(
   file: File,
   settings: TaskSettings,
 ): Promise<{ blob: Blob; format: string }> {
+  const inputExt = getFileExtension(file.name);
+  const inputFormat = inputExt === 'jpg' ? 'jpeg' : inputExt;
+
+  const isNoOp =
+    !settings.crop &&
+    !settings.resize &&
+    !hasActiveFilters(settings.filter) &&
+    !settings.watermark &&
+    (!settings.border || settings.border.width <= 0) &&
+    settings.outputFormat === inputFormat &&
+    settings.compress.mode === 'quality' &&
+    settings.compress.quality >= 92;
+
+  if (isNoOp) {
+    return { blob: file, format: getMimeType(inputFormat) };
+  }
+
   let img: HTMLImageElement;
   if (isHeicFile(file)) {
     const pngBlob = await decodeHeic(file);

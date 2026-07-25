@@ -75,9 +75,9 @@ const FAQ_ITEMS: FAQItem[] = [
       '理论上没有文件大小限制。但由于所有处理在浏览器内存中进行，实际处理能力受到您的设备内存和浏览器限制。对于超大图片（例如超过 10000x10000 像素或文件超过 100MB），处理速度可能会较慢，甚至可能因内存不足而失败。建议将超大图片分批处理。',
   },
   {
-    question: '为什么我的 HEIC/HEIF 图片无法处理？',
+    question: '支持 HEIC/HEIF 格式吗？',
     answer:
-      'HEIC/HEIF 格式需要额外的解码器支持。部分浏览器（特别是 Safari）原生支持 HEIC 解码，但 Chrome 和 Firefox 可能需要额外加载解码 WebAssembly 模块。如果您遇到 HEIC 处理问题，建议先将 HEIC 图片转换为通用格式（如 JPEG），再使用本工具进行后续处理。我们正在改进 HEIC 支持，届时会提供更完善的解码体验。',
+      '支持。ImageToolbox 已内置 HEIC/HEIF 解码器，上传 HEIC 或 HEIF 图片后会自动解码为通用格式再进行后续处理。首次加载 HEIC 解码器需要下载约 1.3MB 的 WebAssembly 模块，后续使用无需再次下载。',
   },
   {
     question: '支持 SVG 文件吗？',
