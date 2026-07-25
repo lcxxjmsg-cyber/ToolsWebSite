@@ -117,10 +117,8 @@ export default function MosaicModal({ isOpen, onClose }: MosaicModalProps) {
     isDrawingRef.current = false;
   }, []);
 
-  const canvasEl = canvasRef.current;
-
   useEffect(() => {
-    const canvas = canvasEl;
+    const canvas = canvasRef.current;
     if (!canvas) return;
 
     const handleTouchStart = (e: globalThis.TouchEvent) => {
@@ -151,7 +149,7 @@ export default function MosaicModal({ isOpen, onClose }: MosaicModalProps) {
       canvas.removeEventListener('touchmove', handleTouchMove);
       canvas.removeEventListener('touchend', handleTouchEnd);
     };
-  }, [canvasEl, drawAt]);
+  }, [imageLoaded, drawAt]);
 
   const handleReset = useCallback(() => {
     const canvas = canvasRef.current;

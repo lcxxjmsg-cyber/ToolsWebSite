@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { X, FlipHorizontal, FlipVertical, FlipHorizontal2 } from 'lucide-react';
 import { useTaskStore } from '../store/taskStore';
+import { fileToImage } from '../utils/imageProcessor';
+import JSZip from 'jszip';
 
 interface MirrorModalProps {
   isOpen: boolean;
@@ -19,12 +21,12 @@ function mirrorImage(img: HTMLImageElement, horizontal: boolean, vertical: boole
 }
 
 export default function MirrorModal({ isOpen, onClose }: MirrorModalProps) {
-  const { selectedTaskId, tasks } = useTaskStore();
-  const selectedTask = tasks.find((t) => t.id === selectedTaskId);
+  const { tasks } = useTaskStore();
 
   const [horizontal, setHorizontal] = useState(false);
   const [vertical, setVertical] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [processing, setProcessing] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const generatingRef = useRef(false);
 
@@ -47,7 +49,7 @@ export default function MirrorModal({ isOpen, onClose }: MirrorModalProps) {
   }, [isOpen]);
 
   useEffect(() => {
-    if (!isOpen || !selectedTask) {
+    if (!isOpen || tasks.length === 0) {
       setPreviewUrl(null);
       return;
     }
@@ -56,7 +58,7 @@ export default function MirrorModal({ isOpen, onClose }: MirrorModalProps) {
       if (generatingRef.current) return;
       generatingRef.current = true;
       try {
-        const img = await loadImage(URL.createObjectURL(selectedTask.file));
+        const img = await fileToImage(tasks[0].file);
         if (cancelled) return;
         const blob = await mirrorImage(img, horizontal, vertical);
         if (cancelled) return;
@@ -86,24 +88,33 @@ export default function MirrorModal({ isOpen, onClose }: MirrorModalProps) {
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [isOpen, selectedTask, horizontal, vertical]);
+  }, [isOpen, tasks, horizontal, vertical]);
 
   const handleApply = useCallback(async () => {
-    if (!selectedTask || !selectedTaskId) return;
+    if (tasks.length === 0) return;
+    setProcessing(true);
     try {
-      const img = await loadImage(URL.createObjectURL(selectedTask.file));
-      const blob = await mirrorImage(img, horizontal, vertical);
-      const url = URL.createObjectURL(blob);
+      const zip = new JSZip();
+      for (const task of tasks) {
+        const img = await fileToImage(task.file);
+        const blob = await mirrorImage(img, horizontal, vertical);
+        const name = task.fileName.replace(/\.[^.]+$/, '') + '.png';
+        zip.file(name, blob);
+      }
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(zipBlob);
       const a = document.createElement('a');
-      a.download = `mirrored_${selectedTask.fileName.replace(/\.[^.]+$/, '')}.png`;
+      a.download = 'mirrored_images.zip';
       a.href = url;
       a.click();
       URL.revokeObjectURL(url);
     } catch {
       // ignore
+    } finally {
+      setProcessing(false);
     }
     onClose();
-  }, [selectedTask, selectedTaskId, horizontal, vertical, onClose]);
+  }, [tasks, horizontal, vertical, onClose]);
 
   if (!isOpen) return null;
 
@@ -123,7 +134,7 @@ export default function MirrorModal({ isOpen, onClose }: MirrorModalProps) {
         </button>
 
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">镜像翻转</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">水平或垂直翻转图片</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">将对所有 {tasks.length} 张图片进行镜像翻转</p>
 
         <div className="mt-6 space-y-5">
           <div className="flex rounded-xl bg-slate-100 dark:bg-slate-800 p-1 gap-1">
@@ -177,6 +188,19 @@ export default function MirrorModal({ isOpen, onClose }: MirrorModalProps) {
               className="w-full h-auto"
             />
           </div>
+
+          {tasks.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {tasks.map((task) => (
+                <img
+                  key={task.id}
+                  src={task.thumbnail}
+                  alt={task.fileName}
+                  className="w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-slate-700 flex-shrink-0"
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
@@ -185,24 +209,13 @@ export default function MirrorModal({ isOpen, onClose }: MirrorModalProps) {
           </button>
           <button
             onClick={handleApply}
-            disabled={!selectedTaskId}
+            disabled={tasks.length === 0 || processing}
             className="btn-primary text-sm py-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            镜像并下载
+            {processing ? '处理中...' : '镜像并下载'}
           </button>
         </div>
       </div>
     </div>
   );
-}
-
-function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => {
-      resolve(img);
-    };
-    img.onerror = reject;
-    img.src = src;
-  });
 }

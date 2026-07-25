@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback, useRef } from 'react';
 import { X, Download, Pipette } from 'lucide-react';
 import { useTaskStore } from '../store/taskStore';
 import { fileToImage } from '../utils/imageProcessor';
+import JSZip from 'jszip';
 
 interface RemoveBgModalProps {
   isOpen: boolean;
@@ -43,13 +44,13 @@ const checkerboardStyle: React.CSSProperties = {
 };
 
 export default function RemoveBgModal({ isOpen, onClose }: RemoveBgModalProps) {
-  const { selectedTaskId, tasks } = useTaskStore();
-  const selectedTask = tasks.find((t) => t.id === selectedTaskId);
+  const { tasks } = useTaskStore();
 
   const [targetColor, setTargetColor] = useState('#ffffff');
   const [tolerance, setTolerance] = useState(30);
   const [previewUrl, setPreviewUrl] = useState('');
   const [eyedropperActive, setEyedropperActive] = useState(false);
+  const [processing, setProcessing] = useState(false);
 
   const previewCanvasRef = useRef<HTMLCanvasElement>(null);
   const imgRef = useRef<HTMLImageElement | null>(null);
@@ -62,20 +63,6 @@ export default function RemoveBgModal({ isOpen, onClose }: RemoveBgModalProps) {
       b: parseInt(h.substring(4, 6), 16),
     };
   }, []);
-
-  const generatePreview = useCallback(async () => {
-    const img = imgRef.current;
-    if (!img) return;
-    try {
-      const blob = await removeBackground(img, parseColor(targetColor), tolerance);
-      const url = URL.createObjectURL(blob);
-      const prev = previewUrl;
-      setPreviewUrl(url);
-      if (prev) URL.revokeObjectURL(prev);
-    } catch {
-      // ignore preview errors
-    }
-  }, [targetColor, tolerance, parseColor, previewUrl]);
 
   useEffect(() => {
     if (!isOpen) return;
@@ -101,23 +88,40 @@ export default function RemoveBgModal({ isOpen, onClose }: RemoveBgModalProps) {
     setTargetColor('#ffffff');
     setTolerance(30);
 
-    if (!isOpen || !selectedTask) return;
+    if (!isOpen || tasks.length === 0) return;
 
-    fileToImage(selectedTask.file).then((img) => {
+    fileToImage(tasks[0].file).then((img) => {
       imgRef.current = img;
       const canvas = previewCanvasRef.current;
       if (!canvas) return;
       canvas.width = img.naturalWidth;
       canvas.height = img.naturalHeight;
-        const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
-        ctx.drawImage(img, 0, 0);
-        generatePreview();
+      const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+      ctx.drawImage(img, 0, 0);
+      updatePreview(img);
     });
-  }, [isOpen, selectedTask, generatePreview]);
+
+    function updatePreview(img: HTMLImageElement) {
+      removeBackground(img, parseColor(targetColor), tolerance).then((blob) => {
+        const url = URL.createObjectURL(blob);
+        const prev = previewUrl;
+        setPreviewUrl(url);
+        if (prev) URL.revokeObjectURL(prev);
+      }).catch(() => {});
+    }
+  }, [isOpen, tasks]);
 
   useEffect(() => {
-    generatePreview();
-  }, [targetColor, tolerance, generatePreview]);
+    const img = imgRef.current;
+    if (!img) return;
+    removeBackground(img, parseColor(targetColor), tolerance).then((blob) => {
+      const url = URL.createObjectURL(blob);
+      setPreviewUrl((prev) => {
+        if (prev) URL.revokeObjectURL(prev);
+        return url;
+      });
+    }).catch(() => {});
+  }, [targetColor, tolerance]);
 
   const handleEyedropper = useCallback((e: React.MouseEvent<HTMLCanvasElement>) => {
     if (!eyedropperActive) return;
@@ -137,17 +141,29 @@ export default function RemoveBgModal({ isOpen, onClose }: RemoveBgModalProps) {
   }, [eyedropperActive]);
 
   const handleDownload = useCallback(async () => {
-    const img = imgRef.current;
-    if (!img) return;
-    const blob = await removeBackground(img, parseColor(targetColor), tolerance);
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const baseName = selectedTask?.fileName.replace(/\.[^.]+$/, '') || 'image';
-    a.download = `${baseName}_nobg.png`;
-    a.href = url;
-    a.click();
-    URL.revokeObjectURL(url);
-  }, [targetColor, tolerance, parseColor, selectedTask]);
+    if (tasks.length === 0) return;
+    setProcessing(true);
+    try {
+      const zip = new JSZip();
+      for (const task of tasks) {
+        const img = await fileToImage(task.file);
+        const blob = await removeBackground(img, parseColor(targetColor), tolerance);
+        const name = task.fileName.replace(/\.[^.]+$/, '') + '.png';
+        zip.file(name, blob);
+      }
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(zipBlob);
+      const a = document.createElement('a');
+      a.download = 'nobg_images.zip';
+      a.href = url;
+      a.click();
+      URL.revokeObjectURL(url);
+    } catch {
+      // ignore
+    } finally {
+      setProcessing(false);
+    }
+  }, [tasks, targetColor, tolerance, parseColor]);
 
   if (!isOpen) return null;
 
@@ -167,9 +183,9 @@ export default function RemoveBgModal({ isOpen, onClose }: RemoveBgModalProps) {
         </button>
 
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">去除背景色</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">选择要移除的纯色背景</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">将对所有 {tasks.length} 张图片去除背景色</p>
 
-        {!selectedTask ? (
+        {tasks.length === 0 ? (
           <div className="mt-6 text-center py-12 text-slate-400">
             请先选择一张图片
           </div>
@@ -235,16 +251,30 @@ export default function RemoveBgModal({ isOpen, onClose }: RemoveBgModalProps) {
               )}
             </div>
 
+            {tasks.length > 1 && (
+              <div className="flex gap-2 overflow-x-auto pb-2">
+                {tasks.map((task) => (
+                  <img
+                    key={task.id}
+                    src={task.thumbnail}
+                    alt={task.fileName}
+                    className="w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-slate-700 flex-shrink-0"
+                  />
+                ))}
+              </div>
+            )}
+
             <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
               <button onClick={onClose} className="btn-secondary text-sm py-2.5">
                 取消
               </button>
               <button
                 onClick={handleDownload}
-                className="btn-primary text-sm py-2.5 flex items-center gap-2"
+                disabled={tasks.length === 0 || processing}
+                className="btn-primary text-sm py-2.5 flex items-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <Download className="w-4 h-4" />
-                下载透明 PNG
+                {processing ? '处理中...' : '下载透明 PNG'}
               </button>
             </div>
           </div>

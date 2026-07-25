@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
-import { X, Download, Images } from 'lucide-react';
+import { X, Download } from 'lucide-react';
 import { useTaskStore } from '../store/taskStore';
+import { fileToImage } from '../utils/imageProcessor';
 import JSZip from 'jszip';
 
 interface SplitModalProps {
@@ -32,26 +33,13 @@ function canvasToBlob(canvas: HTMLCanvasElement): Promise<Blob> {
   });
 }
 
-async function createZip(tiles: HTMLCanvasElement[], rows: number, cols: number): Promise<Blob> {
-  const zip = new JSZip();
-  let idx = 0;
-  for (let r = 0; r < rows; r++) {
-    for (let c = 0; c < cols; c++) {
-      const blob = await canvasToBlob(tiles[idx]);
-      zip.file(`tile_r${r + 1}_c${c + 1}.png`, blob);
-      idx++;
-    }
-  }
-  return await zip.generateAsync({ type: 'blob' });
-}
-
 export default function SplitModal({ isOpen, onClose }: SplitModalProps) {
-  const { selectedTaskId, tasks } = useTaskStore();
-  const selectedTask = tasks.find((t) => t.id === selectedTaskId);
+  const { tasks } = useTaskStore();
 
   const [rows, setRows] = useState(2);
   const [cols, setCols] = useState(2);
   const [originalImg, setOriginalImg] = useState<HTMLImageElement | null>(null);
+  const [processing, setProcessing] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -73,48 +61,52 @@ export default function SplitModal({ isOpen, onClose }: SplitModalProps) {
   }, [isOpen]);
 
   useEffect(() => {
-    if (!isOpen || !selectedTask) {
+    if (!isOpen || tasks.length === 0) {
       setOriginalImg(null);
       return;
     }
-    const img = new Image();
-    img.onload = () => setOriginalImg(img);
-    img.onerror = () => setOriginalImg(null);
-    img.src = URL.createObjectURL(selectedTask.file);
-    return () => { if (img.src) URL.revokeObjectURL(img.src); };
-  }, [isOpen, selectedTask]);
+    let cancelled = false;
+    fileToImage(tasks[0].file).then((img) => {
+      if (!cancelled) setOriginalImg(img);
+    }).catch(() => {
+      if (!cancelled) setOriginalImg(null);
+    });
+    return () => { cancelled = true; };
+  }, [isOpen, tasks]);
 
-  const handleSplitAndDownload = useCallback(async () => {
-    if (!originalImg) return;
-    const tiles = splitImage(originalImg, rows, cols);
-    const zipBlob = await createZip(tiles, rows, cols);
-    const url = URL.createObjectURL(zipBlob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'split-tiles.zip';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }, [originalImg, rows, cols]);
-
-  const handleDownloadSingle = useCallback(async () => {
-    if (!originalImg) return;
-    const tiles = splitImage(originalImg, rows, cols);
-    for (let i = 0; i < tiles.length; i++) {
-      const blob = await canvasToBlob(tiles[i]);
-      const url = URL.createObjectURL(blob);
+  const handleDownload = useCallback(async () => {
+    if (tasks.length === 0) return;
+    setProcessing(true);
+    try {
+      const zip = new JSZip();
+      for (const task of tasks) {
+        const img = await fileToImage(task.file);
+        const tiles = splitImage(img, rows, cols);
+        const folder = zip.folder(task.fileName.replace(/\.[^.]+$/, ''))!;
+        let idx = 0;
+        for (let r = 0; r < rows; r++) {
+          for (let c = 0; c < cols; c++) {
+            const blob = await canvasToBlob(tiles[idx]);
+            folder.file(`tile_r${r + 1}_c${c + 1}.png`, blob);
+            idx++;
+          }
+        }
+      }
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(zipBlob);
       const a = document.createElement('a');
-      const r = Math.floor(i / cols) + 1;
-      const c = (i % cols) + 1;
       a.href = url;
-      a.download = `tile_r${r}_c${c}.png`;
+      a.download = 'split-tiles.zip';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+    } finally {
+      setProcessing(false);
     }
-  }, [originalImg, rows, cols]);
+  }, [tasks, rows, cols]);
+
+  const tileCount = tasks.length * rows * cols;
 
   if (!isOpen) return null;
 
@@ -135,7 +127,7 @@ export default function SplitModal({ isOpen, onClose }: SplitModalProps) {
 
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">切割图片</h2>
         <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">
-          将图片切分为等分的网格块
+          将对所有 {tasks.length} 张图片进行切割
         </p>
 
         <div className="mt-6 space-y-5">
@@ -167,7 +159,7 @@ export default function SplitModal({ isOpen, onClose }: SplitModalProps) {
           {originalImg && (
             <div className="text-sm text-brand-600 dark:text-brand-400 font-medium text-center">
               每块尺寸: {Math.round(originalImg.naturalWidth / cols)} × {Math.round(originalImg.naturalHeight / rows)} px
-              &nbsp;&middot;&nbsp;共 {rows * cols} 块
+              &nbsp;&middot;&nbsp;每张 {rows * cols} 块 &middot; 共 {tileCount} 块
             </div>
           )}
 
@@ -177,9 +169,9 @@ export default function SplitModal({ isOpen, onClose }: SplitModalProps) {
               ref={previewRef}
               className="relative rounded-xl overflow-hidden border border-slate-200 dark:border-slate-700 bg-white"
             >
-              {selectedTask?.thumbnail ? (
+              {tasks.length > 0 && tasks[0].thumbnail ? (
                 <div className="relative">
-                  <img src={selectedTask.thumbnail} alt="preview" className="w-full h-auto block" />
+                  <img src={tasks[0].thumbnail} alt="preview" className="w-full h-auto block" />
                   <svg
                     className="absolute inset-0 w-full h-full"
                     viewBox={`0 0 100 100`}
@@ -211,32 +203,39 @@ export default function SplitModal({ isOpen, onClose }: SplitModalProps) {
                     ))}
                   </svg>
                 </div>
-              ) : (
+              ) : tasks.length > 0 ? (
                 <div className="aspect-video flex items-center justify-center text-sm text-slate-400">
                   无选中图片
+                </div>
+              ) : (
+                <div className="aspect-video flex items-center justify-center text-sm text-slate-400">
+                  无图片
                 </div>
               )}
             </div>
           </div>
 
-          <div className="space-y-2">
-            <button
-              onClick={handleSplitAndDownload}
-              disabled={!originalImg}
-              className="w-full btn-primary text-sm py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Download className="w-4 h-4" />
-              切割并下载 (ZIP)
-            </button>
-            <button
-              onClick={handleDownloadSingle}
-              disabled={!originalImg}
-              className="w-full btn-secondary text-sm py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              <Images className="w-4 h-4" />
-              单个下载
-            </button>
-          </div>
+          {tasks.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {tasks.map((task) => (
+                <img
+                  key={task.id}
+                  src={task.thumbnail}
+                  alt={task.fileName}
+                  className="w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-slate-700 flex-shrink-0"
+                />
+              ))}
+            </div>
+          )}
+
+          <button
+            onClick={handleDownload}
+            disabled={tasks.length === 0 || processing}
+            className="w-full btn-primary text-sm py-2.5 flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+          >
+            <Download className="w-4 h-4" />
+            {processing ? '处理中...' : '切割并下载 (ZIP)'}
+          </button>
         </div>
 
 

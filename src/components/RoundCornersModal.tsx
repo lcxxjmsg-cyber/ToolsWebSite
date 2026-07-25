@@ -1,6 +1,8 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { X, Circle } from 'lucide-react';
 import { useTaskStore } from '../store/taskStore';
+import { fileToImage } from '../utils/imageProcessor';
+import JSZip from 'jszip';
 
 interface RoundCornersModalProps {
   isOpen: boolean;
@@ -41,12 +43,12 @@ function roundCorners(img: HTMLImageElement, radius: number, circular: boolean):
 }
 
 export default function RoundCornersModal({ isOpen, onClose }: RoundCornersModalProps) {
-  const { selectedTaskId, tasks } = useTaskStore();
-  const selectedTask = tasks.find((t) => t.id === selectedTaskId);
+  const { tasks } = useTaskStore();
 
   const [radius, setRadius] = useState(20);
   const [circular, setCircular] = useState(false);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [processing, setProcessing] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const generatingRef = useRef(false);
 
@@ -69,7 +71,7 @@ export default function RoundCornersModal({ isOpen, onClose }: RoundCornersModal
   }, [isOpen]);
 
   useEffect(() => {
-    if (!isOpen || !selectedTask) {
+    if (!isOpen || tasks.length === 0) {
       setPreviewUrl(null);
       return;
     }
@@ -78,7 +80,7 @@ export default function RoundCornersModal({ isOpen, onClose }: RoundCornersModal
       if (generatingRef.current) return;
       generatingRef.current = true;
       try {
-        const img = await loadImage(URL.createObjectURL(selectedTask.file));
+        const img = await fileToImage(tasks[0].file);
         if (cancelled) return;
         const blob = await roundCorners(img, radius, circular);
         if (cancelled) return;
@@ -108,24 +110,33 @@ export default function RoundCornersModal({ isOpen, onClose }: RoundCornersModal
       cancelled = true;
       clearTimeout(timer);
     };
-  }, [isOpen, selectedTask, radius, circular]);
+  }, [isOpen, tasks, radius, circular]);
 
   const handleApply = useCallback(async () => {
-    if (!selectedTask || !selectedTaskId) return;
+    if (tasks.length === 0) return;
+    setProcessing(true);
     try {
-      const img = await loadImage(URL.createObjectURL(selectedTask.file));
-      const blob = await roundCorners(img, radius, circular);
-      const url = URL.createObjectURL(blob);
+      const zip = new JSZip();
+      for (const task of tasks) {
+        const img = await fileToImage(task.file);
+        const blob = await roundCorners(img, radius, circular);
+        const name = task.fileName.replace(/\.[^.]+$/, '') + '.png';
+        zip.file(name, blob);
+      }
+      const zipBlob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(zipBlob);
       const a = document.createElement('a');
-      a.download = `rounded_${selectedTask.fileName.replace(/\.[^.]+$/, '')}.png`;
+      a.download = 'rounded_images.zip';
       a.href = url;
       a.click();
       URL.revokeObjectURL(url);
     } catch {
       // ignore
+    } finally {
+      setProcessing(false);
     }
     onClose();
-  }, [selectedTask, selectedTaskId, radius, circular, onClose]);
+  }, [tasks, radius, circular, onClose]);
 
   if (!isOpen) return null;
 
@@ -145,7 +156,7 @@ export default function RoundCornersModal({ isOpen, onClose }: RoundCornersModal
         </button>
 
         <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-100">圆角 / 裁剪</h2>
-        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">调整图片圆角或裁剪为圆形</p>
+        <p className="text-sm text-slate-500 dark:text-slate-400 mt-1">将对所有 {tasks.length} 张图片进行圆角处理</p>
 
         <div className="mt-6 space-y-5">
           <div className="flex items-center justify-between">
@@ -189,6 +200,19 @@ export default function RoundCornersModal({ isOpen, onClose }: RoundCornersModal
               className="w-full h-auto"
             />
           </div>
+
+          {tasks.length > 1 && (
+            <div className="flex gap-2 overflow-x-auto pb-2">
+              {tasks.map((task) => (
+                <img
+                  key={task.id}
+                  src={task.thumbnail}
+                  alt={task.fileName}
+                  className="w-12 h-12 rounded-lg object-cover border border-slate-200 dark:border-slate-700 flex-shrink-0"
+                />
+              ))}
+            </div>
+          )}
         </div>
 
         <div className="flex justify-end gap-3 mt-6 pt-4 border-t border-slate-200 dark:border-slate-700">
@@ -197,24 +221,13 @@ export default function RoundCornersModal({ isOpen, onClose }: RoundCornersModal
           </button>
           <button
             onClick={handleApply}
-            disabled={!selectedTaskId}
+            disabled={tasks.length === 0 || processing}
             className="btn-primary text-sm py-2.5 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            圆角并下载
+            {processing ? '处理中...' : '圆角并下载'}
           </button>
         </div>
       </div>
     </div>
   );
-}
-
-function loadImage(src: string): Promise<HTMLImageElement> {
-  return new Promise((resolve, reject) => {
-    const img = new Image();
-    img.onload = () => {
-      resolve(img);
-    };
-    img.onerror = reject;
-    img.src = src;
-  });
 }
