@@ -13,6 +13,7 @@ import {
   Loader2,
   RotateCcw,
   CheckCircle2,
+  ScanLine,
 } from 'lucide-react';
 import type { ToolMode } from '../types/index';
 import { useTaskStore } from '../store/taskStore';
@@ -34,6 +35,7 @@ const TOOLS: ToolConfig[] = [
   { mode: 'filter', label: '滤镜', icon: Sparkles },
   { mode: 'watermark', label: '水印', icon: Type },
   { mode: 'border', label: '边框', icon: Square },
+  { mode: 'ocr', label: '文字识别', icon: ScanLine },
 ];
 
 const FORMAT_LABELS: Record<string, string> = {

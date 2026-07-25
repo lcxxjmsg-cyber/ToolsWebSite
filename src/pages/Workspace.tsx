@@ -12,6 +12,7 @@ import ConvertModal from '../components/ConvertModal';
 import FilterModal from '../components/FilterModal';
 import WatermarkModal from '../components/WatermarkModal';
 import BorderModal from '../components/BorderModal';
+import OcrModal from '../components/OcrModal';
 import { useTaskStore } from '../store/taskStore';
 import { useSEO, InjectJSONLD } from '../utils/seo';
 
@@ -115,6 +116,10 @@ export default function Workspace() {
       />
       <BorderModal
         isOpen={activeModal === 'border'}
+        onClose={handleCloseModal}
+      />
+      <OcrModal
+        isOpen={activeModal === 'ocr'}
         onClose={handleCloseModal}
       />
 

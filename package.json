@@ -14,11 +14,13 @@
     "@ffmpeg/util": "^0.12.1",
     "compressorjs": "^1.2.1",
     "heic2any": "^0.0.4",
+    "jspdf": "^4.2.1",
     "jszip": "^3.10.1",
     "lucide-react": "^0.462.0",
     "react": "^19.2.7",
     "react-dom": "^19.2.7",
     "react-router-dom": "^7.1.1",
+    "tesseract.js": "^7.0.0",
     "zustand": "^5.0.2"
   },
   "devDependencies": {

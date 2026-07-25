@@ -9,6 +9,7 @@ import type {
 } from '../types/index';
 import { FORMAT_MIME_MAP } from '../types/index';
 import { getFileExtension } from './formatUtils';
+import { jsPDF } from 'jspdf';
 
 let heic2any: ((args: { blob: Blob; toType?: string; quality?: number }) => Promise<Blob | Blob[]>) | null = null;
 
@@ -473,7 +474,8 @@ export async function processImage(
     (!settings.border || settings.border.width <= 0) &&
     settings.outputFormat === inputFormat &&
     settings.compress.mode === 'quality' &&
-    settings.compress.quality >= 92;
+    settings.compress.quality >= 92 &&
+    settings.outputFormat !== 'pdf';
 
   if (isNoOp) {
     return { blob: file, format: getMimeType(inputFormat) };
@@ -662,6 +664,18 @@ export async function processImage(
     } else {
       ctx.strokeRect(half, half, w - b.width, h - b.width);
     }
+  }
+
+  if (settings.outputFormat === 'pdf') {
+    const pdf = new jsPDF({
+      unit: 'px',
+      format: [canvas.width, canvas.height],
+      orientation: canvas.width > canvas.height ? 'landscape' : 'portrait',
+    });
+    const dataUrl = canvas.toDataURL('image/jpeg', 0.92);
+    pdf.addImage(dataUrl, 'JPEG', 0, 0, canvas.width, canvas.height);
+    const pdfBlob = pdf.output('blob');
+    return { blob: pdfBlob, format: 'application/pdf' };
   }
 
   // Step 6: Compress / convert format

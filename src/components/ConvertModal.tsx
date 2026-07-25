@@ -26,6 +26,7 @@ const FORMAT_INFO: Record<string, FormatInfo> = {
   ico: { label: 'ICO', transparency: true, compression: '无损压缩', lossy: false },
   tiff: { label: 'TIFF', transparency: true, compression: '无损压缩', lossy: false },
   avif: { label: 'AVIF', transparency: true, compression: '有损/无损', lossy: true },
+  pdf: { label: 'PDF', transparency: false, compression: '图片嵌入', lossy: false },
 };
 
 const LOSSY_FORMATS: ImageFormat[] = ['jpeg', 'jpg', 'webp', 'avif'];

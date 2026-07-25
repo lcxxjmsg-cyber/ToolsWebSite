@@ -2,7 +2,7 @@ export type ImageFormat = 'png' | 'jpeg' | 'jpg' | 'webp' | 'gif' | 'bmp' | 'ico
 
 export const SUPPORTED_INPUT_FORMATS: ImageFormat[] = ['png', 'jpeg', 'jpg', 'webp', 'gif', 'bmp', 'ico', 'tiff', 'avif', 'heic', 'heif', 'svg', 'pdf'];
 
-export const SUPPORTED_OUTPUT_FORMATS: ImageFormat[] = ['png', 'jpg', 'webp', 'gif', 'bmp', 'ico', 'tiff', 'avif'];
+export const SUPPORTED_OUTPUT_FORMATS: ImageFormat[] = ['png', 'jpg', 'webp', 'gif', 'bmp', 'ico', 'tiff', 'avif', 'pdf'];
 
 export const FORMAT_MIME_MAP: Record<string, string> = {
   png: 'image/png',
@@ -14,6 +14,7 @@ export const FORMAT_MIME_MAP: Record<string, string> = {
   ico: 'image/x-icon',
   tiff: 'image/tiff',
   avif: 'image/avif',
+  pdf: 'application/pdf',
   heic: 'image/heic',
   heif: 'image/heif',
   svg: 'image/svg+xml',
@@ -75,7 +76,7 @@ export interface BorderSettings {
 
 export type TaskStatus = 'pending' | 'processing' | 'completed' | 'error';
 
-export type ToolMode = 'convert' | 'compress' | 'crop' | 'resize' | 'filter' | 'watermark' | 'border' | 'metadata';
+export type ToolMode = 'convert' | 'compress' | 'crop' | 'resize' | 'filter' | 'watermark' | 'border' | 'metadata' | 'ocr';
 
 export interface TaskSettings {
   outputFormat: ImageFormat;
