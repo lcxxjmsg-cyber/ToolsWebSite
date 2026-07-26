@@ -459,6 +459,92 @@ function hasActiveFilters(settings: FilterSettings): boolean {
   );
 }
 
+function quantizeColors(imageData: ImageData, maxColors: number): ImageData {
+  const pixels = imageData.data;
+  const colorMap = new Map<string, { r: number; g: number; b: number; count: number }>();
+
+  for (let i = 0; i < pixels.length; i += 4) {
+    if (pixels[i + 3] === 0) continue;
+    const key = `${pixels[i]},${pixels[i + 1]},${pixels[i + 2]}`;
+    const existing = colorMap.get(key);
+    if (existing) {
+      existing.count++;
+    } else {
+      colorMap.set(key, { r: pixels[i], g: pixels[i + 1], b: pixels[i + 2], count: 1 });
+    }
+  }
+
+  const colors = Array.from(colorMap.values());
+
+  if (colors.length <= maxColors) return imageData;
+
+  function medianCut(cols: typeof colors, depth: number): typeof colors {
+    if (depth <= 0 || cols.length <= maxColors) {
+      return [{
+        r: Math.round(cols.reduce((s, c) => s + c.r * c.count, 0) / cols.reduce((s, c) => s + c.count, 0)),
+        g: Math.round(cols.reduce((s, c) => s + c.g * c.count, 0) / cols.reduce((s, c) => s + c.count, 0)),
+        b: Math.round(cols.reduce((s, c) => s + c.b * c.count, 0) / cols.reduce((s, c) => s + c.count, 0)),
+        count: 1,
+      }];
+    }
+
+    const rRange = Math.max(...cols.map(c => c.r)) - Math.min(...cols.map(c => c.r));
+    const gRange = Math.max(...cols.map(c => c.g)) - Math.min(...cols.map(c => c.g));
+    const bRange = Math.max(...cols.map(c => c.b)) - Math.min(...cols.map(c => c.b));
+
+    let channel: 'r' | 'g' | 'b';
+    if (rRange >= gRange && rRange >= bRange) channel = 'r';
+    else if (gRange >= rRange && gRange >= bRange) channel = 'g';
+    else channel = 'b';
+
+    const sorted = [...cols].sort((a, b) => a[channel] - b[channel]);
+    const mid = Math.floor(sorted.length / 2);
+
+    return [
+      ...medianCut(sorted.slice(0, mid), depth - 1),
+      ...medianCut(sorted.slice(mid), depth - 1),
+    ];
+  }
+
+  const palette = medianCut(colors, 8);
+
+  for (let i = 0; i < pixels.length; i += 4) {
+    if (pixels[i + 3] === 0) continue;
+    let minDist = Infinity;
+    let best = palette[0];
+    for (const c of palette) {
+      const dr = pixels[i] - c.r;
+      const dg = pixels[i + 1] - c.g;
+      const db = pixels[i + 2] - c.b;
+      const dist = dr * dr + dg * dg + db * db;
+      if (dist < minDist) {
+        minDist = dist;
+        best = c;
+      }
+    }
+    pixels[i] = best.r;
+    pixels[i + 1] = best.g;
+    pixels[i + 2] = best.b;
+  }
+
+  return imageData;
+}
+
+export async function smartCompressPNG(file: File | Blob, colors: number): Promise<Blob> {
+  const img = file instanceof File ? await fileToImage(file) : await blobToImage(file);
+  const canvas = document.createElement('canvas');
+  canvas.width = img.naturalWidth;
+  canvas.height = img.naturalHeight;
+  const ctx = canvas.getContext('2d', { willReadFrequently: true })!;
+  ctx.drawImage(img, 0, 0);
+
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+  const quantized = quantizeColors(imageData, colors);
+  ctx.putImageData(quantized, 0, 0);
+
+  return new Promise<Blob>((resolve) => canvas.toBlob((b) => resolve(b!), 'image/png'));
+}
+
 export async function processImage(
   file: File,
   settings: TaskSettings,
@@ -719,6 +805,13 @@ export async function processImage(
     return { blob: bestBlob, format: getMimeType(format) };
   } else {
     quality = compress.quality;
+  }
+
+  if (compress.mode === 'quality' && format === 'png' && compress.quality < 100) {
+    const colors = Math.max(2, Math.round(256 * compress.quality / 100));
+    const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+    const quantized = quantizeColors(imageData, colors);
+    ctx.putImageData(quantized, 0, 0);
   }
 
   const blob = await canvasToBlob(canvas, format, quality);

@@ -17,16 +17,16 @@ interface FormatInfo {
 }
 
 const FORMAT_INFO: Record<string, FormatInfo> = {
-  png: { label: 'PNG', transparency: true, compression: '无损压缩', lossy: false },
-  jpeg: { label: 'JPEG', transparency: false, compression: '有损压缩', lossy: true },
-  jpg: { label: 'JPEG', transparency: false, compression: '有损压缩', lossy: true },
-  webp: { label: 'WebP', transparency: true, compression: '有损/无损', lossy: true },
-  gif: { label: 'GIF', transparency: true, compression: '无损压缩', lossy: false },
-  bmp: { label: 'BMP', transparency: false, compression: '无压缩', lossy: false },
-  ico: { label: 'ICO', transparency: true, compression: '无损压缩', lossy: false },
-  tiff: { label: 'TIFF', transparency: true, compression: '无损压缩', lossy: false },
-  avif: { label: 'AVIF', transparency: true, compression: '有损/无损', lossy: true },
-  pdf: { label: 'PDF', transparency: false, compression: '图片嵌入', lossy: false },
+  png: { label: 'PNG', transparency: true, compression: '支持透明通道，文件较大', lossy: false },
+  jpeg: { label: 'JPEG', transparency: false, compression: '适合照片，不支持透明', lossy: true },
+  jpg: { label: 'JPEG', transparency: false, compression: '适合照片，不支持透明', lossy: true },
+  webp: { label: 'WebP', transparency: true, compression: '高压缩率，支持透明', lossy: true },
+  gif: { label: 'GIF', transparency: true, compression: '支持动图，256色', lossy: false },
+  bmp: { label: 'BMP', transparency: false, compression: '无压缩，文件大', lossy: false },
+  ico: { label: 'ICO', transparency: true, compression: '图标格式', lossy: false },
+  tiff: { label: 'TIFF', transparency: true, compression: '专业印刷格式', lossy: false },
+  avif: { label: 'AVIF', transparency: true, compression: '最新格式，压缩率最高', lossy: true },
+  pdf: { label: 'PDF', transparency: false, compression: '文档格式', lossy: false },
 };
 
 const LOSSY_FORMATS: ImageFormat[] = ['jpeg', 'jpg', 'webp', 'avif'];
@@ -147,11 +147,11 @@ export default function ConvertModal({ isOpen, onClose }: ConvertModalProps) {
                   {selectedFormatInfo.label}
                 </span>
               </div>
-              <div className="flex gap-3 text-xs text-slate-500 dark:text-slate-400">
-                <span>
-                  透明背景: {selectedFormatInfo.transparency ? '✅ 支持' : '❌ 不支持'}
-                </span>
-                <span>压缩方式: {selectedFormatInfo.compression}</span>
+              <p className="text-xs text-slate-500 dark:text-slate-400">
+                {selectedFormatInfo.compression}
+              </p>
+              <div className="text-xs text-slate-500 dark:text-slate-400">
+                透明背景: {selectedFormatInfo.transparency ? '✅ 支持' : '❌ 不支持'}
               </div>
             </div>
           )}

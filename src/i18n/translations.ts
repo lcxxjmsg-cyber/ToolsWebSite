@@ -94,6 +94,22 @@ export const translations: Record<Lang, Record<string, string>> = {
     'footer.brand': '批图网',
     'footer.tagline': '图片处理工具箱 · 所有处理均在浏览器本地完成',
 
+    // Compress
+    'compress.title': '压缩图片',
+    'compress.subtitle': '选择压缩模式并调整参数',
+    'compress.mode.smart': '智能压缩',
+    'compress.mode.targetSize': '指定大小',
+    'compress.quality.label': '压缩强度',
+    'compress.quality.hint': '数字越小压缩越强，图片越小',
+    'compress.quality.strong': '强压缩',
+    'compress.quality.medium': '中等',
+    'compress.quality.light': '弱压缩',
+    'compress.estimatedSize': '预估输出大小',
+    'compress.estimatedPercent': '约 {percent}% 原大小',
+    'compress.targetSize.label': '目标文件大小 (KB)',
+    'compress.targetSize.hint': '自动调整质量以达到目标文件大小。实际结果可能略有偏差。',
+    'compress.originalSize': '原始大小',
+
     // Common
     'common.apply': '应用',
     'common.cancel': '取消',
@@ -286,6 +302,22 @@ export const translations: Record<Lang, Record<string, string>> = {
     'footer.copyright': 'Free Forever · Local Processing · Privacy Safe',
     'footer.brand': 'ppic.cc',
     'footer.tagline': 'Image Processing Toolbox · All processing done locally in browser',
+
+    // Compress
+    'compress.title': 'Compress Image',
+    'compress.subtitle': 'Select compression mode and adjust parameters',
+    'compress.mode.smart': 'Smart Compress',
+    'compress.mode.targetSize': 'Target Size',
+    'compress.quality.label': 'Compression Strength',
+    'compress.quality.hint': 'Lower number = stronger compression = smaller file',
+    'compress.quality.strong': 'Strong',
+    'compress.quality.medium': 'Medium',
+    'compress.quality.light': 'Light',
+    'compress.estimatedSize': 'Estimated Output Size',
+    'compress.estimatedPercent': '~{percent}% of original',
+    'compress.targetSize.label': 'Target File Size (KB)',
+    'compress.targetSize.hint': 'Automatically adjusts quality to reach target file size. Actual results may vary slightly.',
+    'compress.originalSize': 'Original Size',
 
     'common.apply': 'Apply',
     'common.cancel': 'Cancel',
