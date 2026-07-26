@@ -113,3 +113,13 @@ declare module 'pdfjs-dist' {
     render(opts: { canvasContext: CanvasRenderingContext2D; viewport: { width: number; height: number } }): { promise: Promise<void> };
   }
 }
+
+declare module '@jsquash/png' {
+  export function encode(imageData: ImageData): Promise<ArrayBuffer>;
+}
+declare module '@jsquash/jpeg' {
+  export function encode(imageData: ImageData, quality?: number): Promise<ArrayBuffer>;
+}
+declare module '@jsquash/oxipng' {
+  export function optimise(data: Uint8Array, level?: number): Promise<Uint8Array | null>;
+}

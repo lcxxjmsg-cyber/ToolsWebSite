@@ -11,6 +11,24 @@ import { FORMAT_MIME_MAP, DEFAULT_TASK_SETTINGS } from '../types/index';
 import { getFileExtension } from './formatUtils';
 import { jsPDF } from 'jspdf';
 
+// WASM encoders for proper compression (loaded on demand)
+let jsquashPng: typeof import('@jsquash/png') | null = null;
+let jsquashJpeg: typeof import('@jsquash/jpeg') | null = null;
+let jsquashOxipng: typeof import('@jsquash/oxipng') | null = null;
+
+async function loadPngEncoder() {
+  if (!jsquashPng) jsquashPng = await import('@jsquash/png');
+  return jsquashPng;
+}
+async function loadJpegEncoder() {
+  if (!jsquashJpeg) jsquashJpeg = await import('@jsquash/jpeg');
+  return jsquashJpeg;
+}
+async function loadOxipng() {
+  if (!jsquashOxipng) jsquashOxipng = await import('@jsquash/oxipng');
+  return jsquashOxipng;
+}
+
 let heic2any: ((args: { blob: Blob; toType?: string; quality?: number }) => Promise<Blob | Blob[]>) | null = null;
 
 async function loadHeicDecoder() {
@@ -545,6 +563,33 @@ export async function smartCompressPNG(file: File | Blob, colors: number): Promi
   return new Promise<Blob>((resolve) => canvas.toBlob((b) => resolve(b!), 'image/png'));
 }
 
+async function encodeWithWasm(canvas: HTMLCanvasElement, format: string, quality: number): Promise<Blob> {
+  const ctx = canvas.getContext('2d')!;
+  const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+  if (format === 'png') {
+    const png = await loadPngEncoder();
+    const compressed = await png.encode(imageData);
+    return new Blob([compressed], { type: 'image/png' });
+  } else if (format === 'jpg' || format === 'jpeg') {
+    const jpeg = await loadJpegEncoder();
+    const compressed = await jpeg.encode(imageData, quality);
+    return new Blob([compressed], { type: 'image/jpeg' });
+  } else {
+    return new Promise((resolve) => canvas.toBlob((b) => resolve(b!), getMimeType(format), quality / 100));
+  }
+}
+
+export async function losslessOptimizePng(file: File): Promise<Blob> {
+  const oxipng = await loadOxipng();
+  const buffer = await file.arrayBuffer();
+  const optimized = await oxipng.optimise(new Uint8Array(buffer));
+  if (optimized && optimized.length < buffer.byteLength) {
+    return new Blob([optimized as BlobPart], { type: 'image/png' });
+  }
+  return file;
+}
+
 export async function processImage(
   file: File,
   settings: TaskSettings,
@@ -563,6 +608,14 @@ export async function processImage(
     && outputFormat === inputFormat && settings.outputFormat !== 'pdf';
 
   if (isLosslessNoChange) {
+    if (outputFormat === 'png') {
+      try {
+        const optimized = await losslessOptimizePng(file);
+        return { blob: optimized, format: getMimeType(inputFormat) };
+      } catch {
+        // Fall through to return original file
+      }
+    }
     return { blob: file, format: getMimeType(inputFormat) };
   }
 
@@ -793,7 +846,7 @@ export async function processImage(
 
     for (let i = 0; i < 12; i++) {
       const mid = (lo + hi) >> 1;
-      const blob = await canvasToBlob(canvas, format, mid);
+      const blob = await encodeWithWasm(canvas, format, mid);
 
       if (!bestBlob || blob.size < bestBlob.size) {
         bestBlob = blob;
@@ -828,7 +881,20 @@ export async function processImage(
     ctx.putImageData(quantized, 0, 0);
   }
 
-  const blob = await canvasToBlob(canvas, format, quality);
+  let blob = await encodeWithWasm(canvas, format, quality);
+
+  if (compress.mode === 'lossless' && format === 'png') {
+    try {
+      const pngFile = new File([blob], 'temp.png', { type: 'image/png' });
+      const optimized = await losslessOptimizePng(pngFile);
+      if (optimized.size < blob.size) {
+        blob = optimized;
+      }
+    } catch {
+      // Keep original blob
+    }
+  }
+
   return { blob, format: getMimeType(format) };
 }
 
