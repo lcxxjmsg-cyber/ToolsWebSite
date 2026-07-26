@@ -28,32 +28,33 @@ import type { ToolMode } from '../types/index';
 import { useTaskStore } from '../store/taskStore';
 import { processImage } from '../utils/imageProcessor';
 import { createZipFromResults } from '../utils/zipUtils';
+import { useT } from '../i18n/useT';
 
 
 interface ToolConfig {
   mode: ToolMode;
-  label: string;
+  labelKey: string;
   icon: typeof Zap;
 }
 
 const TOOLS: ToolConfig[] = [
-  { mode: 'convert', label: '格式转换', icon: ArrowLeftRight },
-  { mode: 'compress', label: '压缩', icon: Zap },
-  { mode: 'crop', label: '裁剪', icon: Crop },
-  { mode: 'resize', label: '调整尺寸', icon: Maximize2 },
-  { mode: 'filter', label: '滤镜', icon: Sparkles },
-  { mode: 'watermark', label: '水印', icon: Type },
-  { mode: 'border', label: '边框', icon: Square },
-  { mode: 'merge', label: '合并', icon: Images },
-  { mode: 'split', label: '切割', icon: Grid3X3 },
-  { mode: 'roundCorners', label: '圆角', icon: Circle },
-  { mode: 'mirror', label: '镜像', icon: FlipHorizontal2 },
-  { mode: 'mosaic', label: '马赛克', icon: Hash },
-  { mode: 'compare', label: '对比', icon: Columns2 },
-  { mode: 'exif', label: '元数据', icon: Info },
-  { mode: 'removeBg', label: '去背景', icon: Eraser },
-  { mode: 'gif', label: 'GIF', icon: Film },
-  { mode: 'ocr', label: '文字识别', icon: ScanLine },
+  { mode: 'convert', labelKey: 'toolbar.convert', icon: ArrowLeftRight },
+  { mode: 'compress', labelKey: 'toolbar.compress', icon: Zap },
+  { mode: 'crop', labelKey: 'toolbar.crop', icon: Crop },
+  { mode: 'resize', labelKey: 'toolbar.resize', icon: Maximize2 },
+  { mode: 'filter', labelKey: 'toolbar.filter', icon: Sparkles },
+  { mode: 'watermark', labelKey: 'toolbar.watermark', icon: Type },
+  { mode: 'border', labelKey: 'toolbar.border', icon: Square },
+  { mode: 'merge', labelKey: 'toolbar.merge', icon: Images },
+  { mode: 'split', labelKey: 'toolbar.split', icon: Grid3X3 },
+  { mode: 'roundCorners', labelKey: 'toolbar.roundCorners', icon: Circle },
+  { mode: 'mirror', labelKey: 'toolbar.mirror', icon: FlipHorizontal2 },
+  { mode: 'mosaic', labelKey: 'toolbar.mosaic', icon: Hash },
+  { mode: 'compare', labelKey: 'toolbar.compare', icon: Columns2 },
+  { mode: 'exif', labelKey: 'toolbar.exif', icon: Info },
+  { mode: 'removeBg', labelKey: 'toolbar.removeBg', icon: Eraser },
+  { mode: 'gif', labelKey: 'toolbar.gif', icon: Film },
+  { mode: 'ocr', labelKey: 'toolbar.ocr', icon: ScanLine },
 ];
 
 const FORMAT_LABELS: Record<string, string> = {
@@ -87,6 +88,8 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
     resetResults,
     replaceWithResults,
   } = useTaskStore();
+
+  const t = useT();
 
   const [activeTool, setActiveTool] = useState<ToolMode>('convert');
   const abortRef = useRef(false);
@@ -129,7 +132,7 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
         setTaskStatus(
           task.id,
           'error',
-          err instanceof Error ? err.message : '处理失败',
+          err instanceof Error ? err.message : t('toolbar.error'),
         );
         setTaskProgress(task.id, 0);
       }
@@ -226,13 +229,13 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
                 }`}
               >
                 <Icon className="w-4 h-4" />
-                {tool.label}
+                {t(tool.labelKey)}
               </button>
             );
           })}
 
           <span className="ml-2 px-3 py-1.5 rounded-lg bg-brand-50 dark:bg-brand-500/10 text-sm font-medium text-brand-600 dark:text-brand-400 flex-shrink-0">
-            → {FORMAT_LABELS[currentFormat] ?? currentFormat.toUpperCase()}
+            {t('toolbar.outputFormat')} {FORMAT_LABELS[currentFormat] ?? currentFormat.toUpperCase()}
           </span>
         </div>
 
@@ -240,8 +243,8 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
           <div className="flex items-center justify-between">
             <div className="text-xs text-slate-400 dark:text-slate-500">
               {tasks.length === 0
-                ? '添加图片后点击"开始处理"'
-                : `共 ${tasks.filter((t) => t.status === 'pending').length} 个待处理任务`}
+                ? t('toolbar.addHint')
+                : `共 ${tasks.filter((t) => t.status === 'pending').length} ${t('toolbar.pending')}`}
             </div>
             <button
               onClick={handleStartProcessing}
@@ -249,7 +252,7 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium shadow-lg shadow-brand-500/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 active:scale-[0.98]"
             >
               <Play className="w-4 h-4 fill-current" />
-              开始处理
+              {t('toolbar.start')}
             </button>
           </div>
         )}
@@ -276,7 +279,7 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
             <div className="flex items-center gap-2">
               <CheckCircle2 className="w-4 h-4 text-emerald-500" />
               <span className="text-sm font-medium text-emerald-600 dark:text-emerald-400">
-                {completedCount} 个处理完成
+                {completedCount} {t('toolbar.completed')}
               </span>
             </div>
 
@@ -286,14 +289,14 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-sm font-medium shadow-lg shadow-emerald-500/25 transition-all duration-200 active:scale-[0.98]"
               >
                 <Download className="w-4 h-4" />
-                全部下载
+                {t('toolbar.downloadAll')}
               </button>
               <button
                 onClick={handleDownloadZip}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium transition-colors"
               >
                 <Archive className="w-4 h-4" />
-                打包下载ZIP
+                {t('toolbar.downloadZip')}
               </button>
 
               <div className="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1" />
@@ -303,14 +306,14 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium shadow-lg shadow-brand-500/25 transition-all duration-200 active:scale-[0.98]"
               >
                 <Play className="w-4 h-4 fill-current" />
-                以结果继续
+                {t('toolbar.continueWithResult')}
               </button>
               <button
                 onClick={() => resetResults()}
                 className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 text-sm font-medium transition-colors"
               >
                 <RotateCcw className="w-4 h-4" />
-                重新处理
+                {t('toolbar.reprocess')}
               </button>
             </div>
           </div>

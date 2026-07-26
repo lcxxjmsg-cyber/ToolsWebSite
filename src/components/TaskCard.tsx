@@ -3,6 +3,7 @@ import { Clock, CheckCircle2, XCircle, X, Loader2 } from 'lucide-react';
 import type { TaskItem } from '../types/index';
 import { formatSize } from '../utils/formatUtils';
 import { useTaskStore } from '../store/taskStore';
+import { useT } from '../i18n/useT';
 
 interface TaskCardProps {
   task: TaskItem;
@@ -11,6 +12,7 @@ interface TaskCardProps {
 
 export default function TaskCard({ task, onClick }: TaskCardProps) {
   const { removeTask, selectedTaskId } = useTaskStore();
+  const t = useT();
   const isSelected = selectedTaskId === task.id;
 
   const handleDelete = useCallback(
@@ -88,7 +90,7 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
           <button
             onClick={handleDelete}
             className="p-1 rounded-md opacity-0 group-hover:opacity-100 hover:bg-red-50 dark:hover:bg-red-500/10 text-slate-400 hover:text-red-500 transition-all duration-150 flex-shrink-0"
-            aria-label="删除任务"
+            aria-label={t('task.removeAria')}
           >
             <X className="w-3.5 h-3.5" />
           </button>
@@ -138,7 +140,7 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
         {task.status === 'completed' && (
           <div className="flex flex-col items-center gap-0.5">
             <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-            <span className="text-[10px] text-emerald-500 font-medium">完成</span>
+            <span className="text-[10px] text-emerald-500 font-medium">{t('task.completed')}</span>
           </div>
         )}
         {task.status === 'error' && (
@@ -148,7 +150,7 @@ export default function TaskCard({ task, onClick }: TaskCardProps) {
               className="text-[10px] text-red-500 font-medium max-w-[60px] truncate"
               title={task.errorMessage}
             >
-              {task.errorMessage || '错误'}
+              {task.errorMessage || t('task.error')}
             </span>
           </div>
         )}

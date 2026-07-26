@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react';
 import { Trash2, ImageIcon, GripVertical } from 'lucide-react';
 import { useTaskStore } from '../store/taskStore';
 import TaskCard from './TaskCard';
+import { useT } from '../i18n/useT';
 
 export default function TaskList() {
   const {
@@ -10,6 +11,8 @@ export default function TaskList() {
     reorderTasks,
     clearTasks,
   } = useTaskStore();
+
+  const t = useT();
 
   const [dragIndex, setDragIndex] = useState<number | null>(null);
   const [dragOverIndex, setDragOverIndex] = useState<number | null>(null);
@@ -60,10 +63,10 @@ export default function TaskList() {
           <ImageIcon className="w-10 h-10 text-slate-300 dark:text-slate-600" />
         </div>
         <h3 className="text-lg font-medium text-slate-500 dark:text-slate-400 mb-1">
-          还没有添加图片
+          {t('task.empty')}
         </h3>
         <p className="text-sm text-slate-400 dark:text-slate-500">
-          拖拽图片到上方区域开始
+          {t('task.emptyHint')}
         </p>
       </div>
     );
@@ -73,7 +76,7 @@ export default function TaskList() {
     <div>
       <div className="flex items-center justify-between mb-4">
         <span className="text-sm text-slate-500 dark:text-slate-400">
-          共 {tasks.length} 个任务
+          共 {tasks.length} {t('task.count')}
         </span>
 
         <button
@@ -81,7 +84,7 @@ export default function TaskList() {
           className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-slate-500 dark:text-slate-400 hover:text-red-500 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 rounded-lg transition-colors"
         >
           <Trash2 className="w-4 h-4" />
-          清空全部
+          {t('task.clearAll')}
         </button>
       </div>
 

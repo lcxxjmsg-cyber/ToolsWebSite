@@ -33,6 +33,15 @@ export const translations: Record<Lang, Record<string, string>> = {
     'upload.click': '点击上传',
     'upload.url': '输入图片直链地址',
     'upload.fetch': '获取',
+    'upload.unzipping': '正在解压ZIP文件...',
+    'upload.fetching': '正在获取图片...',
+    'upload.zipNoImages': 'ZIP文件中未找到图片',
+    'upload.zipError': 'ZIP文件解压失败，请检查文件是否损坏',
+    'upload.invalidFile': '请上传图片文件或ZIP压缩包',
+    'upload.invalidUrl': '该URL不是有效的图片资源',
+    'upload.fetchError': '获取图片失败，请检查URL是否正确',
+    'upload.formats': '支持所有图片格式及ZIP压缩包',
+    'upload.ariaLabel': '上传图片',
 
     // Toolbar
     'toolbar.convert': '格式转换',
@@ -61,6 +70,8 @@ export const translations: Record<Lang, Record<string, string>> = {
     'toolbar.reprocess': '重新处理',
     'toolbar.completed': '处理完成',
     'toolbar.pending': '待处理任务',
+    'toolbar.addHint': '添加图片后点击"开始处理"',
+    'toolbar.error': '处理失败',
 
     // Task
     'task.empty': '还没有添加图片',
@@ -70,6 +81,8 @@ export const translations: Record<Lang, Record<string, string>> = {
     'task.completed': '完成',
     'task.pending': '待处理',
     'task.processing': '处理中',
+    'task.error': '错误',
+    'task.removeAria': '删除任务',
 
     // Footer
     'footer.desc': '永久免费在线图片处理工具箱，所有处理均在浏览器本地完成。',
@@ -78,6 +91,8 @@ export const translations: Record<Lang, Record<string, string>> = {
     'footer.terms': '使用条款',
     'footer.feedback': '反馈',
     'footer.copyright': '永久免费 · 本地处理 · 隐私安全',
+    'footer.brand': '批图网',
+    'footer.tagline': '图片处理工具箱 · 所有处理均在浏览器本地完成',
 
     // Common
     'common.apply': '应用',
@@ -102,6 +117,13 @@ export const translations: Record<Lang, Record<string, string>> = {
     'theme.light': '浅色',
     'theme.dark': '深色',
     'theme.system': '系统',
+    'theme.preset': '主题色',
+    'theme.presets.default': '默认',
+    'theme.presets.emerald': '翠绿',
+    'theme.presets.amber': '暖橙',
+    'theme.presets.rose': '玫红',
+    'theme.presets.slate': '岩灰',
+    'theme.ariaLabel': '切换主题',
   },
 
   'en': {
@@ -133,6 +155,15 @@ export const translations: Record<Lang, Record<string, string>> = {
     'upload.click': 'Click to upload',
     'upload.url': 'Enter image URL',
     'upload.fetch': 'Fetch',
+    'upload.unzipping': 'Extracting ZIP...',
+    'upload.fetching': 'Fetching image...',
+    'upload.zipNoImages': 'No images found in ZIP',
+    'upload.zipError': 'ZIP extraction failed, file may be corrupted',
+    'upload.invalidFile': 'Please upload images or ZIP files',
+    'upload.invalidUrl': 'This URL is not a valid image resource',
+    'upload.fetchError': 'Failed to fetch image, please check the URL',
+    'upload.formats': 'Supports all image formats and ZIP archives',
+    'upload.ariaLabel': 'Upload images',
 
     'toolbar.convert': 'Convert',
     'toolbar.compress': 'Compress',
@@ -160,6 +191,8 @@ export const translations: Record<Lang, Record<string, string>> = {
     'toolbar.reprocess': 'Reprocess',
     'toolbar.completed': 'completed',
     'toolbar.pending': 'pending',
+    'toolbar.addHint': 'Add images and click "Start"',
+    'toolbar.error': 'Processing failed',
 
     'task.empty': 'No images added yet',
     'task.emptyHint': 'Drag images to the area above to start',
@@ -168,6 +201,8 @@ export const translations: Record<Lang, Record<string, string>> = {
     'task.completed': 'Done',
     'task.pending': 'Pending',
     'task.processing': 'Processing',
+    'task.error': 'Error',
+    'task.removeAria': 'Remove task',
 
     'footer.desc': 'Free online image processing toolbox. All processing done locally in your browser.',
     'footer.faq': 'FAQ',
@@ -175,6 +210,8 @@ export const translations: Record<Lang, Record<string, string>> = {
     'footer.terms': 'Terms',
     'footer.feedback': 'Feedback',
     'footer.copyright': 'Free Forever · Local Processing · Privacy Safe',
+    'footer.brand': 'ppic.cc',
+    'footer.tagline': 'Image Processing Toolbox · All processing done locally in browser',
 
     'common.apply': 'Apply',
     'common.cancel': 'Cancel',
@@ -195,6 +232,13 @@ export const translations: Record<Lang, Record<string, string>> = {
     'theme.light': 'Light',
     'theme.dark': 'Dark',
     'theme.system': 'System',
+    'theme.preset': 'Theme Color',
+    'theme.presets.default': 'Default',
+    'theme.presets.emerald': 'Emerald',
+    'theme.presets.amber': 'Amber',
+    'theme.presets.rose': 'Rose',
+    'theme.presets.slate': 'Slate',
+    'theme.ariaLabel': 'Switch theme',
   },
 };
 

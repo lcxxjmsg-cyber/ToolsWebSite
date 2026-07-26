@@ -3,12 +3,12 @@ import { Sun, Moon, Monitor } from 'lucide-react';
 import { useThemeStore, type ThemeMode, type ThemePreset } from '../store/themeStore';
 import { useT } from '../i18n/useT';
 
-const PRESETS: { key: ThemePreset; label: string; color: string }[] = [
-  { key: 'default', label: '默认', color: '#6366f1' },
-  { key: 'emerald', label: '翠绿', color: '#10b981' },
-  { key: 'amber', label: '暖橙', color: '#f59e0b' },
-  { key: 'rose', label: '玫红', color: '#f43f5e' },
-  { key: 'slate', label: '岩灰', color: '#64748b' },
+const PRESETS: { key: ThemePreset; labelKey: string; color: string }[] = [
+  { key: 'default', labelKey: 'theme.presets.default', color: '#6366f1' },
+  { key: 'emerald', labelKey: 'theme.presets.emerald', color: '#10b981' },
+  { key: 'amber', labelKey: 'theme.presets.amber', color: '#f59e0b' },
+  { key: 'rose', labelKey: 'theme.presets.rose', color: '#f43f5e' },
+  { key: 'slate', labelKey: 'theme.presets.slate', color: '#64748b' },
 ];
 
 export default function ThemeToggle() {
@@ -41,7 +41,7 @@ export default function ThemeToggle() {
       <button
         onClick={() => setOpen(!open)}
         className="p-2 rounded-xl hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-600 dark:text-slate-300 transition-colors"
-        aria-label="切换主题"
+        aria-label={t('theme.ariaLabel')}
       >
         <Icon className="w-5 h-5" />
       </button>
@@ -75,13 +75,13 @@ export default function ThemeToggle() {
 
           {/* Preset color dots */}
           <div className="px-3 pt-2 pb-0.5">
-            <p className="text-[10px] text-slate-400 dark:text-slate-500 mb-2 px-1">主题色</p>
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 mb-2 px-1">{t('theme.preset')}</p>
             <div className="flex items-center justify-center gap-2">
-              {PRESETS.map(({ key, label, color }) => (
+              {PRESETS.map(({ key, labelKey, color }) => (
                 <button
                   key={key}
                   onClick={() => setPreset(key)}
-                  title={label}
+                  title={t(labelKey)}
                   className={`w-7 h-7 rounded-full transition-all flex items-center justify-center ${
                     preset === key
                       ? 'ring-2 ring-offset-2 ring-slate-300 dark:ring-offset-[#1a1a1a] dark:ring-slate-600'

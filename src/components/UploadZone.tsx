@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { Upload, Link, Loader2, AlertCircle } from 'lucide-react';
 import { useTaskStore } from '../store/taskStore';
 import { extractImagesFromZip } from '../utils/zipUtils';
+import { useT } from '../i18n/useT';
 
 interface UploadZoneProps {
   onFilesAdded: (files: File[]) => void;
@@ -9,6 +10,7 @@ interface UploadZoneProps {
 
 export default function UploadZone({ onFilesAdded }: UploadZoneProps) {
   const { addTasks } = useTaskStore();
+  const t = useT();
   const [isDragOver, setIsDragOver] = useState(false);
   const [urlInput, setUrlInput] = useState('');
   const [urlLoading, setUrlLoading] = useState(false);
@@ -35,11 +37,11 @@ export default function UploadZone({ onFilesAdded }: UploadZoneProps) {
             setZipError('');
             const { files: extracted } = await extractImagesFromZip(file);
             if (extracted.length === 0) {
-              setZipError('ZIP文件中未找到图片');
+              setZipError(t('upload.zipNoImages'));
             }
             imageFiles.push(...extracted);
           } catch {
-            setZipError('ZIP文件解压失败，请检查文件是否损坏');
+            setZipError(t('upload.zipError'));
           } finally {
             setZipLoading(false);
           }
@@ -54,7 +56,7 @@ export default function UploadZone({ onFilesAdded }: UploadZoneProps) {
       }
 
       if (!hasZip && imageFiles.length === 0) {
-        setZipError('请上传图片文件或ZIP压缩包');
+        setZipError(t('upload.invalidFile'));
         setTimeout(() => setZipError(''), 3000);
       }
     },
@@ -126,7 +128,7 @@ export default function UploadZone({ onFilesAdded }: UploadZoneProps) {
 
       const contentType = response.headers.get('content-type') ?? '';
       if (!contentType.startsWith('image/')) {
-        throw new Error('该URL不是有效的图片资源');
+        throw new Error(t('upload.invalidUrl'));
       }
 
       const blob = await response.blob();
@@ -144,7 +146,7 @@ export default function UploadZone({ onFilesAdded }: UploadZoneProps) {
       setUrlInput('');
     } catch (err) {
       setUrlError(
-        err instanceof Error ? err.message : '获取图片失败，请检查URL是否正确',
+        err instanceof Error ? err.message : t('upload.fetchError'),
       );
     } finally {
       setUrlLoading(false);
@@ -211,14 +213,14 @@ export default function UploadZone({ onFilesAdded }: UploadZoneProps) {
           multiple
           onChange={handleFileChange}
           className="hidden"
-          aria-label="上传图片"
+          aria-label={t('upload.ariaLabel')}
         />
 
         {isLoading ? (
           <div className="flex flex-col items-center gap-3">
             <Loader2 className="w-12 h-12 text-brand-500 animate-spin" />
             <p className="text-sm text-slate-500 dark:text-slate-400">
-              {zipLoading ? '正在解压ZIP文件...' : '正在获取图片...'}
+              {zipLoading ? t('upload.unzipping') : t('upload.fetching')}
             </p>
           </div>
         ) : (
@@ -228,10 +230,10 @@ export default function UploadZone({ onFilesAdded }: UploadZoneProps) {
             </div>
             <div className="text-center">
               <p className="text-base font-medium text-slate-700 dark:text-slate-200">
-                拖拽图片到此处
+                {t('upload.title')}
               </p>
               <p className="text-sm text-slate-400 dark:text-slate-500 mt-1">
-                支持所有图片格式及ZIP压缩包
+                {t('upload.formats')}
               </p>
             </div>
             <button
@@ -242,7 +244,7 @@ export default function UploadZone({ onFilesAdded }: UploadZoneProps) {
               }}
               className="btn-primary text-sm px-5 py-2.5"
             >
-              或点击上传
+              {t('upload.or')}{t('upload.click')}
             </button>
           </>
         )}
@@ -263,7 +265,7 @@ export default function UploadZone({ onFilesAdded }: UploadZoneProps) {
             value={urlInput}
             onChange={(e) => setUrlInput(e.target.value)}
             onKeyDown={handleUrlKeyDown}
-            placeholder="粘贴图片URL地址..."
+            placeholder={t('upload.url')}
             className="flex-1 bg-transparent text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 outline-none"
           />
         </div>
@@ -279,7 +281,7 @@ export default function UploadZone({ onFilesAdded }: UploadZoneProps) {
           {urlLoading ? (
             <Loader2 className="w-4 h-4 animate-spin" />
           ) : (
-            '获取'
+            t('upload.fetch')
           )}
         </button>
       </div>
