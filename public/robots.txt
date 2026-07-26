@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://imagetoolbox.pages.dev/sitemap.xml
+Sitemap: https://ppic.cc/sitemap.xml

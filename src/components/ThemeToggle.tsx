@@ -1,9 +1,19 @@
 import { useState, useRef, useEffect } from 'react';
 import { Sun, Moon, Monitor } from 'lucide-react';
-import { useThemeStore, type Theme } from '../store/themeStore';
+import { useThemeStore, type ThemeMode, type ThemePreset } from '../store/themeStore';
+import { useT } from '../i18n/useT';
+
+const PRESETS: { key: ThemePreset; label: string; color: string }[] = [
+  { key: 'default', label: '默认', color: '#6366f1' },
+  { key: 'emerald', label: '翠绿', color: '#10b981' },
+  { key: 'amber', label: '暖橙', color: '#f59e0b' },
+  { key: 'rose', label: '玫红', color: '#f43f5e' },
+  { key: 'slate', label: '岩灰', color: '#64748b' },
+];
 
 export default function ThemeToggle() {
-  const { theme, setTheme } = useThemeStore();
+  const { mode, preset, setMode, setPreset } = useThemeStore();
+  const t = useT();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -17,13 +27,13 @@ export default function ThemeToggle() {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
-  const themes: { key: Theme; icon: typeof Sun; label: string }[] = [
-    { key: 'light', icon: Sun, label: '浅色' },
-    { key: 'dark', icon: Moon, label: '深色' },
-    { key: 'system', icon: Monitor, label: '跟随系统' },
+  const themes: { key: ThemeMode; icon: typeof Sun; label: string }[] = [
+    { key: 'light', icon: Sun, label: t('theme.light') },
+    { key: 'dark', icon: Moon, label: t('theme.dark') },
+    { key: 'system', icon: Monitor, label: t('theme.system') },
   ];
 
-  const current = themes.find((t) => t.key === theme) ?? themes[2];
+  const current = themes.find((item) => item.key === mode) ?? themes[2];
   const Icon = current.icon;
 
   return (
@@ -37,24 +47,55 @@ export default function ThemeToggle() {
       </button>
 
       {open && (
-        <div className="absolute right-0 top-full mt-2 w-36 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1a1a1a] shadow-lg py-1 z-50 animate-scale-in">
-          {themes.map(({ key, icon: ItemIcon, label }) => (
-            <button
-              key={key}
-              onClick={() => {
-                setTheme(key);
-                setOpen(false);
-              }}
-              className={`w-full flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
-                theme === key
-                  ? 'text-brand-500 bg-brand-50 dark:bg-brand-500/10'
-                  : 'text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-slate-800'
-              }`}
-            >
-              <ItemIcon className="w-4 h-4" />
-              {label}
-            </button>
-          ))}
+        <div className="absolute right-0 top-full mt-2 w-44 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-[#1a1a1a] shadow-lg py-2 z-50 animate-scale-in">
+
+          {/* Mode buttons */}
+          <div className="px-3 mb-2">
+            <div className="flex rounded-lg bg-slate-100 dark:bg-slate-800 p-1">
+              {themes.map(({ key, icon: ItemIcon, label }) => (
+                <button
+                  key={key}
+                  onClick={() => { setMode(key); setOpen(false); }}
+                  className={`flex-1 flex items-center justify-center gap-1.5 py-1.5 rounded-md text-xs font-medium transition-all ${
+                    mode === key
+                      ? 'bg-white dark:bg-slate-700 text-slate-900 dark:text-white shadow-sm'
+                      : 'text-slate-500 dark:text-slate-400 hover:text-slate-700 dark:hover:text-slate-200'
+                  }`}
+                  title={label}
+                >
+                  <ItemIcon className="w-3.5 h-3.5" />
+                  <span className="hidden sm:inline">{label}</span>
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Divider */}
+          <div className="mx-3 border-t border-slate-100 dark:border-slate-800" />
+
+          {/* Preset color dots */}
+          <div className="px-3 pt-2 pb-0.5">
+            <p className="text-[10px] text-slate-400 dark:text-slate-500 mb-2 px-1">主题色</p>
+            <div className="flex items-center justify-center gap-2">
+              {PRESETS.map(({ key, label, color }) => (
+                <button
+                  key={key}
+                  onClick={() => setPreset(key)}
+                  title={label}
+                  className={`w-7 h-7 rounded-full transition-all flex items-center justify-center ${
+                    preset === key
+                      ? 'ring-2 ring-offset-2 ring-slate-300 dark:ring-offset-[#1a1a1a] dark:ring-slate-600'
+                      : 'hover:scale-110'
+                  }`}
+                >
+                  <span
+                    className="w-5 h-5 rounded-full"
+                    style={{ backgroundColor: color }}
+                  />
+                </button>
+              ))}
+            </div>
+          </div>
         </div>
       )}
     </div>

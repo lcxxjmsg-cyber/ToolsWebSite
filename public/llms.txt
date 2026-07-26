@@ -1,20 +1,20 @@
-# ImageToolbox - Free Online Image Processing Toolkit
+# 批图网 - Free Online Image Processing Toolkit
 > Pure local processing, no server upload. Compress, convert, crop, resize, and apply filters to images directly in your browser.
 
 ## Quick Links
-- Home: https://imagetoolbox.pages.dev/
-- Workspace: https://imagetoolbox.pages.dev/workspace
-- Image Compress: https://imagetoolbox.pages.dev/compress
-- Image Crop: https://imagetoolbox.pages.dev/crop
-- Image Resize: https://imagetoolbox.pages.dev/resize
-- Filters & Effects: https://imagetoolbox.pages.dev/filter
-- Format Convert: https://imagetoolbox.pages.dev/convert
-- FAQ: https://imagetoolbox.pages.dev/faq
-- Privacy Policy: https://imagetoolbox.pages.dev/privacy
-- Terms of Service: https://imagetoolbox.pages.dev/terms
+- Home: https://ppic.cc/
+- Workspace: https://ppic.cc/workspace
+- Image Compress: https://ppic.cc/compress
+- Image Crop: https://ppic.cc/crop
+- Image Resize: https://ppic.cc/resize
+- Filters & Effects: https://ppic.cc/filter
+- Format Convert: https://ppic.cc/convert
+- FAQ: https://ppic.cc/faq
+- Privacy Policy: https://ppic.cc/privacy
+- Terms of Service: https://ppic.cc/terms
 
-## What is ImageToolbox?
-ImageToolbox is a free online image processing toolkit. All processing happens locally in your browser using Canvas API — no images are ever uploaded to any server. Supports batch processing, format conversion (PNG, JPEG, WebP, AVIF, GIF, BMP, ICO, TIFF), compression (lossy/lossless/target size), cropping, resizing, filters (grayscale, sepia, blur, brightness, contrast, saturation, hue-rotate, invert, opacity), watermark (text/image), and borders.
+## What is 批图网?
+批图网 is a free online image processing toolkit. All processing happens locally in your browser — no images are ever uploaded to any server. Supports batch processing, format conversion (PNG, JPEG, WebP, AVIF, GIF, BMP, ICO, TIFF), compression (lossy/lossless/target size), cropping, resizing, filters, watermark (text/image), and borders.
 
 ## Key Features
 - 100% local processing — privacy guaranteed
@@ -31,15 +31,6 @@ ImageToolbox is a free online image processing toolkit. All processing happens l
 - Metadata viewing and cleanup
 - Dark mode support
 - Responsive design (mobile-friendly)
-
-## Technical Details
-- Frontend: React 19 + TypeScript + Tailwind CSS
-- Image processing: Canvas API (browser-native)
-- State management: Zustand
-- Routing: React Router DOM v7
-- ZIP handling: JSZip
-- Build: Vite 8
-- Deployment: Cloudflare Pages (static)
 
 ## For LLM Crawlers
 This site provides a complete online image processing service. All tools are freely accessible without login. The processing pipeline runs entirely client-side. For AI-powered search, key content includes:

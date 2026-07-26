@@ -8,7 +8,7 @@ const SECTIONS = [
     icon: Database,
     title: '数据收集',
     content:
-      '我们不会收集任何个人数据。ImageToolbox 不需要您创建账号，不会索取您的任何个人信息（如姓名、电子邮件、手机号码等）。您上传的图片文件完全在浏览器本地处理，不会上传到任何服务器，我们也不会记录您的使用行为或处理历史。',
+      '我们不会收集任何个人数据。批图网不需要您创建账号，不会索取您的任何个人信息（如姓名、电子邮件、手机号码等）。您上传的图片文件完全在浏览器本地处理，不会上传到任何服务器，我们也不会记录您的使用行为或处理历史。',
   },
   {
     icon: Cookie,
@@ -32,7 +32,7 @@ const SECTIONS = [
     icon: FileLock,
     title: '数据处理',
     content:
-      '所有图片处理均通过浏览器的 Canvas API 和 WebAssembly 技术在您的设备本地完成。处理流程为：文件加载到浏览器内存 → Canvas 渲染 → 应用处理操作 → 生成结果。整个过程中，图片数据从未离开您的浏览器内存空间。处理完成后，临时数据和预览 URL 在页面关闭时自动释放。',
+      '所有图片处理均在您的设备本地完成。处理流程为：文件加载到浏览器内存 → 应用处理操作 → 生成结果。整个过程中，图片数据从未离开您的浏览器内存。处理完成后，临时数据和预览 URL 在页面关闭时自动释放。',
   },
   {
     icon: Lock,
@@ -44,14 +44,14 @@ const SECTIONS = [
     icon: Mail,
     title: '联系我们',
     content:
-      '如果您对本隐私政策有任何疑问、建议或发现安全漏洞，请通过以下方式联系我们：发送邮件至 anony.neatly471@passfwd.com。我们非常重视用户隐私，将及时回复您的关切。',
+      '如果您对本隐私政策有任何疑问或建议，请发送邮件至 anony.neatly471@passfwd.com。我们非常重视用户隐私，将及时回复您的关切。',
   },
 ];
 
 export default function Privacy() {
   useSEO({
-    title: '隐私协议 - ImageToolbox | 纯本地处理用户隐私保护承诺',
-    description: 'ImageToolbox隐私协议：所有图片处理在浏览器本地完成，不上传任何服务器。不收集个人信息，不使用追踪Cookie，仅localStorage存储主题偏好。',
+    title: '隐私协议 - 批图网 | 纯本地处理用户隐私保护承诺',
+    description: '批图网隐私协议：所有图片处理在浏览器本地完成，不上传任何服务器。不收集个人信息，不使用追踪Cookie，仅localStorage存储主题偏好。',
     keywords: '图片处理隐私,在线工具隐私协议,本地处理隐私,图片不上传服务器',
   });
 
@@ -60,9 +60,9 @@ export default function Privacy() {
       <InjectJSONLD data={{
         '@context': 'https://schema.org',
         '@type': 'WebPage',
-        'name': '隐私协议 - ImageToolbox',
-        'description': 'ImageToolbox隐私协议：纯本地处理，不收集用户数据。',
-        'url': 'https://imagetoolbox.pages.dev/privacy',
+        'name': '隐私协议 - 批图网',
+        'description': '批图网隐私协议：纯本地处理，不收集用户数据。',
+        'url': 'https://ppic.cc/privacy',
       }} />
       <Header />
 
@@ -84,7 +84,7 @@ export default function Privacy() {
           {/* Introduction */}
           <div className="card p-6 sm:p-8 mb-8">
             <p className="text-slate-600 dark:text-slate-400 leading-relaxed">
-              本隐私协议说明了 ImageToolbox（以下简称"本工具"）如何收集、使用和保护您的信息。使用本工具即表示您同意本隐私协议的条款。我们深知隐私的重要性，因此设计了完全本地化的处理架构，确保您的数据安全。
+              本隐私协议说明了批图网（以下简称"本工具"）如何收集、使用和保护您的信息。使用本工具即表示您同意本隐私协议的条款。我们深知隐私的重要性，因此设计了完全本地化的处理架构，确保您的数据安全。
             </p>
           </div>
 

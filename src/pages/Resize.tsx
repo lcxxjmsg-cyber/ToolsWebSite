@@ -36,7 +36,7 @@ export default function Resize() {
   const { tasks } = useTaskStore();
 
   useSEO({
-    title: '调整尺寸 - ImageToolbox | 在线图片缩放调整大小工具',
+    title: '调整尺寸 - 批图网 | 在线图片缩放调整大小工具',
     description: '免费在线图片尺寸调整工具，支持百分比缩放、像素尺寸、适应尺寸三种模式。锁定宽高比，批量调整图片大小，纯本地处理。',
     keywords: '调整图片尺寸,图片缩放,在线图片缩放,图片大小调整,像素调整,批量调整尺寸,长宽比锁定',
   });
@@ -176,9 +176,9 @@ export default function Resize() {
       <InjectJSONLD data={{
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
-        'name': '调整尺寸 - ImageToolbox',
+        'name': '调整尺寸 - 批图网',
         'description': '免费在线图片尺寸调整工具，百分比、像素、适应三种模式。',
-        'url': 'https://imagetoolbox.pages.dev/resize',
+        'url': 'https://ppic.cc/resize',
       }} />
       <Header />
 

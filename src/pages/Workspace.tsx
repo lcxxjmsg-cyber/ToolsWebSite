@@ -28,8 +28,8 @@ import { useSEO, InjectJSONLD } from '../utils/seo';
 export default function Workspace() {
   const [activeModal, setActiveModal] = useState<string | null>(null);
   useSEO({
-    title: '工作台 - ImageToolbox | 在线图片批量处理工具箱',
-    description: 'ImageToolbox工作台，一站式在线图片处理：格式转换、压缩、裁剪、调整尺寸、滤镜特效、水印、边框。支持批量处理，纯本地运行。',
+    title: '工作台 - 批图网 | 在线图片批量处理工具箱',
+    description: '批图网工作台，一站式在线图片处理：格式转换、压缩、裁剪、调整尺寸、滤镜特效、水印、边框。支持批量处理，纯本地运行。',
     keywords: '图片处理工作台,批量图片处理,在线图片编辑,图片转换压缩裁剪,一站式图片工具',
   });
   const { tasks } = useTaskStore();
@@ -56,9 +56,9 @@ export default function Workspace() {
       <InjectJSONLD data={{
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
-        'name': '工作台 - ImageToolbox',
+        'name': '工作台 - 批图网',
         'description': '一站式在线图片批量处理工具箱，格式转换、压缩、裁剪、滤镜等。',
-        'url': 'https://imagetoolbox.pages.dev/workspace',
+        'url': 'https://ppic.cc/workspace',
       }} />
       <Header />
 

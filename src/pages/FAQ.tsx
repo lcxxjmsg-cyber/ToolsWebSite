@@ -15,12 +15,12 @@ const FAQ_ITEMS: FAQItem[] = [
   {
     question: '这个工具真的完全免费吗？',
     answer:
-      '是的，ImageToolbox 永久免费使用。没有任何隐藏费用、高级会员或付费功能。所有功能对所有用户开放，无限使用次数。',
+      '是的，批图网永久免费使用。没有任何隐藏费用、高级会员或付费功能。所有功能对所有用户开放，无限使用次数。',
   },
   {
     question: '我的图片会上传到服务器吗？',
     answer:
-      '绝对不会。所有图片处理均在您的浏览器本地完成，使用 WebAssembly 和 Canvas API 技术。您的图片文件从不会离开您的设备，我们没有任何服务器存储任何用户图片。这也是为什么我们不需要您注册账号 —— 因为根本就没有服务器端处理。',
+      '绝对不会。所有图片处理均在您的浏览器本地完成。您的图片文件从不会离开您的设备，我们没有任何服务器存储任何用户图片。这也是为什么我们不需要您注册账号 —— 因为根本就没有服务器端处理。',
   },
   {
     question: '支持哪些图片格式？',
@@ -77,7 +77,7 @@ const FAQ_ITEMS: FAQItem[] = [
   {
     question: '支持 HEIC/HEIF 格式吗？',
     answer:
-      '支持。ImageToolbox 已内置 HEIC/HEIF 解码器，上传 HEIC 或 HEIF 图片后会自动解码为通用格式再进行后续处理。首次加载 HEIC 解码器需要下载约 1.3MB 的 WebAssembly 模块，后续使用无需再次下载。',
+      '支持。批图网已内置 HEIC/HEIF 解码器，上传 HEIC 或 HEIF 图片后会自动处理。',
   },
   {
     question: '支持 SVG 文件吗？',
@@ -96,7 +96,7 @@ const FAQ_ITEMS: FAQItem[] = [
         <p>
           如果您遇到任何问题或有功能建议，可以通过以下方式联系：
         </p>
-         <ul className="list-disc list-inside mt-2 space-y-1 text-slate-600 dark:text-slate-400">
+          <ul className="list-disc list-inside mt-2 space-y-1 text-slate-600 dark:text-slate-400">
           <li>
             请发送邮件至{' '}
             <a
@@ -106,7 +106,6 @@ const FAQ_ITEMS: FAQItem[] = [
               anony.neatly471@passfwd.com
             </a>
           </li>
-          <li>查看浏览器控制台（F12）中的错误信息以帮助诊断</li>
           <li>尝试使用最新版本的 Chrome、Firefox 或 Edge 浏览器</li>
           <li>对于大文件，尝试分批次处理以降低内存压力</li>
         </ul>
@@ -119,8 +118,8 @@ export default function FAQ() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   useSEO({
-    title: '常见问题 - ImageToolbox | 免费在线图片处理工具箱FAQ',
-    description: 'ImageToolbox免费在线图片处理工具箱常见问题解答：是否免费、图片是否上传、支持格式、批量处理、文件大小限制、隐私安全等。',
+    title: '常见问题 - 批图网 | 免费在线图片处理工具箱FAQ',
+    description: '批图网免费在线图片处理工具箱常见问题解答：是否免费、图片是否上传、支持格式、批量处理、文件大小限制、隐私安全等。',
     keywords: '图片处理FAQ,在线图片工具常见问题,图片压缩问题,格式转换问题,图片隐私安全',
   });
 
@@ -157,7 +156,7 @@ export default function FAQ() {
               常见问题
             </h1>
             <p className="mt-3 text-slate-500 dark:text-slate-400">
-              关于 ImageToolbox 的常见问题解答
+              关于批图网的常见问题解答
             </p>
           </section>
 

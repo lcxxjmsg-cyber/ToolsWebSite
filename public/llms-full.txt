@@ -1,9 +1,9 @@
-# ImageToolbox - Complete AI & LLM Documentation
+# 批图网 - Complete AI & LLM Documentation
 
 ## Overview
-ImageToolbox is a permanently free online image processing toolkit that performs all operations locally in the user's browser. No images are ever uploaded to external servers. The tool processes images using the browser's Canvas API, ensuring complete privacy and security.
+批图网 is a permanently free online image processing toolkit that performs all operations locally in the user's browser. No images are ever uploaded to external servers. The tool processes images using browser-native APIs, ensuring complete privacy and security.
 
-Base URL: https://imagetoolbox.pages.dev/
+Base URL: https://ppic.cc/
 
 ---
 
@@ -11,10 +11,10 @@ Base URL: https://imagetoolbox.pages.dev/
 
 ### 1. Home Page (/)
 **Title:** 图片处理，从未如此简单
-**Description:** Landing page with hero section, upload zone, supported format badges, feature cards (Format Conversion, Compression, Crop, Filters), trust badges (Free Forever, Local Processing, No Registration, Batch Support, No File Size Limit), and statistics.
+**Description:** Landing page with hero section, upload zone, supported format badges, feature cards (Format Conversion, Compression, Crop, Filters), trust badges (Free Forever, Local Processing, No Registration, Batch Support, No File Size Limit).
 
 ### 2. Workspace (/workspace)
-**Title:** 工作台 - ImageToolbox
+**Title:** 工作台 - 批图网
 **Description:** Main processing workspace with full toolbar including:
 - Format conversion (output format selector)
 - Compression (quality/lossless/target size modes)
@@ -23,30 +23,30 @@ Base URL: https://imagetoolbox.pages.dev/
 - Filters (9 adjustment sliders with live preview)
 - Watermark (text or image overlay, 5 positions)
 - Border (width, color, corner radius)
-Supports batch apply-to-all, ZIP export with directory structure preservation.
+Supports batch apply-to-all, ZIP export.
 
 ### 3. Image Compression (/compress)
-**Title:** 图片压缩 - ImageToolbox
+**Title:** 图片压缩 - 批图网
 **Description:** Standalone compression tool. Modes: quality-based (1-100 slider), lossless (PNG only), target file size (auto-adjust quality to hit target KB). Batch processing with individual result previews and downloads.
 
 ### 4. Image Crop (/crop)
-**Title:** 图片裁剪 - ImageToolbox
+**Title:** 图片裁剪 - 批图网
 **Description:** Interactive crop tool with drag-to-select region. 8 preset aspect ratios. Manual pixel input for X, Y, Width, Height. Real-time canvas preview.
 
 ### 5. Image Resize (/resize)
-**Title:** 调整尺寸 - ImageToolbox
+**Title:** 调整尺寸 - 批图网
 **Description:** Three resize modes: percentage scale (1-200%), pixel dimensions (with aspect ratio lock), fit-to-box (contain/cover modes). Shows before/after dimensions.
 
 ### 6. Filters & Effects (/filter)
-**Title:** 滤镜特效 - ImageToolbox
+**Title:** 滤镜特效 - 批图网
 **Description:** 9 filter controls with real-time CSS preview: brightness (0-200), contrast (0-200), saturation (0-200), hue-rotate (0-360deg), grayscale (0-100), sepia (0-100), blur (0-20px), invert (0-100), opacity (0-100). Reset to defaults button.
 
 ### 7. Format Conversion (/convert)
-**Title:** 格式转换 - ImageToolbox
+**Title:** 格式转换 - 批图网
 **Description:** Convert between PNG, JPEG, WebP, AVIF, GIF, BMP, ICO, TIFF. Quality slider for lossy formats. Format information displayed (transparency support, compression type).
 
 ### 8. FAQ (/faq)
-**Title:** 常见问题 - ImageToolbox
+**Title:** 常见问题 - 批图网
 **Description:** 10 expandable FAQ items covering:
 1. Is this tool really free? (Yes, permanently)
 2. Are images uploaded to any server? (No, 100% local)
@@ -54,66 +54,23 @@ Supports batch apply-to-all, ZIP export with directory structure preservation.
 4. Batch processing capability (Unlimited)
 5. Quality after processing (Configurable, lossless option available)
 6. Maximum file size limit (Browser memory limitation)
-7. HEIC/HEIF support (WASM decoder needed)
+7. HEIC/HEIF support (Built-in decoder)
 8. SVG support (Input only, rasterized for output)
 9. Privacy data safety (EXIF viewing and cleanup available)
-10. How to report issues (GitHub or contact)
+10. How to report issues (Email contact)
 
 ### 9. Privacy Policy (/privacy)
-**Title:** 隐私协议 - ImageToolbox
+**Title:** 隐私协议 - 批图网
 **Description:** Comprehensive privacy policy covering: no data collection, no tracking cookies, localStorage for theme preference only, no third-party analytics, all processing in browser memory, files never leave device, contact information.
 
 ### 10. Terms of Service (/terms)
-**Title:** 使用条款 - ImageToolbox
-**Description:** Terms covering: free service declaration, disclaimer of liability, prohibited uses, intellectual property (tool is MIT open source), service availability (best effort), right to modify terms.
-
----
-
-## Technical Architecture
-
-### Image Processing Pipeline
-All image processing uses the browser's Canvas API:
-1. File/Blob → HTMLImageElement
-2. Crop (if configured)
-3. Resize (if configured)
-4. Apply CSS filters via canvas context
-5. Apply watermark overlay (text or image)
-6. Apply border
-7. Export as target format with compression
-
-### Processing Functions (src/utils/imageProcessor.ts)
-- `fileToImage(file: File): Promise<HTMLImageElement>` - Decode file to image
-- `blobToImage(blob: Blob): Promise<HTMLImageElement>` - Decode blob to image
-- `imageToBlob(img, format, quality): Promise<Blob>` - Export image to blob
-- `compressImage(file, settings): Promise<Blob>` - Compress with quality/lossless/targetSize modes
-- `resizeImage(file, settings): Promise<Blob>` - Resize with percent/pixels/fit modes
-- `cropImage(file, settings): Promise<Blob>` - Crop to specified rectangle
-- `applyFilters(file, settings): Promise<Blob>` - Apply CSS filters via canvas
-- `convertFormat(file, format, quality): Promise<Blob>` - Convert format
-- `applyWatermark(file, settings): Promise<Blob>` - Add text/image watermark
-- `applyBorder(file, settings): Promise<Blob>` - Add border with config
-- `processImage(file, settings): Promise<{blob, format}>` - Full pipeline
-- `generateThumbnail(file, maxSize): Promise<string>` - Create preview thumbnail
-
-### State Management (Zustand)
-- **taskStore.ts:** Task queue, individual/global settings, processing status, progress tracking
-- **themeStore.ts:** Light/dark/system theme with localStorage persistence
-
-### Input Methods
-- Drag & drop (single, multiple files, ZIP archives)
-- Click to upload (file input, multiple)
-- Paste from clipboard (Ctrl+V)
-- Direct URL fetch
-
-### Output Methods
-- Individual file download
-- Download all as separate files
-- ZIP archive download (preserves directory structure if input was ZIP)
+**Title:** 使用条款 - 批图网
+**Description:** Terms covering: free service declaration, disclaimer of liability, prohibited uses, intellectual property, service availability (best effort), right to modify terms.
 
 ---
 
 ## SEO & Discovery
-- sitemap.xml: https://imagetoolbox.pages.dev/sitemap.xml
-- robots.txt: https://imagetoolbox.pages.dev/robots.txt
-- llms.txt: https://imagetoolbox.pages.dev/llms.txt
-- llms-full.txt: https://imagetoolbox.pages.dev/llms-full.txt
+- sitemap.xml: https://ppic.cc/sitemap.xml
+- robots.txt: https://ppic.cc/robots.txt
+- llms.txt: https://ppic.cc/llms.txt
+- llms-full.txt: https://ppic.cc/llms-full.txt

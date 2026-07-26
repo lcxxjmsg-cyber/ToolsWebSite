@@ -2,61 +2,61 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
         xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
-    <loc>https://imagetoolbox.pages.dev/</loc>
+    <loc>https://ppic.cc/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
     <lastmod>2026-07-25</lastmod>
   </url>
   <url>
-    <loc>https://imagetoolbox.pages.dev/workspace</loc>
+    <loc>https://ppic.cc/workspace</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
     <lastmod>2026-07-25</lastmod>
   </url>
   <url>
-    <loc>https://imagetoolbox.pages.dev/compress</loc>
+    <loc>https://ppic.cc/compress</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <lastmod>2026-07-25</lastmod>
   </url>
   <url>
-    <loc>https://imagetoolbox.pages.dev/crop</loc>
+    <loc>https://ppic.cc/crop</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <lastmod>2026-07-25</lastmod>
   </url>
   <url>
-    <loc>https://imagetoolbox.pages.dev/resize</loc>
+    <loc>https://ppic.cc/resize</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <lastmod>2026-07-25</lastmod>
   </url>
   <url>
-    <loc>https://imagetoolbox.pages.dev/filter</loc>
+    <loc>https://ppic.cc/filter</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
     <lastmod>2026-07-25</lastmod>
   </url>
   <url>
-    <loc>https://imagetoolbox.pages.dev/convert</loc>
+    <loc>https://ppic.cc/convert</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
     <lastmod>2026-07-25</lastmod>
   </url>
   <url>
-    <loc>https://imagetoolbox.pages.dev/faq</loc>
+    <loc>https://ppic.cc/faq</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
     <lastmod>2026-07-25</lastmod>
   </url>
   <url>
-    <loc>https://imagetoolbox.pages.dev/privacy</loc>
+    <loc>https://ppic.cc/privacy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
     <lastmod>2026-07-25</lastmod>
   </url>
   <url>
-    <loc>https://imagetoolbox.pages.dev/terms</loc>
+    <loc>https://ppic.cc/terms</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
     <lastmod>2026-07-25</lastmod>

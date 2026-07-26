@@ -1,94 +1,78 @@
 import { create } from 'zustand';
 
-export type Theme = 'light' | 'dark' | 'system';
-
-const THEME_STORAGE_KEY = 'imagetoolbox-theme';
-
-function getStoredTheme(): Theme {
-  try {
-    const stored = localStorage.getItem(THEME_STORAGE_KEY);
-    if (stored === 'light' || stored === 'dark' || stored === 'system') {
-      return stored;
-    }
-  } catch {
-    // localStorage not available
-  }
-  return 'system';
-}
-
-function storeTheme(theme: Theme): void {
-  try {
-    localStorage.setItem(THEME_STORAGE_KEY, theme);
-  } catch {
-    // localStorage not available
-  }
-}
-
-function resolveTheme(theme: Theme): 'light' | 'dark' {
-  if (theme === 'system') {
-    if (
-      typeof window !== 'undefined' &&
-      window.matchMedia &&
-      window.matchMedia('(prefers-color-scheme: dark)').matches
-    ) {
-      return 'dark';
-    }
-    return 'light';
-  }
-  return theme;
-}
-
-function applyThemeClass(resolved: 'light' | 'dark'): void {
-  if (typeof document === 'undefined') return;
-  const root = document.documentElement;
-  root.classList.remove('light', 'dark');
-  root.classList.add(resolved);
-}
+export type ThemeMode = 'light' | 'dark' | 'system';
+export type ThemePreset = 'default' | 'emerald' | 'amber' | 'rose' | 'slate';
 
 interface ThemeStore {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-  resolvedTheme: 'light' | 'dark';
+  mode: ThemeMode;
+  preset: ThemePreset;
+  resolvedMode: 'light' | 'dark';
+  setMode: (mode: ThemeMode) => void;
+  setPreset: (preset: ThemePreset) => void;
 }
 
-const initialTheme = getStoredTheme();
-const initialResolved = resolveTheme(initialTheme);
+const PRESET_COLORS: Record<ThemePreset, { light: Record<string, string>; dark: Record<string, string> }> = {
+  default: {
+    light: { '--color-accent': '#6366f1', '--color-accent-hover': '#4f46e5' },
+    dark: { '--color-accent': '#818cf8', '--color-accent-hover': '#6366f1' },
+  },
+  emerald: {
+    light: { '--color-accent': '#10b981', '--color-accent-hover': '#059669' },
+    dark: { '--color-accent': '#34d399', '--color-accent-hover': '#10b981' },
+  },
+  amber: {
+    light: { '--color-accent': '#f59e0b', '--color-accent-hover': '#d97706' },
+    dark: { '--color-accent': '#fbbf24', '--color-accent-hover': '#f59e0b' },
+  },
+  rose: {
+    light: { '--color-accent': '#f43f5e', '--color-accent-hover': '#e11d48' },
+    dark: { '--color-accent': '#fb7185', '--color-accent-hover': '#f43f5e' },
+  },
+  slate: {
+    light: { '--color-accent': '#64748b', '--color-accent-hover': '#475569' },
+    dark: { '--color-accent': '#94a3b8', '--color-accent-hover': '#64748b' },
+  },
+};
 
-if (typeof document !== 'undefined') {
-  applyThemeClass(initialResolved);
-}
+function applyTheme(mode: ThemeMode, preset: ThemePreset) {
+  const root = document.documentElement;
+  const resolved = mode === 'system'
+    ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+    : mode;
 
-// Listen for system preference changes
-if (
-  typeof window !== 'undefined' &&
-  window.matchMedia
-) {
-  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-  const handleChange = () => {
-    const store = useThemeStore.getState();
-    if (store.theme === 'system') {
-      const resolved = resolveTheme('system');
-      useThemeStore.setState({ resolvedTheme: resolved });
-      applyThemeClass(resolved);
-    }
-  };
+  root.classList.toggle('dark', resolved === 'dark');
 
-  if (mediaQuery.addEventListener) {
-    mediaQuery.addEventListener('change', handleChange);
-  } else {
-    // Safari < 14 fallback
-    mediaQuery.addListener(handleChange);
+  const colors = PRESET_COLORS[preset][resolved];
+  for (const [key, value] of Object.entries(colors)) {
+    root.style.setProperty(key, value);
   }
 }
 
-export const useThemeStore = create<ThemeStore>((set) => ({
-  theme: initialTheme,
-  resolvedTheme: initialResolved,
+export const useThemeStore = create<ThemeStore>((set, get) => ({
+  mode: (localStorage.getItem('ppic_theme_mode') as ThemeMode) || 'system',
+  preset: (localStorage.getItem('ppic_theme_preset') as ThemePreset) || 'default',
+  resolvedMode: 'light',
 
-  setTheme: (theme: Theme) => {
-    const resolved = resolveTheme(theme);
-    storeTheme(theme);
-    applyThemeClass(resolved);
-    set({ theme, resolvedTheme: resolved });
+  setMode: (mode: ThemeMode) => {
+    localStorage.setItem('ppic_theme_mode', mode);
+    const { preset } = get();
+    applyTheme(mode, preset);
+    set({ mode });
+  },
+
+  setPreset: (preset: ThemePreset) => {
+    localStorage.setItem('ppic_theme_preset', preset);
+    const { mode } = get();
+    applyTheme(mode, preset);
+    set({ preset });
   },
 }));
+
+const initMode = (localStorage.getItem('ppic_theme_mode') as ThemeMode) || 'system';
+const initPreset = (localStorage.getItem('ppic_theme_preset') as ThemePreset) || 'default';
+applyTheme(initMode, initPreset);
+
+window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => {
+  const { mode, preset } = useThemeStore.getState();
+  if (mode === 'system') applyTheme('system', preset);
+});

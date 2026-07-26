@@ -32,7 +32,7 @@ export default function Crop() {
   const { tasks } = useTaskStore();
 
   useSEO({
-    title: '图片裁剪 - ImageToolbox | 在线图片自由裁剪工具',
+    title: '图片裁剪 - 批图网 | 在线图片自由裁剪工具',
     description: '免费在线图片裁剪工具，支持自由裁剪、预设比例(1:1/4:3/16:9等)、精确像素裁剪。拖拽选取裁剪区域，纯本地处理。',
     keywords: '图片裁剪,在线图片裁剪,自由裁剪,比例裁剪,1比1裁剪,16比9裁剪,像素裁剪',
   });
@@ -253,9 +253,9 @@ export default function Crop() {
       <InjectJSONLD data={{
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
-        'name': '图片裁剪 - ImageToolbox',
+        'name': '图片裁剪 - 批图网',
         'description': '免费在线图片裁剪工具，支持自由裁剪和预设比例。',
-        'url': 'https://imagetoolbox.pages.dev/crop',
+        'url': 'https://ppic.cc/crop',
       }} />
       <Header />
 

@@ -19,7 +19,7 @@ export default function Footer() {
               <Image className="w-4 h-4 text-white" />
             </div>
             <span className="text-lg font-bold text-white tracking-tight">
-              ImageToolbox
+              批图网
             </span>
           </div>
 
@@ -48,7 +48,7 @@ export default function Footer() {
 
         <div className="pt-6 border-t border-slate-800">
           <p className="text-sm text-slate-500 text-center">
-            © 2026 ImageToolbox. 永久免费 · 本地处理 · 隐私安全
+            © 2026 批图网. 永久免费 · 本地处理 · 隐私安全
           </p>
         </div>
       </div>

@@ -10,6 +10,7 @@
   --color-text-secondary: #475569;
   --color-border: #e2e8f0;
   --color-accent: #6366f1;
+  --color-accent-hover: #4f46e5;
   --glass-bg: rgba(255, 255, 255, 0.7);
   --glass-border: rgba(255, 255, 255, 0.3);
 }
@@ -22,6 +23,7 @@
   --color-text-secondary: #94a3b8;
   --color-border: #334155;
   --color-accent: #818cf8;
+  --color-accent-hover: #6366f1;
   --glass-bg: rgba(26, 26, 26, 0.7);
   --glass-border: rgba(51, 65, 85, 0.5);
 }
@@ -93,3 +95,26 @@ body {
 .animate-spin-slow {
   animation: spin-slow 2s linear infinite;
 }
+
+/* Theme-aware brand color overrides */
+.bg-brand-50 { background-color: color-mix(in srgb, var(--color-accent) 10%, transparent) !important; }
+.bg-brand-500 { background-color: var(--color-accent) !important; }
+.bg-brand-600 { background-color: var(--color-accent-hover) !important; }
+.text-brand-500 { color: var(--color-accent) !important; }
+.text-brand-600 { color: var(--color-accent-hover) !important; }
+.border-brand-500 { border-color: var(--color-accent) !important; }
+.ring-brand-500 { --tw-ring-color: var(--color-accent) !important; }
+.accent-brand-500 { accent-color: var(--color-accent) !important; }
+.from-brand-500 { --tw-gradient-from: var(--color-accent) !important; }
+.to-brand-600,
+.to-brand-700 { --tw-gradient-to: var(--color-accent-hover) !important; }
+.shadow-brand-500\/25 { --tw-shadow-color: color-mix(in srgb, var(--color-accent) 25%, transparent) !important; }
+.shadow-brand-500\/40 { --tw-shadow-color: color-mix(in srgb, var(--color-accent) 40%, transparent) !important; }
+.hover\:bg-brand-600:hover { background-color: var(--color-accent-hover) !important; }
+.hover\:text-brand-500:hover { color: var(--color-accent) !important; }
+.hover\:text-brand-600:hover { color: var(--color-accent-hover) !important; }
+.hover\:border-brand-400:hover { border-color: var(--color-accent) !important; }
+.hover\:border-brand-600:hover { border-color: var(--color-accent-hover) !important; }
+.dark .dark\:bg-brand-500\/10 { background-color: color-mix(in srgb, var(--color-accent) 10%, transparent) !important; }
+.dark .dark\:bg-brand-50\/10 { background-color: color-mix(in srgb, var(--color-accent) 10%, transparent) !important; }
+.dark .dark\:bg-brand-500\/20 { background-color: color-mix(in srgb, var(--color-accent) 20%, transparent) !important; }

@@ -30,7 +30,7 @@ export default function Compress() {
   const { tasks } = useTaskStore();
 
   useSEO({
-    title: '图片压缩 - ImageToolbox | 在线图片无损有损压缩工具',
+    title: '图片压缩 - 批图网 | 在线图片无损有损压缩工具',
     description: '免费在线图片压缩工具，支持有损压缩、无损压缩、目标大小三种模式。批量压缩PNG/JPEG/WebP图片，纯本地处理保护隐私。',
     keywords: '图片压缩,在线图片压缩,PNG压缩,JPEG压缩,批量图片压缩,无损压缩,有损压缩,目标大小压缩',
   });
@@ -135,9 +135,9 @@ export default function Compress() {
       <InjectJSONLD data={{
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
-        'name': '图片压缩 - ImageToolbox',
+        'name': '图片压缩 - 批图网',
         'description': '免费在线图片压缩工具，支持有损/无损/目标大小压缩，批量处理。',
-        'url': 'https://imagetoolbox.pages.dev/compress',
+        'url': 'https://ppic.cc/compress',
       }} />
       <Header />
 

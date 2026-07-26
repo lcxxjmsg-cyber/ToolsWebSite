@@ -6,7 +6,7 @@ import {
   Crop,
   Shield,
   Users,
-  Infinity,
+  InfinityIcon,
   Layers,
   ArrowRight,
   Check,
@@ -15,13 +15,14 @@ import Header from '../components/Header';
 import Footer from '../components/Footer';
 import { SUPPORTED_INPUT_FORMATS } from '../types/index';
 import { useSEO, InjectJSONLD } from '../utils/seo';
+import { useT } from '../i18n/useT';
 
 const HOME_JSONLD = {
   '@context': 'https://schema.org',
   '@type': 'WebApplication',
-  'name': 'ImageToolbox',
-  'url': 'https://imagetoolbox.pages.dev/',
-  'description': '免费在线图片处理工具箱，纯本地处理不上传服务器。支持图片压缩、格式转换PNG/JPEG/WebP/AVIF、裁剪、调整尺寸、滤镜特效、水印、边框等，永久免费。',
+  'name': '批图网',
+  'url': 'https://ppic.cc/',
+  'description': '永久免费在线图片批量处理工具箱。纯本地处理不上传服务器，支持20+图片处理功能。批量压缩、格式转换、裁剪、滤镜、水印，保护您的隐私安全。',
   'applicationCategory': 'MultimediaApplication',
   'operatingSystem': 'All',
   'offers': {
@@ -42,57 +43,58 @@ const HOME_JSONLD = {
   ],
 };
 
-const FEATURES = [
-  {
-    icon: Shuffle,
-    title: '格式转换',
-    description: 'PNG、JPEG、WebP、AVIF 等格式互转，支持批量处理',
-    color: 'from-violet-500 to-purple-600',
-    bg: 'bg-violet-50 dark:bg-violet-500/10',
-    iconColor: 'text-violet-500',
-  },
-  {
-    icon: Zap,
-    title: '图片压缩',
-    description: '智能压缩，支持有损/无损/目标大小三种模式',
-    color: 'from-amber-500 to-orange-600',
-    bg: 'bg-amber-50 dark:bg-amber-500/10',
-    iconColor: 'text-amber-500',
-  },
-  {
-    icon: Crop,
-    title: '裁剪',
-    description: '自由裁剪、预设比例、精确像素裁剪',
-    color: 'from-emerald-500 to-teal-600',
-    bg: 'bg-emerald-50 dark:bg-emerald-500/10',
-    iconColor: 'text-emerald-500',
-  },
-  {
-    icon: Sparkles,
-    title: '滤镜特效',
-    description: '亮度、对比度、饱和度等专业调整',
-    color: 'from-rose-500 to-pink-600',
-    bg: 'bg-rose-50 dark:bg-rose-500/10',
-    iconColor: 'text-rose-500',
-  },
-];
-
-const TRUST_BADGES = [
-  { icon: Check, label: '永久免费' },
-  { icon: Shield, label: '本地处理' },
-  { icon: Users, label: '无需注册' },
-  { icon: Layers, label: '支持批量' },
-  { icon: Infinity, label: '无文件大小限制' },
-];
-
 export default function Home() {
   const navigate = useNavigate();
+  const t = useT();
 
   useSEO({
-    title: 'ImageToolbox - 免费在线图片处理工具箱 | 纯本地压缩转换裁剪滤镜',
-    description: '免费在线图片处理工具箱，纯本地处理不上传服务器。支持图片压缩、格式转换PNG/JPEG/WebP/AVIF、裁剪、调整尺寸、滤镜特效等，永久免费无需注册。',
-    keywords: '图片处理,图片压缩,图片格式转换,在线图片处理,免费图片编辑,裁剪,滤镜,批量处理',
+    title: t('home.seoTitle'),
+    description: t('home.seoDesc'),
+    keywords: t('home.seoKeywords'),
   });
+
+  const FEATURES = [
+    {
+      icon: Shuffle,
+      title: t('home.feature1.title'),
+      description: t('home.feature1.desc'),
+      color: 'from-violet-500 to-purple-600',
+      bg: 'bg-violet-50 dark:bg-violet-500/10',
+      iconColor: 'text-violet-500',
+    },
+    {
+      icon: Zap,
+      title: t('home.feature2.title'),
+      description: t('home.feature2.desc'),
+      color: 'from-amber-500 to-orange-600',
+      bg: 'bg-amber-50 dark:bg-amber-500/10',
+      iconColor: 'text-amber-500',
+    },
+    {
+      icon: Crop,
+      title: t('home.feature3.title'),
+      description: t('home.feature3.desc'),
+      color: 'from-emerald-500 to-teal-600',
+      bg: 'bg-emerald-50 dark:bg-emerald-500/10',
+      iconColor: 'text-emerald-500',
+    },
+    {
+      icon: Sparkles,
+      title: t('home.feature4.title'),
+      description: t('home.feature4.desc'),
+      color: 'from-rose-500 to-pink-600',
+      bg: 'bg-rose-50 dark:bg-rose-500/10',
+      iconColor: 'text-rose-500',
+    },
+  ];
+
+  const TRUST_BADGES = [
+    { icon: Check, label: t('home.badge1') },
+    { icon: Shield, label: t('home.badge2') },
+    { icon: Users, label: t('home.badge3') },
+    { icon: Layers, label: t('home.badge4') },
+    { icon: InfinityIcon, label: t('home.badge5') },
+  ];
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0f0f0f]">
@@ -109,25 +111,25 @@ export default function Home() {
           <div className="relative max-w-4xl mx-auto px-4 sm:px-6 text-center">
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight leading-tight">
               <span className="bg-gradient-to-r from-brand-500 to-brand-700 bg-clip-text text-transparent">
-                图片处理，从未如此简单
+                {t('home.title')}
               </span>
             </h1>
             <p className="mt-6 text-lg sm:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-              纯本地处理，您的图片不会上传到任何服务器，隐私绝对安全
+              {t('home.subtitle')}
             </p>
             <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4">
               <button
                 onClick={() => navigate('/workspace')}
                 className="btn-primary text-base px-8 py-4 inline-flex items-center gap-2 group"
               >
-                开始使用
+                {t('home.cta')}
                 <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </button>
               <button
                 onClick={() => navigate('/workspace')}
                 className="btn-secondary text-base px-8 py-4"
               >
-                格式转换
+                {t('home.feature1.title')}
               </button>
             </div>
           </div>

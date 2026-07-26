@@ -57,7 +57,7 @@ export default function Filter() {
   useTaskStore();
 
   useSEO({
-    title: '滤镜特效 - ImageToolbox | 在线图片滤镜调色工具',
+    title: '滤镜特效 - 批图网 | 在线图片滤镜调色工具',
     description: '免费在线图片滤镜工具，支持亮度、对比度、饱和度、色相、灰度、怀旧、模糊、反相、透明度9种调整。实时预览，纯本地处理。',
     keywords: '图片滤镜,在线图片滤镜,调色工具,亮度调整,对比度调整,饱和度,灰度滤镜,怀旧滤镜,模糊效果',
   });
@@ -136,9 +136,9 @@ export default function Filter() {
       <InjectJSONLD data={{
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
-        'name': '滤镜特效 - ImageToolbox',
+        'name': '滤镜特效 - 批图网',
         'description': '免费在线图片滤镜工具，亮度、对比度、饱和度等9种调整。',
-        'url': 'https://imagetoolbox.pages.dev/filter',
+        'url': 'https://ppic.cc/filter',
       }} />
       <Header />
 

@@ -51,7 +51,7 @@ export default function Convert() {
   const { tasks } = useTaskStore();
 
   useSEO({
-    title: '格式转换 - ImageToolbox | 在线图片格式互转PNG/JPEG/WebP/AVIF',
+    title: '格式转换 - 批图网 | 在线图片格式互转PNG/JPEG/WebP/AVIF',
     description: '免费在线图片格式转换工具，支持PNG/JPEG/WebP/AVIF/GIF/BMP/ICO/TIFF格式互转。批量处理，可调节输出质量，纯本地处理保护隐私。',
     keywords: '图片格式转换,PNG转JPEG,WebP转换,AVIF转换,在线图片格式转换,批量格式转换,PNG转WebP,JPEG转PNG',
   });
@@ -144,9 +144,9 @@ export default function Convert() {
       <InjectJSONLD data={{
         '@context': 'https://schema.org',
         '@type': 'WebApplication',
-        'name': '格式转换 - ImageToolbox',
+        'name': '格式转换 - 批图网',
         'description': '免费在线图片格式转换工具，PNG/JPEG/WebP/AVIF等格式互转。',
-        'url': 'https://imagetoolbox.pages.dev/convert',
+        'url': 'https://ppic.cc/convert',
       }} />
       <Header />
 
