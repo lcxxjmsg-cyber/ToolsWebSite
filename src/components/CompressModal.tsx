@@ -56,7 +56,9 @@ export default function CompressModal({ isOpen, onClose }: CompressModalProps) {
     if (cs.targetSizeKB != null) setTargetSizeKB(cs.targetSizeKB);
   }, [isOpen, selectedTask]);
 
-  const estimatedPercent = mode === 'quality' ? Math.max(5, Math.min(100, quality)) : null;
+  const estimatedPercent = mode === 'quality' 
+    ? Math.round(Math.max(3, quality * 0.7))  // WASM encoder typically achieves ~30% better than quality setting
+    : null;
 
   const handleApply = useCallback(() => {
     if (!selectedTaskId) return;
