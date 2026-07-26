@@ -557,6 +557,15 @@ export async function processImage(
   const noCompressChange = settings.compress.mode === DEFAULT_TASK_SETTINGS.compress.mode
     && settings.compress.quality === DEFAULT_TASK_SETTINGS.compress.quality;
 
+  const isLosslessNoChange = settings.compress.mode === 'lossless'
+    && !settings.crop && !settings.resize && !hasActiveFilters(settings.filter)
+    && !settings.watermark && (!settings.border || settings.border.width <= 0)
+    && outputFormat === inputFormat && settings.outputFormat !== 'pdf';
+
+  if (isLosslessNoChange) {
+    return { blob: file, format: getMimeType(inputFormat) };
+  }
+
   const isNoOp =
     !settings.crop &&
     !settings.resize &&
