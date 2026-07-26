@@ -1,19 +1,23 @@
 /*
   Cross-Origin-Opener-Policy: same-origin
-  Cross-Origin-Embedder-Policy: require-corp
+  Cross-Origin-Embedder-Policy: credentialless
 
 /sitemap.xml
   Cache-Control: public, max-age=3600
   Content-Type: application/xml; charset=utf-8
+  Cross-Origin-Opener-Policy: unsafe-none
+  Cross-Origin-Embedder-Policy: unsafe-none
 
 /robots.txt
   Cache-Control: public, max-age=86400
+  Cross-Origin-Opener-Policy: unsafe-none
+  Cross-Origin-Embedder-Policy: unsafe-none
 
 /llms.txt
   Cache-Control: public, max-age=86400
 
-/index.html
-  Cache-Control: public, max-age=3600
+/llms-full.txt
+  Cache-Control: public, max-age=86400
 
 /*.js
   Cache-Control: public, max-age=31536000, immutable
