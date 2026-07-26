@@ -121,5 +121,12 @@ declare module '@jsquash/jpeg' {
   export function encode(imageData: ImageData, quality?: number): Promise<ArrayBuffer>;
 }
 declare module '@jsquash/oxipng' {
-  export function optimise(data: Uint8Array, level?: number): Promise<Uint8Array | null>;
+  interface OxipngOptions { level?: number; interlace?: boolean }
+  export function optimise(data: Uint8Array, options?: OxipngOptions): Promise<Uint8Array | null>;
+}
+declare module '@jsquash/webp' {
+  export function encode(imageData: ImageData, quality?: number): Promise<ArrayBuffer>;
+}
+declare module '@jsquash/avif' {
+  export function encode(imageData: ImageData, options?: { quality?: number }): Promise<ArrayBuffer>;
 }

@@ -15,19 +15,14 @@ import { jsPDF } from 'jspdf';
 let jsquashPng: typeof import('@jsquash/png') | null = null;
 let jsquashJpeg: typeof import('@jsquash/jpeg') | null = null;
 let jsquashOxipng: typeof import('@jsquash/oxipng') | null = null;
+let jsquashWebp: typeof import('@jsquash/webp') | null = null;
+let jsquashAvif: typeof import('@jsquash/avif') | null = null;
 
-async function loadPngEncoder() {
-  if (!jsquashPng) jsquashPng = await import('@jsquash/png');
-  return jsquashPng;
-}
-async function loadJpegEncoder() {
-  if (!jsquashJpeg) jsquashJpeg = await import('@jsquash/jpeg');
-  return jsquashJpeg;
-}
-async function loadOxipng() {
-  if (!jsquashOxipng) jsquashOxipng = await import('@jsquash/oxipng');
-  return jsquashOxipng;
-}
+async function loadPngEncoder() { if (!jsquashPng) jsquashPng = await import('@jsquash/png'); return jsquashPng; }
+async function loadJpegEncoder() { if (!jsquashJpeg) jsquashJpeg = await import('@jsquash/jpeg'); return jsquashJpeg; }
+async function loadOxipng() { if (!jsquashOxipng) jsquashOxipng = await import('@jsquash/oxipng'); return jsquashOxipng; }
+async function loadWebpEncoder() { if (!jsquashWebp) jsquashWebp = await import('@jsquash/webp'); return jsquashWebp; }
+async function loadAvifEncoder() { if (!jsquashAvif) jsquashAvif = await import('@jsquash/avif'); return jsquashAvif; }
 
 let heic2any: ((args: { blob: Blob; toType?: string; quality?: number }) => Promise<Blob | Blob[]>) | null = null;
 
@@ -570,11 +565,19 @@ async function encodeWithWasm(canvas: HTMLCanvasElement, format: string, quality
   if (format === 'png') {
     const png = await loadPngEncoder();
     const compressed = await png.encode(imageData);
-    return new Blob([compressed], { type: 'image/png' });
+    return new Blob([new Uint8Array(compressed)], { type: 'image/png' });
   } else if (format === 'jpg' || format === 'jpeg') {
     const jpeg = await loadJpegEncoder();
     const compressed = await jpeg.encode(imageData, quality);
-    return new Blob([compressed], { type: 'image/jpeg' });
+    return new Blob([new Uint8Array(compressed)], { type: 'image/jpeg' });
+  } else if (format === 'webp') {
+    const webp = await loadWebpEncoder();
+    const compressed = await webp.encode(imageData, Math.round(quality));
+    return new Blob([new Uint8Array(compressed)], { type: 'image/webp' });
+  } else if (format === 'avif') {
+    const avif = await loadAvifEncoder();
+    const compressed = await avif.encode(imageData, { quality: Math.round(quality) });
+    return new Blob([new Uint8Array(compressed)], { type: 'image/avif' });
   } else {
     return new Promise((resolve) => canvas.toBlob((b) => resolve(b!), getMimeType(format), quality / 100));
   }
@@ -583,9 +586,9 @@ async function encodeWithWasm(canvas: HTMLCanvasElement, format: string, quality
 export async function losslessOptimizePng(file: File): Promise<Blob> {
   const oxipng = await loadOxipng();
   const buffer = await file.arrayBuffer();
-  const optimized = await oxipng.optimise(new Uint8Array(buffer));
+  const optimized = await oxipng.optimise(new Uint8Array(buffer), { level: 6 });
   if (optimized && optimized.length < buffer.byteLength) {
-    return new Blob([optimized as BlobPart], { type: 'image/png' });
+    return new Blob([new Uint8Array(optimized)], { type: 'image/png' });
   }
   return file;
 }
