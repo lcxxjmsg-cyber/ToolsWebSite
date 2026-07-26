@@ -248,6 +248,13 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
             resultBlob: undefined,
             resultSize: undefined,
             resultUrl: undefined,
+            settings: {
+              ...t.settings,
+              compress: {
+                mode: DEFAULT_TASK_SETTINGS.compress.mode,
+                quality: DEFAULT_TASK_SETTINGS.compress.quality,
+              },
+            },
           };
         }
         return t;
