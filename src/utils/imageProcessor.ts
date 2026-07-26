@@ -550,7 +550,9 @@ export async function processImage(
   settings: TaskSettings,
 ): Promise<{ blob: Blob; format: string }> {
   const inputExt = getFileExtension(file.name);
-  const inputFormat = inputExt === 'jpg' ? 'jpeg' : inputExt;
+  let inputFormat = inputExt === 'jpg' || inputExt === 'jpeg' ? 'jpg' : inputExt;
+  if (inputFormat === 'jpeg') inputFormat = 'jpg';
+  const outputFormat = settings.outputFormat === 'jpeg' ? 'jpg' : settings.outputFormat;
 
   const isNoOp =
     !settings.crop &&
@@ -558,8 +560,8 @@ export async function processImage(
     !hasActiveFilters(settings.filter) &&
     !settings.watermark &&
     (!settings.border || settings.border.width <= 0) &&
-    settings.outputFormat === inputFormat &&
-    settings.compress.mode === 'quality' &&
+    outputFormat === inputFormat &&
+    (settings.compress.mode === 'quality' || settings.compress.mode === 'lossless') &&
     settings.outputFormat !== 'pdf';
 
   if (isNoOp) {

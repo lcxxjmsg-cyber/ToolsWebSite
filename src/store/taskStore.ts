@@ -1,8 +1,8 @@
 import { create } from 'zustand';
-import type { TaskItem, TaskSettings, TaskStatus } from '../types/index';
-import { DEFAULT_TASK_SETTINGS } from '../types/index';
+import type { TaskItem, TaskSettings, TaskStatus, ImageFormat } from '../types/index';
+import { DEFAULT_TASK_SETTINGS, SUPPORTED_OUTPUT_FORMATS } from '../types/index';
 import { generateThumbnail } from '../utils/imageProcessor';
-import { getFileExtension, getFormatLabel } from '../utils/formatUtils';
+import { getFileExtension, getFormatLabel, getFormatFromExtension } from '../utils/formatUtils';
 import { isDocumentFile, convertDocumentToImage } from '../utils/documentConverter';
 
 interface TaskStore {
@@ -62,6 +62,10 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
       } else {
         const id = crypto.randomUUID();
         const ext = getFileExtension(file.name);
+        let fmt = getFormatFromExtension(ext);
+        if (fmt === 'jpeg') fmt = 'jpg';
+        if (!SUPPORTED_OUTPUT_FORMATS.includes(fmt as never)) fmt = 'png';
+        const settings = { ...DEFAULT_TASK_SETTINGS, outputFormat: fmt as ImageFormat };
 
         let thumbnail = '';
         try { thumbnail = await generateThumbnail(file, 200); } catch { thumbnail = ''; }
@@ -70,7 +74,7 @@ export const useTaskStore = create<TaskStore>((set, get) => ({
           id, file, fileName: file.name,
           originalSize: file.size, originalFormat: getFormatLabel(ext),
           thumbnail, status: 'pending', progress: 0,
-          settings: { ...DEFAULT_TASK_SETTINGS },
+          settings,
         });
       }
     }
