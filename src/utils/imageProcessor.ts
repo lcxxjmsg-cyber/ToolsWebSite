@@ -619,9 +619,10 @@ export async function processImage(
   if (isLosslessNoChange) {
     if (outputFormat === 'png') {
       const optimized = await losslessOptimizePng(file);
-      return { blob: optimized, format: getMimeType(inputFormat) };
+      if (optimized.size < file.size) {
+        return { blob: optimized, format: getMimeType(inputFormat) };
+      }
     }
-    return { blob: file, format: getMimeType(inputFormat) };
   }
 
   const isNoOp =
