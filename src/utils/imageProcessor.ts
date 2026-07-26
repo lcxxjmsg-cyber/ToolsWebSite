@@ -7,7 +7,7 @@ import type {
   BorderSettings,
   TaskSettings,
 } from '../types/index';
-import { FORMAT_MIME_MAP } from '../types/index';
+import { FORMAT_MIME_MAP, DEFAULT_TASK_SETTINGS } from '../types/index';
 import { getFileExtension } from './formatUtils';
 import { jsPDF } from 'jspdf';
 
@@ -554,6 +554,9 @@ export async function processImage(
   if (inputFormat === 'jpeg') inputFormat = 'jpg';
   const outputFormat = settings.outputFormat === 'jpeg' ? 'jpg' : settings.outputFormat;
 
+  const noCompressChange = settings.compress.mode === DEFAULT_TASK_SETTINGS.compress.mode
+    && settings.compress.quality === DEFAULT_TASK_SETTINGS.compress.quality;
+
   const isNoOp =
     !settings.crop &&
     !settings.resize &&
@@ -561,7 +564,7 @@ export async function processImage(
     !settings.watermark &&
     (!settings.border || settings.border.width <= 0) &&
     outputFormat === inputFormat &&
-    (settings.compress.mode === 'quality' || settings.compress.mode === 'lossless') &&
+    noCompressChange &&
     settings.outputFormat !== 'pdf';
 
   if (isNoOp) {

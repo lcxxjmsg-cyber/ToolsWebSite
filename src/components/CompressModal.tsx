@@ -56,7 +56,7 @@ export default function CompressModal({ isOpen, onClose }: CompressModalProps) {
     if (cs.targetSizeKB != null) setTargetSizeKB(cs.targetSizeKB);
   }, [isOpen, selectedTask]);
 
-  const estimatedPercent = mode === 'quality' ? Math.max(5, quality - 10 + Math.round(quality * 0.15)) : null;
+  const estimatedPercent = mode === 'quality' ? Math.max(5, Math.min(100, quality)) : null;
 
   const handleApply = useCallback(() => {
     if (!selectedTaskId) return;
