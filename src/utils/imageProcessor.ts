@@ -584,11 +584,17 @@ async function encodeWithWasm(canvas: HTMLCanvasElement, format: string, quality
 }
 
 export async function losslessOptimizePng(file: File): Promise<Blob> {
-  const oxipng = await loadOxipng();
-  const buffer = await file.arrayBuffer();
-  const optimized = await oxipng.optimise(new Uint8Array(buffer), { level: 6 });
-  if (optimized && optimized.length < buffer.byteLength) {
-    return new Blob([new Uint8Array(optimized)], { type: 'image/png' });
+  try {
+    const oxipng = await loadOxipng();
+    const buffer = await file.arrayBuffer();
+    const optimized = await oxipng.optimise(new Uint8Array(buffer), { level: 6 });
+    if (optimized && optimized.length < buffer.byteLength) {
+      console.log(`[oxipng] ${file.name}: ${buffer.byteLength} -> ${optimized.length} (${Math.round((1 - optimized.length / buffer.byteLength) * 100)}% smaller)`);
+      return new Blob([new Uint8Array(optimized)], { type: 'image/png' });
+    }
+    console.log(`[oxipng] ${file.name}: no improvement (${buffer.byteLength} bytes)`);
+  } catch (e) {
+    console.error('[oxipng] failed:', e);
   }
   return file;
 }
@@ -612,12 +618,8 @@ export async function processImage(
 
   if (isLosslessNoChange) {
     if (outputFormat === 'png') {
-      try {
-        const optimized = await losslessOptimizePng(file);
-        return { blob: optimized, format: getMimeType(inputFormat) };
-      } catch {
-        // Fall through to return original file
-      }
+      const optimized = await losslessOptimizePng(file);
+      return { blob: optimized, format: getMimeType(inputFormat) };
     }
     return { blob: file, format: getMimeType(inputFormat) };
   }
