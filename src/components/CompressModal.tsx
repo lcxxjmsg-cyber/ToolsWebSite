@@ -62,7 +62,7 @@ export default function CompressModal({ isOpen, onClose }: CompressModalProps) {
     if (!selectedTaskId) return;
     const settings: CompressSettings = {
       mode,
-      quality,
+      quality: mode === 'lossless' ? 100 : quality,
       ...(mode === 'targetSize' ? { targetSizeKB } : {}),
     };
     updateTaskSettings(selectedTaskId, { compress: settings });
@@ -94,6 +94,7 @@ export default function CompressModal({ isOpen, onClose }: CompressModalProps) {
           <div className="flex rounded-xl bg-slate-100 dark:bg-slate-800 p-1 gap-1">
             {([
               { key: 'quality' as const, label: t('compress.mode.smart') },
+              { key: 'lossless' as const, label: t('compress.mode.lossless') },
               { key: 'targetSize' as const, label: t('compress.mode.targetSize') },
             ]).map((opt) => (
               <button
@@ -154,6 +155,19 @@ export default function CompressModal({ isOpen, onClose }: CompressModalProps) {
                   </div>
                 </div>
               )}
+            </div>
+          )}
+
+          {mode === 'lossless' && (
+            <div className="rounded-xl bg-slate-50 dark:bg-slate-800/50 p-4 space-y-2">
+              <p className="text-sm text-slate-700 dark:text-slate-300 font-medium">{t('compress.lossless.title')}</p>
+              <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                {t('compress.lossless.desc')}
+              </p>
+              <ul className="text-xs text-slate-400 dark:text-slate-500 space-y-1 list-disc list-inside">
+                <li>{t('compress.lossless.png')}</li>
+                <li>{t('compress.lossless.jpeg')}</li>
+              </ul>
             </div>
           )}
 

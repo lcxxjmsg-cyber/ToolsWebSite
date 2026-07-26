@@ -25,6 +25,7 @@ import {
   Film,
 } from 'lucide-react';
 import type { ToolMode } from '../types/index';
+import { DEFAULT_TASK_SETTINGS } from '../types/index';
 import { useTaskStore } from '../store/taskStore';
 import { processImage } from '../utils/imageProcessor';
 import { createZipFromResults } from '../utils/zipUtils';
@@ -101,6 +102,27 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
     updateAllTasksSettings({ activeTool: tool.mode });
     onToolChange?.(tool.mode);
   };
+
+  const allDefault = tasks.length > 0 && tasks.every(
+    (t) =>
+      t.settings.outputFormat === DEFAULT_TASK_SETTINGS.outputFormat &&
+      !t.settings.crop &&
+      !t.settings.resize &&
+      !t.settings.watermark &&
+      (!t.settings.border || t.settings.border.width <= 0) &&
+      t.settings.compress.mode === DEFAULT_TASK_SETTINGS.compress.mode &&
+      t.settings.compress.quality === DEFAULT_TASK_SETTINGS.compress.quality &&
+      t.settings.filter &&
+      t.settings.filter.grayscale === 0 &&
+      t.settings.filter.sepia === 0 &&
+      t.settings.filter.blur === 0 &&
+      t.settings.filter.brightness === 100 &&
+      t.settings.filter.contrast === 100 &&
+      t.settings.filter.saturation === 100 &&
+      t.settings.filter.hueRotate === 0 &&
+      t.settings.filter.invert === 0 &&
+      t.settings.filter.opacity === 100
+  );
 
   const handleStartProcessing = useCallback(async () => {
     if (isProcessing || tasks.length === 0) return;
@@ -249,11 +271,15 @@ export default function Toolbar({ onToolChange }: ToolbarProps) {
             <button
               onClick={handleStartProcessing}
               disabled={tasks.length === 0}
+              title={allDefault ? t('toolbar.noSettingsHint') : ''}
               className="flex items-center gap-2 px-5 py-2.5 rounded-xl bg-brand-500 hover:bg-brand-600 text-white text-sm font-medium shadow-lg shadow-brand-500/25 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 active:scale-[0.98]"
             >
               <Play className="w-4 h-4 fill-current" />
               {t('toolbar.start')}
             </button>
+            {allDefault && (
+              <p className="text-xs text-amber-500 dark:text-amber-400 mt-1">{t('toolbar.noSettingsHint')}</p>
+            )}
           </div>
         )}
 

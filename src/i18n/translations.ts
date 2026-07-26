@@ -70,6 +70,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'toolbar.reprocess': '重新处理',
     'toolbar.completed': '处理完成',
     'toolbar.pending': '待处理任务',
+    'toolbar.noSettingsHint': '提示：在工具栏选择工具并配置参数后再开始处理',
     'toolbar.addHint': '添加图片后点击"开始处理"',
     'toolbar.error': '处理失败',
 
@@ -98,6 +99,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'compress.title': '压缩图片',
     'compress.subtitle': '选择压缩模式并调整参数',
     'compress.mode.smart': '智能压缩',
+    'compress.mode.lossless': '无损保留',
     'compress.mode.targetSize': '指定大小',
     'compress.quality.label': '压缩强度',
     'compress.quality.hint': '数字越小压缩越强，图片越小',
@@ -109,6 +111,10 @@ export const translations: Record<Lang, Record<string, string>> = {
     'compress.targetSize.label': '目标文件大小 (KB)',
     'compress.targetSize.hint': '自动调整质量以达到目标文件大小。实际结果可能略有偏差。',
     'compress.originalSize': '原始大小',
+    'compress.lossless.title': '无损保留原图',
+    'compress.lossless.desc': '对于 JPEG/WebP 输出将使用最高质量编码，对于 PNG 输出将保留原始颜色数。',
+    'compress.lossless.png': 'PNG: 保留全部颜色，文件大小基本不变',
+    'compress.lossless.jpeg': 'JPEG/WebP: 使用 100% 质量，视觉上无损',
 
     // Common
     'common.apply': '应用',
@@ -281,6 +287,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'toolbar.reprocess': 'Reprocess',
     'toolbar.completed': 'completed',
     'toolbar.pending': 'pending',
+    'toolbar.noSettingsHint': 'Tip: Configure tools and parameters before processing',
     'toolbar.addHint': 'Add images and click "Start"',
     'toolbar.error': 'Processing failed',
 
@@ -307,6 +314,7 @@ export const translations: Record<Lang, Record<string, string>> = {
     'compress.title': 'Compress Image',
     'compress.subtitle': 'Select compression mode and adjust parameters',
     'compress.mode.smart': 'Smart Compress',
+    'compress.mode.lossless': 'Lossless',
     'compress.mode.targetSize': 'Target Size',
     'compress.quality.label': 'Compression Strength',
     'compress.quality.hint': 'Lower number = stronger compression = smaller file',
@@ -318,6 +326,10 @@ export const translations: Record<Lang, Record<string, string>> = {
     'compress.targetSize.label': 'Target File Size (KB)',
     'compress.targetSize.hint': 'Automatically adjusts quality to reach target file size. Actual results may vary slightly.',
     'compress.originalSize': 'Original Size',
+    'compress.lossless.title': 'Keep Original Quality',
+    'compress.lossless.desc': 'For JPEG/WebP output uses maximum quality. For PNG output preserves all colors.',
+    'compress.lossless.png': 'PNG: All colors preserved, file size nearly unchanged',
+    'compress.lossless.jpeg': 'JPEG/WebP: 100% quality, visually lossless',
 
     'common.apply': 'Apply',
     'common.cancel': 'Cancel',

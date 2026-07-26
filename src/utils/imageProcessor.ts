@@ -478,35 +478,35 @@ function quantizeColors(imageData: ImageData, maxColors: number): ImageData {
 
   if (colors.length <= maxColors) return imageData;
 
-  function medianCut(cols: typeof colors, depth: number): typeof colors {
-    if (depth <= 0 || cols.length <= maxColors) {
-      return [{
-        r: Math.round(cols.reduce((s, c) => s + c.r * c.count, 0) / cols.reduce((s, c) => s + c.count, 0)),
-        g: Math.round(cols.reduce((s, c) => s + c.g * c.count, 0) / cols.reduce((s, c) => s + c.count, 0)),
-        b: Math.round(cols.reduce((s, c) => s + c.b * c.count, 0) / cols.reduce((s, c) => s + c.count, 0)),
-        count: 1,
-      }];
+  function channelRange(ch: 'r' | 'g' | 'b', cols: typeof colors): number {
+    let min = Infinity, max = -Infinity;
+    for (const c of cols) { if (c[ch] < min) min = c[ch]; if (c[ch] > max) max = c[ch]; }
+    return max - min;
+  }
+
+  function medianCut(cols: typeof colors, depth: number, targetColors: number): typeof colors {
+    if (cols.length <= targetColors || depth <= 0) {
+      let tr = 0, tg = 0, tb = 0, tc = 0;
+      for (const c of cols) { tr += c.r * c.count; tg += c.g * c.count; tb += c.b * c.count; tc += c.count; }
+      return [{ r: tc > 0 ? Math.round(tr / tc) : 128, g: tc > 0 ? Math.round(tg / tc) : 128, b: tc > 0 ? Math.round(tb / tc) : 128, count: 1 }];
     }
 
-    const rRange = Math.max(...cols.map(c => c.r)) - Math.min(...cols.map(c => c.r));
-    const gRange = Math.max(...cols.map(c => c.g)) - Math.min(...cols.map(c => c.g));
-    const bRange = Math.max(...cols.map(c => c.b)) - Math.min(...cols.map(c => c.b));
+    const rRange = channelRange('r', cols);
+    const gRange = channelRange('g', cols);
+    const bRange = channelRange('b', cols);
+    const channel: 'r' | 'g' | 'b' = rRange >= gRange && rRange >= bRange ? 'r' : gRange >= bRange ? 'g' : 'b';
 
-    let channel: 'r' | 'g' | 'b';
-    if (rRange >= gRange && rRange >= bRange) channel = 'r';
-    else if (gRange >= rRange && gRange >= bRange) channel = 'g';
-    else channel = 'b';
-
-    const sorted = [...cols].sort((a, b) => a[channel] - b[channel]);
-    const mid = Math.floor(sorted.length / 2);
+    cols.sort((a, b) => a[channel] - b[channel]);
+    const mid = Math.floor(cols.length / 2);
+    const halfTarget = Math.max(1, Math.floor(targetColors / 2));
 
     return [
-      ...medianCut(sorted.slice(0, mid), depth - 1),
-      ...medianCut(sorted.slice(mid), depth - 1),
+      ...medianCut(cols.slice(0, mid), depth - 1, halfTarget),
+      ...medianCut(cols.slice(mid), depth - 1, targetColors - halfTarget),
     ];
   }
 
-  const palette = medianCut(colors, 8);
+  const palette = medianCut(colors, 6, maxColors);
 
   for (let i = 0; i < pixels.length; i += 4) {
     if (pixels[i + 3] === 0) continue;
