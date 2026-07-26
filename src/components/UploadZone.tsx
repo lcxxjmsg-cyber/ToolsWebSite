@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { Upload, Link, Loader2, AlertCircle } from 'lucide-react';
 import { useTaskStore } from '../store/taskStore';
 import { extractImagesFromZip } from '../utils/zipUtils';
+import { isDocumentFile } from '../utils/documentConverter';
 import { useT } from '../i18n/useT';
 
 interface UploadZoneProps {
@@ -45,7 +46,7 @@ export default function UploadZone({ onFilesAdded }: UploadZoneProps) {
           } finally {
             setZipLoading(false);
           }
-        } else if (file.type.startsWith('image/')) {
+        } else if (file.type.startsWith('image/') || isDocumentFile(file)) {
           imageFiles.push(file);
         }
       }
@@ -121,29 +122,44 @@ export default function UploadZone({ onFilesAdded }: UploadZoneProps) {
     setUrlError('');
 
     try {
+      // Try proxy approach: fetch via our own serverless function
+      // For now, attempt direct fetch (will fail for cross-origin on most sites)
       const response = await fetch(url);
       if (!response.ok) {
-        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+        throw new Error(`HTTP ${response.status}`);
       }
 
       const contentType = response.headers.get('content-type') ?? '';
-      if (!contentType.startsWith('image/')) {
+
+      if (contentType.startsWith('image/')) {
+        const blob = await response.blob();
+        const urlObj = new URL(url);
+        const pathParts = urlObj.pathname.split('/');
+        const rawName = pathParts[pathParts.length - 1] || 'image';
+        const extMatch = rawName.match(/\.([a-zA-Z0-9]+)$/);
+        const fileName = extMatch ? rawName : `${rawName}.${blob.type.split('/')[1] || 'png'}`;
+        const file = new File([blob], fileName, { type: blob.type });
+        await addTasks([file]);
+        onFilesAdded([file]);
+        setUrlInput('');
+      } else if (contentType.includes('html') || contentType.includes('text')) {
+        const html = await response.text();
+        const fileName = new URL(url).hostname.replace(/[^a-zA-Z0-9]/g, '_') + '.html';
+        const blob = new Blob([html], { type: 'text/html' });
+        const file = new File([blob], fileName, { type: 'text/html' });
+        await addTasks([file]);
+        onFilesAdded([file]);
+        setUrlInput('');
+      } else if (contentType.includes('pdf')) {
+        const blob = await response.blob();
+        const fileName = new URL(url).hostname.replace(/[^a-zA-Z0-9]/g, '_') + '.pdf';
+        const file = new File([blob], fileName, { type: 'application/pdf' });
+        await addTasks([file]);
+        onFilesAdded([file]);
+        setUrlInput('');
+      } else {
         throw new Error(t('upload.invalidUrl'));
       }
-
-      const blob = await response.blob();
-      const urlObj = new URL(url);
-      const pathParts = urlObj.pathname.split('/');
-      const rawName = pathParts[pathParts.length - 1] || 'image';
-      const extMatch = rawName.match(/\.([a-zA-Z0-9]+)$/);
-      const fileName = extMatch
-        ? rawName
-        : `${rawName}.${blob.type.split('/')[1] || 'png'}`;
-
-      const file = new File([blob], fileName, { type: blob.type });
-      await addTasks([file]);
-      onFilesAdded([file]);
-      setUrlInput('');
     } catch (err) {
       setUrlError(
         err instanceof Error ? err.message : t('upload.fetchError'),
@@ -209,7 +225,7 @@ export default function UploadZone({ onFilesAdded }: UploadZoneProps) {
         <input
           ref={fileInputRef}
           type="file"
-          accept="image/*,.zip"
+          accept="image/*,.zip,.txt,.html,.htm,.docx,.xlsx,.xls,.pdf"
           multiple
           onChange={handleFileChange}
           className="hidden"
