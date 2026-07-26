@@ -2,64 +2,67 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --color-bg-primary: #ffffff;
-  --color-bg-secondary: #f8fafc;
-  --color-bg-card: #ffffff;
-  --color-text-primary: #0f172a;
-  --color-text-secondary: #475569;
-  --color-border: #e2e8f0;
-  --color-accent: #6366f1;
-  --color-accent-hover: #4f46e5;
-  --glass-bg: rgba(255, 255, 255, 0.7);
-  --glass-border: rgba(255, 255, 255, 0.3);
-}
-
-.dark {
-  --color-bg-primary: #0f0f0f;
-  --color-bg-secondary: #1a1a1a;
-  --color-bg-card: #1a1a1a;
-  --color-text-primary: #f1f5f9;
-  --color-text-secondary: #94a3b8;
-  --color-border: #334155;
-  --color-accent: #818cf8;
-  --color-accent-hover: #6366f1;
-  --glass-bg: rgba(26, 26, 26, 0.7);
-  --glass-border: rgba(51, 65, 85, 0.5);
-}
-
-* {
-  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
-}
-
 body {
-  background-color: var(--color-bg-primary);
-  color: var(--color-text-primary);
-  font-family: 'Inter', 'SF Pro Display', 'PingFang SC', system-ui, -apple-system, sans-serif;
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  font-family: var(--font);
 }
 
 .glass {
   background: var(--glass-bg);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
   border: 1px solid var(--glass-border);
 }
 
 @layer components {
   .btn-primary {
-    @apply px-6 py-3 bg-brand-500 hover:bg-brand-600 text-white font-medium rounded-xl transition-all duration-200 shadow-lg shadow-brand-500/25 hover:shadow-brand-500/40 active:scale-[0.98];
+    @apply px-6 py-3 text-white font-medium transition-all duration-200 active:scale-[0.98];
+    background: var(--accent);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-sm);
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-hover);
+    box-shadow: var(--shadow-md);
   }
 
   .btn-secondary {
-    @apply px-6 py-3 bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-medium rounded-xl transition-all duration-200 active:scale-[0.98];
+    @apply px-6 py-3 font-medium transition-all duration-200 active:scale-[0.98];
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    color: var(--text-secondary);
+  }
+
+  .btn-secondary:hover {
+    background: var(--border-color);
+    color: var(--text-primary);
   }
 
   .card {
-    @apply bg-white dark:bg-[#1a1a1a] rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm hover:shadow-md transition-all duration-200;
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow-sm);
+    @apply transition-all duration-200;
+  }
+
+  .card:hover {
+    box-shadow: var(--shadow-md);
   }
 
   .input-field {
-    @apply w-full px-4 py-3 bg-slate-50 dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:border-transparent transition-all duration-200;
+    @apply w-full px-4 py-3 placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:border-transparent transition-all duration-200;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius);
+    color: var(--text-primary);
+  }
+
+  .input-field:focus {
+    --tw-ring-color: var(--accent);
   }
 }
 
@@ -83,8 +86,8 @@ body {
 
 .drag-over {
   transform: scale(1.02);
-  border-color: var(--color-accent) !important;
-  background: rgba(99, 102, 241, 0.05) !important;
+  border-color: var(--accent) !important;
+  background: color-mix(in srgb, var(--accent) 5%, transparent) !important;
 }
 
 @keyframes spin-slow {
@@ -97,24 +100,23 @@ body {
 }
 
 /* Theme-aware brand color overrides */
-.bg-brand-50 { background-color: color-mix(in srgb, var(--color-accent) 10%, transparent) !important; }
-.bg-brand-500 { background-color: var(--color-accent) !important; }
-.bg-brand-600 { background-color: var(--color-accent-hover) !important; }
-.text-brand-500 { color: var(--color-accent) !important; }
-.text-brand-600 { color: var(--color-accent-hover) !important; }
-.border-brand-500 { border-color: var(--color-accent) !important; }
-.ring-brand-500 { --tw-ring-color: var(--color-accent) !important; }
-.accent-brand-500 { accent-color: var(--color-accent) !important; }
-.from-brand-500 { --tw-gradient-from: var(--color-accent) !important; }
+.bg-brand-50 { background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important; }
+.bg-brand-500 { background-color: var(--accent) !important; }
+.bg-brand-600 { background-color: var(--accent-hover) !important; }
+.text-brand-500 { color: var(--accent) !important; }
+.text-brand-600 { color: var(--accent-hover) !important; }
+.border-brand-500 { border-color: var(--accent) !important; }
+.ring-brand-500 { --tw-ring-color: var(--accent) !important; }
+.accent-brand-500 { accent-color: var(--accent) !important; }
+.from-brand-500 { --tw-gradient-from: var(--accent) !important; }
 .to-brand-600,
-.to-brand-700 { --tw-gradient-to: var(--color-accent-hover) !important; }
-.shadow-brand-500\/25 { --tw-shadow-color: color-mix(in srgb, var(--color-accent) 25%, transparent) !important; }
-.shadow-brand-500\/40 { --tw-shadow-color: color-mix(in srgb, var(--color-accent) 40%, transparent) !important; }
-.hover\:bg-brand-600:hover { background-color: var(--color-accent-hover) !important; }
-.hover\:text-brand-500:hover { color: var(--color-accent) !important; }
-.hover\:text-brand-600:hover { color: var(--color-accent-hover) !important; }
-.hover\:border-brand-400:hover { border-color: var(--color-accent) !important; }
-.hover\:border-brand-600:hover { border-color: var(--color-accent-hover) !important; }
-.dark .dark\:bg-brand-500\/10 { background-color: color-mix(in srgb, var(--color-accent) 10%, transparent) !important; }
-.dark .dark\:bg-brand-50\/10 { background-color: color-mix(in srgb, var(--color-accent) 10%, transparent) !important; }
-.dark .dark\:bg-brand-500\/20 { background-color: color-mix(in srgb, var(--color-accent) 20%, transparent) !important; }
+.to-brand-700 { --tw-gradient-to: var(--accent-hover) !important; }
+.shadow-brand-500\/25 { box-shadow: 0 4px 14px color-mix(in srgb, var(--accent) 25%, transparent) !important; }
+.hover\:bg-brand-600:hover { background-color: var(--accent-hover) !important; }
+.hover\:text-brand-500:hover { color: var(--accent) !important; }
+.hover\:text-brand-600:hover { color: var(--accent-hover) !important; }
+.hover\:border-brand-400:hover { border-color: var(--accent) !important; }
+.hover\:border-brand-600:hover { border-color: var(--accent-hover) !important; }
+.dark .dark\:bg-brand-500\/10 { background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important; }
+.dark .dark\:bg-brand-50\/10 { background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important; }
+.dark .dark\:bg-brand-500\/20 { background-color: color-mix(in srgb, var(--accent) 20%, transparent) !important; }
