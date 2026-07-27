@@ -1,9 +1,0 @@
-/assets/*          /assets/:splat      200
-/9e8f7d6c5b4a*.txt  /:path              200  
-/favicon.svg        /favicon.svg         200
-/sitemap.xml        /sitemap.xml         200
-/robots.txt         /robots.txt          200
-/llms.txt           /llms.txt            200
-/llms-full.txt      /llms-full.txt       200
-/BingSiteAuth.xml   /BingSiteAuth.xml    200
-/*                  /index.html          200
