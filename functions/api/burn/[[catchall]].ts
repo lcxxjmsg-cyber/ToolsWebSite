@@ -2,7 +2,7 @@ interface BurnBody {
   ciphertext: string;
   iv: string;
   salt?: string;
-  expiresIn?: number; // seconds
+  expiresIn?: number;
 }
 
 interface Env {
@@ -12,7 +12,8 @@ interface Env {
 export const onRequest: PagesFunction<Env> = async (context) => {
   const { request, env } = context;
   const url = new URL(request.url);
-  const id = url.pathname.split('/').pop();
+  const pathParts = url.pathname.split('/').filter(Boolean);
+  const id = pathParts[pathParts.length - 1];
 
   if (request.method === 'OPTIONS') {
     return new Response(null, {
@@ -24,7 +25,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     });
   }
 
-  if (request.method === 'POST') {
+  if (request.method === 'POST' && (!id || id === 'burn')) {
     const body: BurnBody = await request.json();
 
     if (!body.ciphertext || !body.iv) {
@@ -38,22 +39,18 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     const messageId = crypto.randomUUID();
     const ttl = body.expiresIn && body.expiresIn > 0 ? body.expiresIn : undefined;
 
-    await env.BURN_KV.put(messageId, JSON.stringify({
-      ciphertext: body.ciphertext,
-      iv: body.iv,
-      salt: body.salt || null,
-    }), { expirationTtl: ttl });
+    await env.BURN_KV.put(
+      messageId,
+      JSON.stringify({ ciphertext: body.ciphertext, iv: body.iv, salt: body.salt || null }),
+      ttl ? { expirationTtl: ttl } : undefined,
+    );
 
     return new Response(JSON.stringify({ id: messageId }), {
       headers: { 'Access-Control-Allow-Origin': '*', 'Content-Type': 'application/json' },
     });
   }
 
-  if (request.method === 'GET') {
-    if (!id || id === 'burn') {
-      return new Response(JSON.stringify({ error: 'Not found' }), { status: 404 });
-    }
-
+  if (request.method === 'GET' && id && id !== 'burn') {
     const data = await env.BURN_KV.get(id);
     if (!data) {
       return new Response(JSON.stringify({ error: 'Message not found or already read' }), { status: 404 });
