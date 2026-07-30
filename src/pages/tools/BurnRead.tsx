@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Flame, AlertTriangle, Eye, EyeOff, Lock, ArrowLeft } from 'lucide-react';
 import { useT } from '../../i18n/useT';
@@ -16,14 +16,27 @@ export default function BurnRead() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
+  const fetchedRef = useRef(false);
 
-  const destroyMessage = useCallback(async () => {
-    try {
-      await fetch(`/api/burn/${id}`, { method: 'DELETE' });
-    } catch { }
-  }, [id]);
+  useEffect(() => {
+    if (!id) {
+      setStatus('error');
+      setErrorMsg(t('burn.read.invalid'));
+      return;
+    }
 
-  const fetchMessage = useCallback(async (key?: string) => {
+    if (fetchedRef.current) return;
+    fetchedRef.current = true;
+
+    const keyFromHash = window.location.hash.slice(1);
+    if (keyFromHash) {
+      loadMessage(keyFromHash);
+    } else {
+      setStatus('password');
+    }
+  }, []);
+
+  async function loadMessage(key?: string) {
     setStatus('loading');
     setErrorMsg('');
 
@@ -57,31 +70,16 @@ export default function BurnRead() {
       setContent(decrypted);
       setStatus('revealed');
 
-      destroyMessage();
+      fetch(`/api/burn/${id}`, { method: 'DELETE' }).catch(() => {});
     } catch {
       setStatus('error');
       setErrorMsg(t('burn.read.error'));
     }
-  }, [id, password, t, destroyMessage]);
+  }
 
-  useEffect(() => {
-    if (!id) {
-      setStatus('error');
-      setErrorMsg(t('burn.read.invalid'));
-      return;
-    }
-
-    const keyFromHash = window.location.hash.slice(1);
-    if (keyFromHash) {
-      fetchMessage(keyFromHash);
-    } else {
-      setStatus('password');
-    }
-  }, [id, fetchMessage, t]);
-
-  const handleReveal = () => {
-    fetchMessage();
-  };
+  function handleReveal() {
+    loadMessage();
+  }
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a]">
