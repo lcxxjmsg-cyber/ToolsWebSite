@@ -7,6 +7,7 @@ import Terms from './pages/Terms';
 import ToolsIndex from './pages/tools/ToolsIndex';
 import BurnCreate from './pages/tools/BurnCreate';
 import BurnRead from './pages/tools/BurnRead';
+import ChatRoom from './pages/tools/ChatRoom';
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
         <Route path="/tools" element={<ToolsIndex />} />
         <Route path="/tools/burn" element={<BurnCreate />} />
         <Route path="/tools/burn/:id" element={<BurnRead />} />
+        <Route path="/tools/chat" element={<ChatRoom />} />
+        <Route path="/tools/chat/:id" element={<ChatRoom />} />
       </Routes>
     </BrowserRouter>
   );

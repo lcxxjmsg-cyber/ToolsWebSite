@@ -81,3 +81,23 @@ export async function decryptMessage(data: {
 
   return new TextDecoder().decode(decrypted);
 }
+
+export async function encryptWithKey(plaintext: string, keyBase64: string): Promise<{ ciphertext: string; iv: string }> {
+  const key = await crypto.subtle.importKey('raw', b642ab(keyBase64), { name: 'AES-GCM', length: 256 }, false, ['encrypt']);
+  const iv = crypto.getRandomValues(new Uint8Array(12));
+  const encrypted = await crypto.subtle.encrypt({ name: 'AES-GCM', iv }, key, new TextEncoder().encode(plaintext));
+  return { ciphertext: ab2b64(encrypted), iv: ab2b64(iv) };
+}
+
+export async function decryptWithKey(ciphertext: string, iv: string, keyBase64: string): Promise<string> {
+  const key = await crypto.subtle.importKey('raw', b642ab(keyBase64), { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const decrypted = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b642ab(iv) }, key, b642ab(ciphertext));
+  return new TextDecoder().decode(decrypted);
+}
+
+export function generateKey(): string {
+  const key = crypto.getRandomValues(new Uint8Array(32));
+  let s = '';
+  for (let i = 0; i < key.length; i++) s += String.fromCharCode(key[i]);
+  return btoa(s);
+}

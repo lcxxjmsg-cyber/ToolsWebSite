@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Lock, Flame } from 'lucide-react';
+import { Lock, Flame, MessageSquare } from 'lucide-react';
 import { useT } from '../../i18n/useT';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -10,6 +10,13 @@ const TOOL_CATEGORIES = [
     icon: Lock,
     tools: [
       { to: '/tools/burn', key: 'tools.burn', icon: Flame, desc: 'tools.burn.desc' },
+    ],
+  },
+  {
+    key: 'tools.cat.communication',
+    icon: MessageSquare,
+    tools: [
+      { to: '/tools/chat', key: 'tools.chat', icon: MessageSquare, desc: 'tools.chat.desc' },
     ],
   },
 ];
