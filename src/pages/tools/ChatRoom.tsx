@@ -14,6 +14,18 @@ const TTL_OPTIONS = [
 
 const POLL_INTERVAL = 3000;
 
+const NICK_KEY = 'chat_nick';
+
+function getMyNick(): string {
+  let nick = localStorage.getItem(NICK_KEY);
+  if (!nick) {
+    const rand = Math.floor(Math.random() * 9000 + 1000);
+    nick = `User-${rand}`;
+    localStorage.setItem(NICK_KEY, nick);
+  }
+  return nick;
+}
+
 interface ChatMessage {
   id: string;
   text: string;
@@ -33,6 +45,7 @@ export default function ChatRoom() {
   const { id: roomId } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const t = useT();
+  const myNick = useRef(getMyNick());
 
   const [mode, setMode] = useState<'create' | 'loading' | 'chat' | 'notfound' | 'error'>('create');
   const [ttl, setTtl] = useState(86400);
@@ -41,8 +54,6 @@ export default function ChatRoom() {
 
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState('');
-  const [senderName, setSenderName] = useState(() => localStorage.getItem('chat_nick') || '');
-  const [showNameInput, setShowNameInput] = useState(!localStorage.getItem('chat_nick'));
   const [sending, setSending] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
   const [roomInfo, setRoomInfo] = useState<{ createdAt: number; ttl: number; ttlRemaining: number } | null>(null);
@@ -198,7 +209,7 @@ export default function ChatRoom() {
 
     setSending(true);
     try {
-      const payload = JSON.stringify({ text, sender: senderName || 'Anonymous' });
+      const payload = JSON.stringify({ text, sender: myNick.current });
       const encrypted = await encryptWithKey(payload, roomKeyRef.current);
 
       const res = await fetch(`/api/chat/room/${roomId}/msg`, {
@@ -210,7 +221,7 @@ export default function ChatRoom() {
       if (!res.ok) throw new Error();
 
       const { id, timestamp } = await res.json();
-      setMessages((prev) => [...prev, { id, text, sender: senderName || 'Anonymous', timestamp, encrypted: false }]);
+      setMessages((prev) => [...prev, { id, text, sender: myNick.current, timestamp, encrypted: false }]);
       lastTimestampRef.current = timestamp;
       setInput('');
     } catch {
@@ -225,12 +236,6 @@ export default function ChatRoom() {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
     }).catch(() => {});
-  }
-
-  function saveNick(name: string) {
-    setSenderName(name);
-    localStorage.setItem('chat_nick', name);
-    setShowNameInput(!name);
   }
 
   function formatTime(ts: number) {
@@ -451,10 +456,10 @@ export default function ChatRoom() {
           )}
 
           {messages.map((msg) => {
-            const isMe = msg.sender === (senderName || 'Anonymous');
+            const isMe = msg.sender === myNick.current;
             return (
               <div key={msg.id} className={`flex ${isMe ? 'justify-end' : 'justify-start'}`}>
-                <div className={`max-w-[80%] ${isMe ? 'order-1' : 'order-1'}`}>
+                <div className="max-w-[80%]">
                   {!isMe && (
                     <p className="text-xs text-slate-400 mb-0.5 px-1">{msg.sender}</p>
                   )}
@@ -481,23 +486,6 @@ export default function ChatRoom() {
       {/* Input */}
       <div className="px-4 sm:px-6 lg:px-8 max-w-3xl mx-auto w-full pb-6">
         <div className="bg-white dark:bg-[#141414] rounded-b-xl border border-t-0 border-slate-200 dark:border-slate-800 p-3">
-          {showNameInput && (
-            <div className="flex gap-2 mb-2">
-              <input
-                value={senderName}
-                onChange={(e) => setSenderName(e.target.value)}
-                placeholder={t('chat.nick.placeholder')}
-                className="flex-1 rounded-lg border border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-[#0a0a0a] px-3 py-1.5 text-xs text-slate-900 dark:text-white placeholder-slate-400 focus:outline-none focus:ring-1 focus:ring-violet-500"
-              />
-              <button
-                onClick={() => saveNick(senderName)}
-                className="px-3 py-1.5 rounded-lg bg-violet-500 text-white text-xs font-medium hover:bg-violet-600 transition-colors"
-              >
-                {t('common.apply')}
-              </button>
-            </div>
-          )}
-
           <div className="flex gap-2">
             <input
               value={input}
@@ -524,16 +512,9 @@ export default function ChatRoom() {
           )}
 
           <div className="flex items-center gap-2 mt-2">
-            <button
-              onClick={() => setShowNameInput(!showNameInput)}
-              className="text-xs text-slate-400 hover:text-violet-500 transition-colors"
-            >
-              {senderName ? `${t('chat.nick.as')} ${senderName}` : t('chat.nick.set')}
-            </button>
+            <span className="text-xs text-slate-400">{t('chat.nick.as')} {myNick.current}</span>
             <span className="text-slate-300 dark:text-slate-600">·</span>
-            <span className="text-xs text-slate-400">
-              {t('chat.encrypted')}
-            </span>
+            <span className="text-xs text-slate-400">{t('chat.encrypted')}</span>
           </div>
         </div>
       </div>
