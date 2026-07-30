@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MessageSquare, Send, Copy, Check, Clock, Users, ArrowLeft, AlertTriangle, Key } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useLangStore } from '../../store/langStore';
 import { encryptWithKey, decryptWithKey, generateKey } from '../../utils/crypto';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -16,29 +17,52 @@ const POLL_INTERVAL = 3000;
 
 const NICK_KEY = 'chat_nick';
 
-const ADJS = [
-  'Swift', 'Quiet', 'Bold', 'Calm', 'Brisk', 'Cool', 'Deep', 'Wild',
-  'Sharp', 'Sly', 'Bright', 'Dark', 'Fleet', 'Grand', 'Keen', 'Lucky',
-  'Neat', 'Prime', 'Rare', 'Safe', 'Lean', 'Fast', 'Soft', 'Warm',
-  'Crisp', 'Droll', 'Fond', 'Grim', 'Hale', 'Jade', 'Lark', 'Mild',
-  'Noble', 'Pert', 'Rife', 'Sage', 'Tidy', 'Vast', 'Wise', 'Zest',
-  'Flax', 'Gled', 'Husk', 'Jest', 'Lisp', 'Muse', 'Nock', 'Purl',
-];
-
-const ANIMALS = [
-  'Fox', 'Lynx', 'Owl', 'Bear', 'Wolf', 'Deer', 'Hawk', 'Mole',
-  'Vole', 'Crab', 'Dove', 'Ermine', 'Fawn', 'Goat', 'Hare', 'Ibex',
-  'Jackal', 'Koala', 'Lion', 'Moose', 'Newt', 'Oryx', 'Puma', 'Quail',
-  'Roan', 'Seal', 'Tahr', 'Urial', 'Viper', 'Wren', 'Yak', 'Zebra',
-  'Ape', 'Bat', 'Cod', 'Dab', 'Eel', 'Fry', 'Gnu', 'Hog',
-  'Kid', 'Lamb', 'Ram', 'Sole', 'Toad', 'Vole', 'Wasp', 'Yaffle',
-];
+const NICK_POOLS: Record<string, { adjs: string[]; animals: string[] }> = {
+  'zh-CN': {
+    adjs: ['迅捷', '安静', '勇敢', '沉稳', '轻盈', '深邃', '野性', '机敏', '明亮', '幽暗', '灵动', '温和', '温暖', '柔软', '清冷'],
+    animals: ['狐', '猞', '熊', '狼', '鹿', '鹰', '鼬', '羚', '鹤', '豹', '貂', '雁', '鸢', '鹏', '鸾'],
+  },
+  'ja': {
+    adjs: ['疾風', '静寂', '勇壮', '優雅', '清澄', '深淵', '孤高', '敏捷', '璀璨', '幽玄', '爽快', '温厚'],
+    animals: ['狐', '山猫', '熊', '狼', '鹿', '鷲', '鼬', '羚', '鶴', '豹', '貂', '鷹'],
+  },
+  'en': {
+    adjs: ['Swift', 'Quiet', 'Bold', 'Calm', 'Brisk', 'Cool', 'Deep', 'Wild', 'Sharp', 'Sly', 'Bright', 'Dark', 'Fleet', 'Grand', 'Keen', 'Lucky', 'Neat', 'Prime', 'Rare', 'Safe', 'Lean', 'Fast', 'Soft', 'Warm', 'Crisp', 'Noble', 'Wise', 'Zest'],
+    animals: ['Fox', 'Lynx', 'Owl', 'Bear', 'Wolf', 'Deer', 'Hawk', 'Mole', 'Crab', 'Dove', 'Fawn', 'Goat', 'Hare', 'Lion', 'Moose', 'Newt', 'Puma', 'Quail', 'Seal', 'Viper', 'Wren', 'Zebra', 'Bat', 'Ram', 'Toad', 'Wasp'],
+  },
+  'ko': {
+    adjs: ['날쌘', '고요한', '용감한', '차분한', '가벼운', '깊은', '야생의', '날카로운', '밝은', '어두운', '온화한', '따뜻한'],
+    animals: ['여우', '스라소니', '곰', '늑대', '사슴', '매', '족제비', '영양', '두루미', '표범', '담비'],
+  },
+  'es': {
+    adjs: ['Rápido', 'Tranquilo', 'Audaz', 'Sereno', 'Ligero', 'Profundo', 'Salvaje', 'Agudo', 'Brillante', 'Oscuro', 'Suave', 'Cálido'],
+    animals: ['Zorro', 'Lince', 'Búho', 'Oso', 'Lobo', 'Ciervo', 'Halcón', 'Topo', 'Cabra', 'Liebre', 'León', 'Foca'],
+  },
+  'fr': {
+    adjs: ['Rapide', 'Calme', 'Audacieux', 'Serein', 'Léger', 'Profond', 'Sauvage', 'Vif', 'Luisant', 'Sombre', 'Doux', 'Chaud'],
+    animals: ['Renard', 'Lynx', 'Hibou', 'Ours', 'Loup', 'Cerf', 'Faucon', 'Taupe', 'Chèvre', 'Lièvre', 'Lion', 'Phoque'],
+  },
+  'de': {
+    adjs: ['Schnell', 'Ruhig', 'Mutig', 'Gelassen', 'Leicht', 'Tief', 'Wild', 'Scharf', 'Hell', 'Dunkel', 'Sanft', 'Warm'],
+    animals: ['Fuchs', 'Luchs', 'Eule', 'Bär', 'Wolf', 'Hirsch', 'Falke', 'Maulwurf', 'Ziege', 'Hase', 'Löwe', 'Robbe'],
+  },
+  'pt': {
+    adjs: ['Rápido', 'Calmo', 'Audaz', 'Sereno', 'Leve', 'Profundo', 'Selvagem', 'Agudo', 'Brilhante', 'Escuro', 'Suave', 'Quente'],
+    animals: ['Raposa', 'Lince', 'Coruja', 'Urso', 'Lobo', 'Cervo', 'Falcão', 'Toupeira', 'Cabra', 'Lebre', 'Leão', 'Foca'],
+  },
+  'ru': {
+    adjs: ['Быстрый', 'Тихий', 'Смелый', 'Спокойный', 'Лёгкий', 'Глубокий', 'Дикий', 'Острый', 'Яркий', 'Тёмный', 'Мягкий', 'Тёплый'],
+    animals: ['Лис', 'Рысь', 'Сова', 'Медведь', 'Волк', 'Олень', 'Сокол', 'Крот', 'Коза', 'Заяц', 'Лев', 'Тюлень'],
+  },
+};
 
 function getMyNick(): string {
   let nick = localStorage.getItem(NICK_KEY);
   if (!nick) {
-    const a = ADJS[Math.floor(Math.random() * ADJS.length)];
-    const b = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
+    const lang = useLangStore.getState().lang;
+    const pool = NICK_POOLS[lang] || NICK_POOLS['en'];
+    const a = pool.adjs[Math.floor(Math.random() * pool.adjs.length)];
+    const b = pool.animals[Math.floor(Math.random() * pool.animals.length)];
     nick = a + b;
     localStorage.setItem(NICK_KEY, nick);
   }
