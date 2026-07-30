@@ -29,11 +29,7 @@ export default function BurnRead() {
     fetchedRef.current = true;
 
     const keyFromHash = window.location.hash.slice(1);
-    if (keyFromHash) {
-      loadMessage(keyFromHash);
-    } else {
-      setStatus('password');
-    }
+    loadMessage(keyFromHash || undefined);
   }, []);
 
   async function loadMessage(key?: string) {
@@ -53,6 +49,17 @@ export default function BurnRead() {
       }
 
       const data = await res.json();
+      const needsPassword = !key && data.salt;
+
+      if (needsPassword && !password) {
+        setStatus('password');
+        return;
+      }
+
+      if (!key && !data.salt && !password) {
+        setStatus('notfound');
+        return;
+      }
 
       let decrypted: string;
       try {
@@ -63,7 +70,9 @@ export default function BurnRead() {
         );
       } catch {
         setStatus('password');
-        setErrorMsg(t('burn.read.wrongPassword'));
+        if (password) {
+          setErrorMsg(t('burn.read.wrongPassword'));
+        }
         return;
       }
 
