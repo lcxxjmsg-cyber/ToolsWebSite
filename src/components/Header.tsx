@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Image, Shield, Menu, X, Mail, ChevronDown, Flame, Wrench, MessageSquare } from 'lucide-react';
+import { Image, Shield, Menu, X, Mail, ChevronDown, Flame, Wrench, MessageSquare, ArrowRightLeft, Hash, Braces, Fingerprint, Clock, Link as LinkIcon } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import LangToggle from './LangToggle';
 import { useT } from '../i18n/useT';
@@ -13,6 +13,12 @@ const NAV_LINKS = [
 
 const TOOLS_DROPDOWN = [
   { to: '/tools', key: 'nav.tools.all', icon: Wrench },
+  { to: '/tools/base64', key: 'nav.tools.base64', icon: ArrowRightLeft },
+  { to: '/tools/url-encode', key: 'nav.tools.urlencode', icon: LinkIcon },
+  { to: '/tools/base-convert', key: 'nav.tools.baseconvert', icon: Hash },
+  { to: '/tools/json-format', key: 'nav.tools.jsonformat', icon: Braces },
+  { to: '/tools/uuid', key: 'nav.tools.uuid', icon: Fingerprint },
+  { to: '/tools/timestamp', key: 'nav.tools.timestamp', icon: Clock },
   { to: '/tools/burn', key: 'nav.tools.burn', icon: Flame },
   { to: '/tools/chat', key: 'nav.tools.chat', icon: MessageSquare },
 ];

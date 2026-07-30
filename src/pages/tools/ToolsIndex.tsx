@@ -1,10 +1,34 @@
 import { Link } from 'react-router-dom';
-import { Lock, Flame, MessageSquare } from 'lucide-react';
+import { Lock, Flame, MessageSquare, ArrowRightLeft, Link as LinkIcon, Hash, Braces, Fingerprint, Clock } from 'lucide-react';
 import { useT } from '../../i18n/useT';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 const TOOL_CATEGORIES = [
+  {
+    key: 'tools.cat.encoding',
+    icon: ArrowRightLeft,
+    tools: [
+      { to: '/tools/base64', key: 'tools.base64', icon: ArrowRightLeft, desc: 'tools.base64.desc' },
+      { to: '/tools/url-encode', key: 'tools.urlencode', icon: LinkIcon, desc: 'tools.urlencode.desc' },
+    ],
+  },
+  {
+    key: 'tools.cat.conversion',
+    icon: Hash,
+    tools: [
+      { to: '/tools/base-convert', key: 'tools.baseconvert', icon: Hash, desc: 'tools.baseconvert.desc' },
+      { to: '/tools/json-format', key: 'tools.jsonformat', icon: Braces, desc: 'tools.jsonformat.desc' },
+    ],
+  },
+  {
+    key: 'tools.cat.dev',
+    icon: Fingerprint,
+    tools: [
+      { to: '/tools/uuid', key: 'tools.uuid', icon: Fingerprint, desc: 'tools.uuid.desc' },
+      { to: '/tools/timestamp', key: 'tools.timestamp', icon: Clock, desc: 'tools.timestamp.desc' },
+    ],
+  },
   {
     key: 'tools.cat.security',
     icon: Lock,
