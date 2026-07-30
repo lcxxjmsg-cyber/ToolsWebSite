@@ -16,11 +16,30 @@ const POLL_INTERVAL = 3000;
 
 const NICK_KEY = 'chat_nick';
 
+const ADJS = [
+  'Swift', 'Quiet', 'Bold', 'Calm', 'Brisk', 'Cool', 'Deep', 'Wild',
+  'Sharp', 'Sly', 'Bright', 'Dark', 'Fleet', 'Grand', 'Keen', 'Lucky',
+  'Neat', 'Prime', 'Rare', 'Safe', 'Lean', 'Fast', 'Soft', 'Warm',
+  'Crisp', 'Droll', 'Fond', 'Grim', 'Hale', 'Jade', 'Lark', 'Mild',
+  'Noble', 'Pert', 'Rife', 'Sage', 'Tidy', 'Vast', 'Wise', 'Zest',
+  'Flax', 'Gled', 'Husk', 'Jest', 'Lisp', 'Muse', 'Nock', 'Purl',
+];
+
+const ANIMALS = [
+  'Fox', 'Lynx', 'Owl', 'Bear', 'Wolf', 'Deer', 'Hawk', 'Mole',
+  'Vole', 'Crab', 'Dove', 'Ermine', 'Fawn', 'Goat', 'Hare', 'Ibex',
+  'Jackal', 'Koala', 'Lion', 'Moose', 'Newt', 'Oryx', 'Puma', 'Quail',
+  'Roan', 'Seal', 'Tahr', 'Urial', 'Viper', 'Wren', 'Yak', 'Zebra',
+  'Ape', 'Bat', 'Cod', 'Dab', 'Eel', 'Fry', 'Gnu', 'Hog',
+  'Kid', 'Lamb', 'Ram', 'Sole', 'Toad', 'Vole', 'Wasp', 'Yaffle',
+];
+
 function getMyNick(): string {
   let nick = localStorage.getItem(NICK_KEY);
   if (!nick) {
-    const rand = Math.floor(Math.random() * 9000 + 1000);
-    nick = `User-${rand}`;
+    const a = ADJS[Math.floor(Math.random() * ADJS.length)];
+    const b = ANIMALS[Math.floor(Math.random() * ANIMALS.length)];
+    nick = a + b;
     localStorage.setItem(NICK_KEY, nick);
   }
   return nick;
