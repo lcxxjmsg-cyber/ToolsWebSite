@@ -14,6 +14,19 @@ import BaseConvertTool from './pages/tools/BaseConvertTool';
 import JsonFormatTool from './pages/tools/JsonFormatTool';
 import UuidTool from './pages/tools/UuidTool';
 import TimestampTool from './pages/tools/TimestampTool';
+import Base32Tool from './pages/tools/Base32Tool';
+import HtmlEntityTool from './pages/tools/HtmlEntityTool';
+import ColorConvertTool from './pages/tools/ColorConvertTool';
+import CaseConvertTool from './pages/tools/CaseConvertTool';
+import JsonCsvTool from './pages/tools/JsonCsvTool';
+import HashTool from './pages/tools/HashTool';
+import PasswordTool from './pages/tools/PasswordTool';
+import RotTool from './pages/tools/RotTool';
+import JwtDecoderTool from './pages/tools/JwtDecoderTool';
+import RegexTool from './pages/tools/RegexTool';
+import TextDiffTool from './pages/tools/TextDiffTool';
+import ImageBase64Tool from './pages/tools/ImageBase64Tool';
+import ColorPickerTool from './pages/tools/ColorPickerTool';
 
 function App() {
   return (
@@ -35,6 +48,19 @@ function App() {
         <Route path="/tools/json-format" element={<JsonFormatTool />} />
         <Route path="/tools/uuid" element={<UuidTool />} />
         <Route path="/tools/timestamp" element={<TimestampTool />} />
+        <Route path="/tools/base32" element={<Base32Tool />} />
+        <Route path="/tools/html-entity" element={<HtmlEntityTool />} />
+        <Route path="/tools/color-convert" element={<ColorConvertTool />} />
+        <Route path="/tools/case-convert" element={<CaseConvertTool />} />
+        <Route path="/tools/json-csv" element={<JsonCsvTool />} />
+        <Route path="/tools/hash" element={<HashTool />} />
+        <Route path="/tools/password" element={<PasswordTool />} />
+        <Route path="/tools/rot" element={<RotTool />} />
+        <Route path="/tools/jwt" element={<JwtDecoderTool />} />
+        <Route path="/tools/regex" element={<RegexTool />} />
+        <Route path="/tools/text-diff" element={<TextDiffTool />} />
+        <Route path="/tools/image-base64" element={<ImageBase64Tool />} />
+        <Route path="/tools/color-picker" element={<ColorPickerTool />} />
       </Routes>
     </BrowserRouter>
   );

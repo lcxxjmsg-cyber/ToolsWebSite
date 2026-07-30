@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Lock, Flame, MessageSquare, ArrowRightLeft, Link as LinkIcon, Hash, Braces, Fingerprint, Clock } from 'lucide-react';
+import { Flame, MessageSquare, ArrowRightLeft, Link as LinkIcon, Hash, Braces, Fingerprint, Clock, Code, Sigma, Palette, Text, Table, ShieldCheck, Brackets, FileDiff, Image, Eye, Key, Shield, RefreshCw } from 'lucide-react';
 import { useT } from '../../i18n/useT';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -11,6 +11,8 @@ const TOOL_CATEGORIES = [
     tools: [
       { to: '/tools/base64', key: 'tools.base64', icon: ArrowRightLeft, desc: 'tools.base64.desc' },
       { to: '/tools/url-encode', key: 'tools.urlencode', icon: LinkIcon, desc: 'tools.urlencode.desc' },
+      { to: '/tools/base32', key: 'tools.base32', icon: Sigma, desc: 'tools.base32.desc' },
+      { to: '/tools/html-entity', key: 'tools.htmlentity', icon: Code, desc: 'tools.htmlentity.desc' },
     ],
   },
   {
@@ -19,6 +21,19 @@ const TOOL_CATEGORIES = [
     tools: [
       { to: '/tools/base-convert', key: 'tools.baseconvert', icon: Hash, desc: 'tools.baseconvert.desc' },
       { to: '/tools/json-format', key: 'tools.jsonformat', icon: Braces, desc: 'tools.jsonformat.desc' },
+      { to: '/tools/color-convert', key: 'tools.colorconvert', icon: Palette, desc: 'tools.colorconvert.desc' },
+      { to: '/tools/case-convert', key: 'tools.caseconvert', icon: Text, desc: 'tools.caseconvert.desc' },
+      { to: '/tools/json-csv', key: 'tools.jsoncsv', icon: Table, desc: 'tools.jsoncsv.desc' },
+    ],
+  },
+  {
+    key: 'tools.cat.security',
+    icon: Shield,
+    tools: [
+      { to: '/tools/burn', key: 'tools.burn', icon: Flame, desc: 'tools.burn.desc' },
+      { to: '/tools/hash', key: 'tools.hash', icon: Shield, desc: 'tools.hash.desc' },
+      { to: '/tools/password', key: 'tools.password', icon: Key, desc: 'tools.password.desc' },
+      { to: '/tools/rot', key: 'tools.rot', icon: RefreshCw, desc: 'tools.rot.desc' },
     ],
   },
   {
@@ -27,13 +42,17 @@ const TOOL_CATEGORIES = [
     tools: [
       { to: '/tools/uuid', key: 'tools.uuid', icon: Fingerprint, desc: 'tools.uuid.desc' },
       { to: '/tools/timestamp', key: 'tools.timestamp', icon: Clock, desc: 'tools.timestamp.desc' },
+      { to: '/tools/jwt', key: 'tools.jwt', icon: ShieldCheck, desc: 'tools.jwt.desc' },
+      { to: '/tools/regex', key: 'tools.regex', icon: Brackets, desc: 'tools.regex.desc' },
+      { to: '/tools/text-diff', key: 'tools.textdiff', icon: FileDiff, desc: 'tools.textdiff.desc' },
     ],
   },
   {
-    key: 'tools.cat.security',
-    icon: Lock,
+    key: 'tools.cat.image',
+    icon: Image,
     tools: [
-      { to: '/tools/burn', key: 'tools.burn', icon: Flame, desc: 'tools.burn.desc' },
+      { to: '/tools/image-base64', key: 'tools.imagebase64', icon: Image, desc: 'tools.imagebase64.desc' },
+      { to: '/tools/color-picker', key: 'tools.colorpicker', icon: Eye, desc: 'tools.colorpicker.desc' },
     ],
   },
   {

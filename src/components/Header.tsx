@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Image, Shield, Menu, X, Mail, ChevronDown, Flame, Wrench, MessageSquare, ArrowRightLeft, Hash, Braces, Fingerprint, Clock, Link as LinkIcon } from 'lucide-react';
+import { Image, Shield, Menu, X, Mail, ChevronDown, Flame, Wrench, MessageSquare, ArrowRightLeft, Hash, Braces, Fingerprint, Clock, Link as LinkIcon, Sigma, Code, Palette, Text, Table, Key, ShieldCheck, Brackets, FileDiff, Eye, RefreshCw } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import LangToggle from './LangToggle';
 import { useT } from '../i18n/useT';
@@ -15,10 +15,23 @@ const TOOLS_DROPDOWN = [
   { to: '/tools', key: 'nav.tools.all', icon: Wrench },
   { to: '/tools/base64', key: 'nav.tools.base64', icon: ArrowRightLeft },
   { to: '/tools/url-encode', key: 'nav.tools.urlencode', icon: LinkIcon },
+  { to: '/tools/base32', key: 'nav.tools.base32', icon: Sigma },
+  { to: '/tools/html-entity', key: 'nav.tools.htmlentity', icon: Code },
   { to: '/tools/base-convert', key: 'nav.tools.baseconvert', icon: Hash },
   { to: '/tools/json-format', key: 'nav.tools.jsonformat', icon: Braces },
+  { to: '/tools/color-convert', key: 'nav.tools.colorconvert', icon: Palette },
+  { to: '/tools/case-convert', key: 'nav.tools.caseconvert', icon: Text },
+  { to: '/tools/json-csv', key: 'nav.tools.jsoncsv', icon: Table },
+  { to: '/tools/hash', key: 'nav.tools.hash', icon: ShieldCheck },
+  { to: '/tools/password', key: 'nav.tools.password', icon: Key },
+  { to: '/tools/rot', key: 'nav.tools.rot', icon: RefreshCw },
   { to: '/tools/uuid', key: 'nav.tools.uuid', icon: Fingerprint },
   { to: '/tools/timestamp', key: 'nav.tools.timestamp', icon: Clock },
+  { to: '/tools/jwt', key: 'nav.tools.jwt', icon: ShieldCheck },
+  { to: '/tools/regex', key: 'nav.tools.regex', icon: Brackets },
+  { to: '/tools/text-diff', key: 'nav.tools.textdiff', icon: FileDiff },
+  { to: '/tools/image-base64', key: 'nav.tools.imagebase64', icon: Image },
+  { to: '/tools/color-picker', key: 'nav.tools.colorpicker', icon: Eye },
   { to: '/tools/burn', key: 'nav.tools.burn', icon: Flame },
   { to: '/tools/chat', key: 'nav.tools.chat', icon: MessageSquare },
 ];
