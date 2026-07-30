@@ -95,7 +95,7 @@ function linkify(text: string): (string | React.ReactNode)[] {
   });
 }
 
-function formatDateGroup(ts: number): string {
+function formatDateGroup(ts: number): string | null {
   const d = new Date(ts);
   const today = new Date();
   const yesterday = new Date(today);
@@ -141,7 +141,6 @@ export default function ChatRoom() {
   const [errorMsg, setErrorMsg] = useState('');
   const [roomInfo, setRoomInfo] = useState<{ createdAt: number; ttl: number; ttlRemaining: number } | null>(null);
   const [isAtBottom, setIsAtBottom] = useState(true);
-  const [lastSenderRef] = useState({ current: '' });
 
   const roomKeyRef = useRef('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -305,7 +304,6 @@ export default function ChatRoom() {
     }
 
     const rendered: React.ReactNode[] = [];
-    let lastDate = '';
 
     messages.forEach((msg, idx) => {
       const dateLabel = formatDateGroup(msg.timestamp);

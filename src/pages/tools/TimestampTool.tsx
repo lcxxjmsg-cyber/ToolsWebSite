@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Copy, Check, Clock, Calendar, RefreshCw } from 'lucide-react';
+import { ArrowLeft, Copy, Clock, Calendar, RefreshCw } from 'lucide-react';
 import { useT } from '../../i18n/useT';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
