@@ -99,6 +99,15 @@ body {
   animation: spin-slow 2s linear infinite;
 }
 
+@keyframes fade-in {
+  from { opacity: 0; transform: translateY(-4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.15s ease-out;
+}
+
 /* Theme-aware brand color overrides */
 .bg-brand-50 { background-color: color-mix(in srgb, var(--accent) 10%, transparent) !important; }
 .bg-brand-500 { background-color: var(--accent) !important; }

@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { Image, Shield, Menu, X, Mail } from 'lucide-react';
+import { Image, Shield, Menu, X, Mail, ChevronDown, Flame, Wrench } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import LangToggle from './LangToggle';
 import { useT } from '../i18n/useT';
@@ -11,14 +11,32 @@ const NAV_LINKS = [
   { to: '/faq', key: 'nav.faq' },
 ];
 
+const TOOLS_DROPDOWN = [
+  { to: '/tools', key: 'nav.tools.all', icon: Wrench },
+  { to: '/tools/burn', key: 'nav.tools.burn', icon: Flame },
+];
+
 export default function Header() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [toolsOpen, setToolsOpen] = useState(false);
+  const toolsRef = useRef<HTMLDivElement>(null);
   const t = useT();
 
   useEffect(() => {
     setMobileOpen(false);
+    setToolsOpen(false);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (toolsRef.current && !toolsRef.current.contains(e.target as Node)) {
+        setToolsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClick);
+    return () => document.removeEventListener('mousedown', handleClick);
+  }, []);
 
   useEffect(() => {
     if (mobileOpen) {
@@ -70,6 +88,43 @@ export default function Header() {
                 {t(key)}
               </Link>
             ))}
+
+            <div ref={toolsRef} className="relative">
+              <button
+                onClick={() => setToolsOpen(!toolsOpen)}
+                onMouseEnter={() => setToolsOpen(true)}
+                className={`flex items-center gap-1 px-3.5 py-2 rounded-lg text-sm font-medium transition-colors ${
+                  location.pathname.startsWith('/tools')
+                    ? 'text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-500/10'
+                    : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                }`}
+              >
+                {t('nav.tools')}
+                <ChevronDown className={`w-3.5 h-3.5 transition-transform ${toolsOpen ? 'rotate-180' : ''}`} />
+              </button>
+
+              {toolsOpen && (
+                <div
+                  className="absolute top-full right-0 mt-1 w-56 py-2 rounded-xl bg-white dark:bg-[#141414] border border-slate-200 dark:border-slate-800 shadow-xl shadow-slate-900/10 animate-fade-in z-50"
+                  onMouseLeave={() => setToolsOpen(false)}
+                >
+                  {TOOLS_DROPDOWN.map(({ to, key, icon: Icon }) => (
+                    <Link
+                      key={to}
+                      to={to}
+                      className={`flex items-center gap-3 px-4 py-2.5 text-sm transition-colors ${
+                        location.pathname === to
+                          ? 'text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-500/10'
+                          : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                      }`}
+                    >
+                      <Icon className="w-4 h-4" />
+                      {t(key)}
+                    </Link>
+                  ))}
+                </div>
+              )}
+            </div>
           </nav>
 
           <div className="hidden lg:flex items-center gap-1">
@@ -119,6 +174,24 @@ export default function Header() {
                   {t(key)}
                 </Link>
               ))}
+
+              <div className="pt-2 mt-2 border-t border-slate-100 dark:border-slate-800">
+                <p className="px-3.5 pb-1.5 text-xs font-medium text-slate-400 uppercase tracking-wider">{t('nav.tools')}</p>
+                {TOOLS_DROPDOWN.map(({ to, key, icon: Icon }) => (
+                  <Link
+                    key={to}
+                    to={to}
+                    className={`flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm font-medium transition-colors ${
+                      location.pathname === to
+                        ? 'text-brand-600 dark:text-brand-400 bg-brand-50 dark:bg-brand-500/10'
+                        : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-800'
+                    }`}
+                  >
+                    <Icon className="w-4 h-4" />
+                    {t(key)}
+                  </Link>
+                ))}
+              </div>
             </nav>
 
           </div>
