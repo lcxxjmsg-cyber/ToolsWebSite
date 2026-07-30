@@ -1,6 +1,6 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { Flame, AlertTriangle, Eye, EyeOff, Lock, Trash2, ArrowLeft } from 'lucide-react';
+import { Flame, AlertTriangle, Eye, EyeOff, Lock, ArrowLeft } from 'lucide-react';
 import { useT } from '../../i18n/useT';
 import { decryptMessage } from '../../utils/crypto';
 import Header from '../../components/Header';
@@ -11,42 +11,31 @@ export default function BurnRead() {
   const navigate = useNavigate();
   const t = useT();
 
-  const [status, setStatus] = useState<'loading' | 'password' | 'revealed' | 'gone' | 'error'>('loading');
+  const [status, setStatus] = useState<'loading' | 'password' | 'revealed' | 'notfound' | 'error'>('loading');
   const [content, setContent] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
-  const [burning, setBurning] = useState(false);
 
-  useEffect(() => {
-    if (!id) {
-      setStatus('error');
-      setErrorMsg(t('burn.read.invalid'));
-      return;
-    }
-
-    const keyFromHash = window.location.hash.slice(1);
-    if (keyFromHash) {
-      fetchMessage(keyFromHash);
-    } else {
-      setStatus('password');
-      setBurning(false);
-    }
+  const destroyMessage = useCallback(async () => {
+    try {
+      await fetch(`/api/burn/${id}`, { method: 'DELETE' });
+    } catch { }
   }, [id]);
 
-  const fetchMessage = async (key?: string) => {
+  const fetchMessage = useCallback(async (key?: string) => {
     setStatus('loading');
     setErrorMsg('');
 
     try {
       const res = await fetch(`/api/burn/${id}`);
+      if (res.status === 404) {
+        setStatus('notfound');
+        return;
+      }
       if (!res.ok) {
-        if (res.status === 404) {
-          setStatus('gone');
-        } else {
-          setStatus('error');
-          setErrorMsg(t('burn.read.error'));
-        }
+        setStatus('error');
+        setErrorMsg(t('burn.read.error'));
         return;
       }
 
@@ -62,20 +51,35 @@ export default function BurnRead() {
       } catch {
         setStatus('password');
         setErrorMsg(t('burn.read.wrongPassword'));
-        setBurning(false);
         return;
       }
 
       setContent(decrypted);
       setStatus('revealed');
+
+      destroyMessage();
     } catch {
       setStatus('error');
       setErrorMsg(t('burn.read.error'));
     }
-  };
+  }, [id, password, t, destroyMessage]);
+
+  useEffect(() => {
+    if (!id) {
+      setStatus('error');
+      setErrorMsg(t('burn.read.invalid'));
+      return;
+    }
+
+    const keyFromHash = window.location.hash.slice(1);
+    if (keyFromHash) {
+      fetchMessage(keyFromHash);
+    } else {
+      setStatus('password');
+    }
+  }, [id, fetchMessage, t]);
 
   const handleReveal = () => {
-    setBurning(true);
     fetchMessage();
   };
 
@@ -95,13 +99,19 @@ export default function BurnRead() {
           </div>
         )}
 
-        {status === 'gone' && (
+        {status === 'notfound' && (
           <div className="bg-white dark:bg-[#141414] rounded-xl border border-slate-200 dark:border-slate-800 p-10 text-center">
             <div className="w-16 h-16 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center mx-auto mb-4">
-              <Trash2 className="w-8 h-8 text-slate-400" />
+              <AlertTriangle className="w-8 h-8 text-slate-400" />
             </div>
-            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{t('burn.read.gone')}</h2>
-            <p className="text-sm text-slate-500">{t('burn.read.gone.desc')}</p>
+            <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{t('burn.read.notfound')}</h2>
+            <p className="text-sm text-slate-500 mb-6">{t('burn.read.notfound.desc')}</p>
+            <button
+              onClick={() => navigate('/tools/burn')}
+              className="px-6 py-2.5 rounded-xl bg-brand-500 text-white font-medium hover:bg-brand-600 transition-colors"
+            >
+              {t('burn.read.createNew')}
+            </button>
           </div>
         )}
 
@@ -138,17 +148,11 @@ export default function BurnRead() {
 
             <button
               onClick={handleReveal}
-              disabled={!password || burning}
+              disabled={!password}
               className="px-6 py-2.5 rounded-xl bg-amber-500 text-white font-medium hover:bg-amber-600 disabled:opacity-50 disabled:cursor-not-allowed transition-colors flex items-center gap-2 mx-auto"
             >
-              {burning ? (
-                <span className="w-5 h-5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-              ) : (
-                <>
-                  <Eye className="w-4 h-4" />
-                  {t('burn.read.reveal')}
-                </>
-              )}
+              <Eye className="w-4 h-4" />
+              {t('burn.read.reveal')}
             </button>
           </div>
         )}

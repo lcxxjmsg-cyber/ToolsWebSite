@@ -167,8 +167,8 @@ export const translations: Record<Lang, Record<string, string>> = {
     'burn.read.errorTitle': '出错了',
     'burn.read.wrongPassword': '密码错误，请重试',
     'burn.read.loading': '正在安全加载消息...',
-    'burn.read.gone': '消息已被读取',
-    'burn.read.gone.desc': '这条阅后即焚消息已被访问过，内容已永久销毁。',
+    'burn.read.notfound': '消息不存在',
+    'burn.read.notfound.desc': '该链接无效或消息已被读取销毁。',
     'burn.read.createNew': '创建新消息',
 
     // Common additions
@@ -445,8 +445,8 @@ export const translations: Record<Lang, Record<string, string>> = {
     'burn.read.errorTitle': 'Something went wrong',
     'burn.read.wrongPassword': 'Wrong password, try again',
     'burn.read.loading': 'Securely loading message...',
-    'burn.read.gone': 'Message has been read',
-    'burn.read.gone.desc': 'This burn-after-reading message has already been accessed and permanently destroyed.',
+    'burn.read.notfound': 'Message not found',
+    'burn.read.notfound.desc': 'This link is invalid or the message has already been read and destroyed.',
     'burn.read.createNew': 'Create New Message',
 
     // Common additions
@@ -723,8 +723,8 @@ export const translations: Record<Lang, Record<string, string>> = {
     'burn.read.errorTitle': 'エラーが発生しました',
     'burn.read.wrongPassword': 'パスワードが間違っています',
     'burn.read.loading': 'メッセージを安全に読み込み中...',
-    'burn.read.gone': 'メッセージは既に読まれました',
-    'burn.read.gone.desc': 'このメッセージは既にアクセスされ、完全に消去されました。',
+    'burn.read.notfound': 'メッセージが見つかりません',
+    'burn.read.notfound.desc': 'このリンクは無効か、メッセージは既に読まれて消去されました。',
     'burn.read.createNew': '新しいメッセージを作成',
 
     // Common additions

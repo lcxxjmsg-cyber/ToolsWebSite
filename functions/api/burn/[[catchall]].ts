@@ -1,3 +1,5 @@
+const MAX_TTL = 2592000; // 30 days
+
 interface BurnBody {
   ciphertext: string;
   iv: string;
@@ -19,7 +21,7 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     return new Response(null, {
       headers: {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Methods': 'GET, POST, DELETE, OPTIONS',
         'Access-Control-Allow-Headers': 'Content-Type',
       },
     });
@@ -37,12 +39,12 @@ export const onRequest: PagesFunction<Env> = async (context) => {
     }
 
     const messageId = crypto.randomUUID();
-    const ttl = body.expiresIn && body.expiresIn > 0 ? body.expiresIn : undefined;
+    const ttl = body.expiresIn && body.expiresIn > 0 ? Math.min(body.expiresIn, MAX_TTL) : MAX_TTL;
 
     await env.BURN_KV.put(
       messageId,
       JSON.stringify({ ciphertext: body.ciphertext, iv: body.iv, salt: body.salt || null }),
-      ttl ? { expirationTtl: ttl } : undefined,
+      { expirationTtl: ttl },
     );
 
     return new Response(JSON.stringify({ id: messageId }), {
@@ -53,10 +55,8 @@ export const onRequest: PagesFunction<Env> = async (context) => {
   if (request.method === 'GET' && id && id !== 'burn') {
     const data = await env.BURN_KV.get(id);
     if (!data) {
-      return new Response(JSON.stringify({ error: 'Message not found or already read' }), { status: 404 });
+      return new Response(JSON.stringify({ error: 'Not found' }), { status: 404 });
     }
-
-    await env.BURN_KV.delete(id);
 
     return new Response(data, {
       headers: {
@@ -65,6 +65,11 @@ export const onRequest: PagesFunction<Env> = async (context) => {
         'Cache-Control': 'no-store, max-age=0',
       },
     });
+  }
+
+  if (request.method === 'DELETE' && id && id !== 'burn') {
+    await env.BURN_KV.delete(id);
+    return new Response(null, { status: 204, headers: { 'Access-Control-Allow-Origin': '*' } });
   }
 
   return new Response(JSON.stringify({ error: 'Method not allowed' }), { status: 405 });
