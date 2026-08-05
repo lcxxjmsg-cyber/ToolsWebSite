@@ -2,11 +2,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, ArrowRightLeft, Link } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 export default function UrlEncodeTool() {
   const t = useT();
+
+  useSEO({
+    title: 'URL编解码 - 批图网 | 在线URL编码解码工具',
+    description: '免费在线URL编码与解码工具，支持中文等特殊字符，纯本地处理不上传服务器，保护您的隐私安全。',
+    keywords: 'url编码,url解码,在线url编解码,urlencode,urldecode',
+  });
   const navigate = useNavigate();
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [input, setInput] = useState('');

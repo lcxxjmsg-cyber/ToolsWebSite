@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, Hash } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -9,6 +10,12 @@ const BASES = [2, 8, 10, 16];
 
 export default function BaseConvertTool() {
   const t = useT();
+
+  useSEO({
+    title: '进制转换 - 批图网 | 在线二进制八进制十进制十六进制转换',
+    description: '免费在线进制转换工具，支持二进制、八进制、十进制、十六进制互转，纯本地处理不上传服务器。',
+    keywords: '进制转换,二进制转换,十六进制,在线进制转换,进制计算器',
+  });
   const navigate = useNavigate();
   const [input, setInput] = useState('');
   const [fromBase, setFromBase] = useState(10);

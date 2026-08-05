@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, Key, RefreshCw } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -12,6 +13,12 @@ const SYMBOLS = '!@#$%^&*()_+-=[]{}|;:,.<>?';
 
 export default function PasswordTool() {
   const t = useT();
+
+  useSEO({
+    title: '密码生成器 - 批图网 | 在线高强度随机密码生成工具',
+    description: '免费在线高强度随机密码生成器，可自定义长度与字符集，纯本地生成不上传服务器，保护您的账户安全。',
+    keywords: '密码生成器,随机密码,强密码,在线密码生成,密码工具',
+  });
   const navigate = useNavigate();
   const [length, setLength] = useState(16);
   const [includeUpper, setIncludeUpper] = useState(true);

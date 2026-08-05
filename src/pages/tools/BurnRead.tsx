@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Flame, AlertTriangle, Eye, EyeOff, Lock, ArrowLeft } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import { decryptMessage } from '../../utils/crypto';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -10,6 +11,12 @@ export default function BurnRead() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const t = useT();
+
+  useSEO({
+    title: '查看加密消息 - 批图网 | 阅后即焚安全消息查看',
+    description: '查看端到端加密的阅后即焚消息，消息在查看后自动销毁，保护您的隐私安全。',
+    keywords: '阅后即焚,加密消息查看,私密消息,安全消息',
+  });
 
   const [status, setStatus] = useState<'loading' | 'password' | 'revealed' | 'notfound' | 'error'>('loading');
   const [content, setContent] = useState('');

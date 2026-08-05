@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, Palette } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -31,6 +32,12 @@ function toHsl(r: number, g: number, b: number): string {
 
 export default function ColorConvertTool() {
   const t = useT();
+
+  useSEO({
+    title: '颜色格式转换 - 批图网 | 在线HEX RGB HSL颜色转换工具',
+    description: '免费在线颜色格式转换工具，支持HEX、RGB、HSL等格式互转，纯本地处理不上传服务器。',
+    keywords: '颜色转换,hex转rgb,rgb转hex,hsl,在线颜色工具',
+  });
   const navigate = useNavigate();
   const [hex, setHex] = useState('#7c3aed');
   const [rgb, setRgb] = useState('');

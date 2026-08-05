@@ -2,11 +2,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Clock, Calendar, RefreshCw } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 export default function TimestampTool() {
   const t = useT();
+
+  useSEO({
+    title: '时间戳转换 - 批图网 | 在线Unix时间戳与日期互转工具',
+    description: '免费在线Unix时间戳与日期时间互转工具，支持秒级与毫秒级时间戳，纯本地处理不上传服务器。',
+    keywords: '时间戳,时间戳转换,unix时间戳,在线时间戳,时间转换工具',
+  });
   const navigate = useNavigate();
   const [timestamp, setTimestamp] = useState('');
   const [dateStr, setDateStr] = useState('');

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, ShieldCheck } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -25,6 +26,12 @@ function parseJwt(token: string): { header: string; payload: string; signature: 
 
 export default function JwtDecoderTool() {
   const t = useT();
+
+  useSEO({
+    title: 'JWT解析 - 批图网 | 在线JWT令牌解码验证工具',
+    description: '免费在线JWT令牌解析与验证工具，解码Header、Payload与Signature，纯本地处理不上传服务器。',
+    keywords: 'jwt,jwt解析,jwt解码,jwt验证,在线jwt',
+  });
   const navigate = useNavigate();
   const [input, setInput] = useState('');
   const [result, setResult] = useState<{ header: string; payload: string; signature: string } | null>(null);

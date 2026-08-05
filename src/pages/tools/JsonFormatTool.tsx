@@ -2,11 +2,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, Braces, Shrink } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 export default function JsonFormatTool() {
   const t = useT();
+
+  useSEO({
+    title: 'JSON格式化 - 批图网 | 在线JSON格式化压缩校验工具',
+    description: '免费在线JSON格式化与压缩工具，支持JSON语法校验，纯本地处理不上传服务器，保护您的数据安全。',
+    keywords: 'json格式化,json压缩,json校验,在线json,json格式化工具',
+  });
   const navigate = useNavigate();
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');

@@ -2,6 +2,7 @@ import { useState, useEffect, useRef, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { MessageSquare, Send, Copy, Check, Clock, Users, ArrowLeft, AlertTriangle, Key, ChevronDown } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import { useLangStore } from '../../store/langStore';
 import { encryptWithKey, decryptWithKey, generateKey } from '../../utils/crypto';
 import Header from '../../components/Header';
@@ -129,6 +130,12 @@ export default function ChatRoom() {
   const navigate = useNavigate();
   const t = useT();
   const myNick = useRef(getMyNick());
+
+  useSEO({
+    title: '私密聊天室 - 批图网 | 端到端加密临时聊天室',
+    description: '免费在线端到端加密临时聊天室，分享链接即可多人加入，无需注册，纯加密传输保护隐私。',
+    keywords: '私密聊天,加密聊天,临时聊天室,端到端加密,在线聊天',
+  });
 
   const [mode, setMode] = useState<'create' | 'loading' | 'chat' | 'notfound' | 'error'>('create');
   const [ttl, setTtl] = useState(86400);

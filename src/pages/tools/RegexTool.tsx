@@ -2,11 +2,18 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, Brackets } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 export default function RegexTool() {
   const t = useT();
+
+  useSEO({
+    title: '正则测试 - 批图网 | 在线正则表达式测试工具',
+    description: '免费在线正则表达式测试工具，支持实时匹配高亮与常用正则语法参考，纯本地处理不上传服务器。',
+    keywords: '正则表达式,正则测试,regex,在线正则,regex测试',
+  });
   const navigate = useNavigate();
   const [pattern, setPattern] = useState('');
   const [flags, setFlags] = useState('gm');

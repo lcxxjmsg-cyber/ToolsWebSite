@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, Shield, RefreshCw } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -21,6 +22,12 @@ async function hexDigest(algo: string, text: string): Promise<string> {
 
 export default function HashTool() {
   const t = useT();
+
+  useSEO({
+    title: 'Hash计算 - 批图网 | 在线SHA-1 SHA-256 SHA-512哈希工具',
+    description: '免费在线Hash计算工具，支持SHA-1、SHA-256、SHA-384、SHA-512算法，纯本地计算不上传服务器，保护您的数据安全。',
+    keywords: 'hash,sha1,sha256,sha512,在线哈希计算,hash生成器',
+  });
   const navigate = useNavigate();
   const [input, setInput] = useState('');
   const [activeAlgo, setActiveAlgo] = useState('SHA-256');

@@ -2,6 +2,7 @@ import { useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, FileDiff } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -25,6 +26,12 @@ function lcs(a: string[], b: string[]): string[][] {
 
 export default function TextDiffTool() {
   const t = useT();
+
+  useSEO({
+    title: '文本对比 - 批图网 | 在线文本差异对比工具',
+    description: '免费在线文本差异对比工具，逐行高亮显示两段文本的差异，纯本地处理不上传服务器。',
+    keywords: '文本对比,文本差异,diff,在线对比工具,文本比较',
+  });
   const navigate = useNavigate();
   const [textA, setTextA] = useState('');
   const [textB, setTextB] = useState('');

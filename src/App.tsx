@@ -1,6 +1,11 @@
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from './pages/Home';
 import Workspace from './pages/Workspace';
+import Compress from './pages/Compress';
+import Convert from './pages/Convert';
+import Crop from './pages/Crop';
+import Resize from './pages/Resize';
+import Filter from './pages/Filter';
 import FAQ from './pages/FAQ';
 import Privacy from './pages/Privacy';
 import Terms from './pages/Terms';
@@ -34,6 +39,11 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/workspace" element={<Workspace />} />
+        <Route path="/compress" element={<Compress />} />
+        <Route path="/convert" element={<Convert />} />
+        <Route path="/crop" element={<Crop />} />
+        <Route path="/resize" element={<Resize />} />
+        <Route path="/filter" element={<Filter />} />
         <Route path="/faq" element={<FAQ />} />
         <Route path="/privacy" element={<Privacy />} />
         <Route path="/terms" element={<Terms />} />

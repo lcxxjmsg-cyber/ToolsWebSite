@@ -2,11 +2,18 @@ import { useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, Image, Upload } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 export default function ImageBase64Tool() {
   const t = useT();
+
+  useSEO({
+    title: '图片转Base64 - 批图网 | 在线图片转Base64编码工具',
+    description: '免费在线图片转Base64编码工具，支持PNG/JPEG/WebP/GIF等格式，纯本地处理不上传服务器，保护您的隐私安全。',
+    keywords: '图片转base64,base64图片,在线图片转码,图片编码',
+  });
   const navigate = useNavigate();
   const [dataUrl, setDataUrl] = useState('');
   const [base64, setBase64] = useState('');

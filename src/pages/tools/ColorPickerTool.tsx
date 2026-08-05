@@ -2,11 +2,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, Eye } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 export default function ColorPickerTool() {
   const t = useT();
+
+  useSEO({
+    title: '颜色选择器 - 批图网 | 在线取色器HEX RGB HSL',
+    description: '免费在线颜色选择器，支持HEX、RGB、HSL等格式实时预览与复制，纯本地处理不上传服务器。',
+    keywords: '颜色选择器,取色器,在线取色,hex色值,颜色工具',
+  });
   const navigate = useNavigate();
   const [color, setColor] = useState('#7c3aed');
   const [copied, setCopied] = useState(false);

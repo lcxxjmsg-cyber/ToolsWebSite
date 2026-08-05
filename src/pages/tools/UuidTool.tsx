@@ -2,11 +2,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, Fingerprint, RefreshCw } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 export default function UuidTool() {
   const t = useT();
+
+  useSEO({
+    title: 'UUID生成器 - 批图网 | 在线UUID生成工具',
+    description: '免费在线UUID生成器，支持生成多种版本UUID标识符，纯本地处理不上传服务器。',
+    keywords: 'uuid,uuid生成器,在线uuid,uuid v4,guid生成',
+  });
   const navigate = useNavigate();
   const [count, setCount] = useState(1);
   const [uuids, setUuids] = useState<string[]>([]);

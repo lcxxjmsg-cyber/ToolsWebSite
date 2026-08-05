@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { Flame, MessageSquare, ArrowRightLeft, Link as LinkIcon, Hash, Braces, Fingerprint, Clock, Code, Sigma, Palette, Text, Table, ShieldCheck, Brackets, FileDiff, Image, Eye, Key, Shield, RefreshCw } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -66,6 +67,12 @@ const TOOL_CATEGORIES = [
 
 export default function ToolsIndex() {
   const t = useT();
+
+  useSEO({
+    title: '工具导航 - 批图网 | 在线免费工具箱(编码/转换/安全/开发工具)',
+    description: '批图网免费在线工具箱：Base64编解码、进制转换、JSON格式化、UUID生成、时间戳转换、Hash计算、密码生成、正则测试、文本对比等20+实用工具。',
+    keywords: '在线工具,免费工具,开发者工具,编码工具,转换工具',
+  });
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#0a0a0a]">

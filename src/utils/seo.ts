@@ -38,6 +38,26 @@ export function useSEO({
     if (canonical) {
       canonical.setAttribute('href', window.location.href);
     }
+
+    const ogUrl = document.querySelector('meta[property="og:url"]');
+    if (ogUrl) {
+      ogUrl.setAttribute('content', window.location.href);
+    }
+
+    const ogType = document.querySelector('meta[property="og:type"]');
+    if (ogType) {
+      ogType.setAttribute('content', 'website');
+    }
+
+    const twTitle = document.querySelector('meta[name="twitter:title"]');
+    if (twTitle && title) {
+      twTitle.setAttribute('content', title);
+    }
+
+    const twDesc = document.querySelector('meta[name="twitter:description"]');
+    if (twDesc && description) {
+      twDesc.setAttribute('content', description);
+    }
   }, [title, description, keywords]);
 }
 

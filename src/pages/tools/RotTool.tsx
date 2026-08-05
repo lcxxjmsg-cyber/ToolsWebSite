@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, ArrowRightLeft, RefreshCw } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -23,6 +24,12 @@ function rot47(s: string): string {
 
 export default function RotTool() {
   const t = useT();
+
+  useSEO({
+    title: 'ROT13加解密 - 批图网 | 在线凯撒密码ROT13/ROT47工具',
+    description: '免费在线ROT13/ROT47凯撒密码加解密工具，纯本地处理不上传服务器，保护您的隐私安全。',
+    keywords: 'rot13,凯撒密码,rot47,在线加解密,rot加密',
+  });
   const navigate = useNavigate();
   const [mode, setMode] = useState<'rot13' | 'rot47'>('rot13');
   const [input, setInput] = useState('');

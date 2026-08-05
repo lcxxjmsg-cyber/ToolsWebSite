@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Flame, Copy, Check, ArrowLeft, Eye, EyeOff, Clock, Lock, FileText } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import { encryptMessage } from '../../utils/crypto';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
@@ -16,6 +17,12 @@ const EXPIRATION_OPTIONS = [
 
 export default function BurnCreate() {
   const t = useT();
+
+  useSEO({
+    title: '阅后即焚 - 批图网 | 端到端加密阅后即焚消息工具',
+    description: '免费在线阅后即焚消息工具，端到端加密，消息一次性查看后自动销毁，纯本地加密不上传服务器。',
+    keywords: '阅后即焚,加密消息,一次性消息,端到端加密,私密消息',
+  });
   const navigate = useNavigate();
   const [message, setMessage] = useState('');
   const [password, setPassword] = useState('');

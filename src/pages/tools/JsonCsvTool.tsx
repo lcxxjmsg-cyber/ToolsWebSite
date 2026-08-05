@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, Table } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -30,6 +31,12 @@ function csvToJson(csv: string): string {
 
 export default function JsonCsvTool() {
   const t = useT();
+
+  useSEO({
+    title: 'JSON转CSV - 批图网 | 在线JSON与CSV互转工具',
+    description: '免费在线JSON与CSV数据格式互转工具，纯本地处理不上传服务器，保护您的数据安全。',
+    keywords: 'json转csv,csv转json,json csv转换,在线数据转换',
+  });
   const navigate = useNavigate();
   const [mode, setMode] = useState<'json2csv' | 'csv2json'>('json2csv');
   const [input, setInput] = useState('');

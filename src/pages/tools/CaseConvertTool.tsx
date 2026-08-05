@@ -2,11 +2,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, Text } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 export default function CaseConvertTool() {
   const t = useT();
+
+  useSEO({
+    title: '大小写转换 - 批图网 | 在线文本大小写转换工具',
+    description: '免费在线文本大小写转换工具，支持大写、小写、标题、驼峰、蛇形等多种格式，纯本地处理不上传服务器。',
+    keywords: '大小写转换,文本转换,驼峰命名,蛇形命名,在线文字工具',
+  });
   const navigate = useNavigate();
   const [input, setInput] = useState('');
   const [output, setOutput] = useState('');

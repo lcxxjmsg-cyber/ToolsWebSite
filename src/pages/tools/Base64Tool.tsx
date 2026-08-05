@@ -2,11 +2,18 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, ArrowRightLeft } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
 export default function Base64Tool() {
   const t = useT();
+
+  useSEO({
+    title: 'Base64编解码 - 批图网 | 在线Base64编码解码工具',
+    description: '免费在线Base64编码与解码工具，支持文本和文件，纯本地处理不上传服务器，保护您的隐私安全。',
+    keywords: 'base64,base64编码,base64解码,在线base64,base64工具',
+  });
   const navigate = useNavigate();
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [input, setInput] = useState('');

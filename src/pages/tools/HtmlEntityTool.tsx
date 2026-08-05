@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, ArrowRightLeft, Code } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -18,6 +19,12 @@ function unescapeHtml(s: string): string {
 
 export default function HtmlEntityTool() {
   const t = useT();
+
+  useSEO({
+    title: 'HTML实体编解码 - 批图网 | 在线HTML实体转义工具',
+    description: '免费在线HTML实体编码与解码工具，支持常见HTML特殊字符转义，纯本地处理不上传服务器。',
+    keywords: 'html实体,html转义,html实体编码,htmlencode,htmldecode',
+  });
   const navigate = useNavigate();
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [input, setInput] = useState('');

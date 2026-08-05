@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Copy, Check, ArrowRightLeft, Sigma } from 'lucide-react';
 import { useT } from '../../i18n/useT';
+import { useSEO } from '../../utils/seo';
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 
@@ -37,6 +38,12 @@ function base32Decode(input: string): string {
 
 export default function Base32Tool() {
   const t = useT();
+
+  useSEO({
+    title: 'Base32编解码 - 批图网 | 在线Base32编码解码工具',
+    description: '免费在线Base32编码与解码工具，纯本地处理不上传服务器，保护您的隐私安全。',
+    keywords: 'base32,base32编码,base32解码,在线base32',
+  });
   const navigate = useNavigate();
   const [mode, setMode] = useState<'encode' | 'decode'>('encode');
   const [input, setInput] = useState('');

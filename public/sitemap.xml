@@ -4,60 +4,192 @@
     <loc>https://ppic.cc/</loc>
     <changefreq>weekly</changefreq>
     <priority>1.0</priority>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-05</lastmod>
   </url>
   <url>
     <loc>https://ppic.cc/workspace</loc>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-05</lastmod>
   </url>
   <url>
     <loc>https://ppic.cc/compress</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-05</lastmod>
   </url>
   <url>
     <loc>https://ppic.cc/crop</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-05</lastmod>
   </url>
   <url>
     <loc>https://ppic.cc/resize</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-05</lastmod>
   </url>
   <url>
     <loc>https://ppic.cc/filter</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-05</lastmod>
   </url>
   <url>
     <loc>https://ppic.cc/convert</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools</loc>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/base64</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/url-encode</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/base32</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/html-entity</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/base-convert</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/json-format</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/color-convert</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/case-convert</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/json-csv</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/burn</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/hash</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/password</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/rot</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/uuid</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/timestamp</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/jwt</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/regex</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/text-diff</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/image-base64</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/color-picker</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.5</priority>
+    <lastmod>2026-08-05</lastmod>
+  </url>
+  <url>
+    <loc>https://ppic.cc/tools/chat</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+    <lastmod>2026-08-05</lastmod>
   </url>
   <url>
     <loc>https://ppic.cc/faq</loc>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-05</lastmod>
   </url>
   <url>
     <loc>https://ppic.cc/privacy</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-05</lastmod>
   </url>
   <url>
     <loc>https://ppic.cc/terms</loc>
     <changefreq>monthly</changefreq>
     <priority>0.3</priority>
-    <lastmod>2026-07-25</lastmod>
+    <lastmod>2026-08-05</lastmod>
   </url>
 </urlset>
